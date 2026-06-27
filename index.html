@@ -3,127 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modina Auto Parts Ltd. - HR & Admin Service Portal</title>
+    <title>Modina Auto Parts Ltd. - Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>.header-login-container { display: flex !important; align-items: center !important; gap: 10px; }</style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800" onload="loadRequisitions()">
+<body class="bg-gray-50 font-sans text-gray-800" onload="loadAllData()">
 
     <!-- Top Navbar -->
     <nav class="bg-slate-900 text-white p-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
         <div class="flex items-center space-x-3">
-            <div class="bg-emerald-600 p-2 rounded text-white font-bold text-lg tracking-wider">M</div>
+            <div class="bg-emerald-600 p-2 rounded font-bold text-lg">M</div>
             <div>
-                <h1 class="text-md font-bold leading-tight">Modina Auto Parts Ltd.</h1>
-                <p class="text-xs text-slate-400">HR & Admin Service Portal</p>
+                <h1 class="text-sm font-bold md:text-base">Modina Auto Parts Ltd.</h1>
+                <p class="text-[11px] text-slate-400">HR & Admin Service Portal</p>
             </div>
         </div>
         
-        <!-- Secure Login -->
-        <div class="flex items-center space-x-2">
-            <div id="roleBadge" class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-xs font-semibold text-emerald-400">
+        <div class="header-login-container">
+            <div id="roleBadge" class="bg-slate-800 px-2.5 py-1.5 rounded text-xs font-bold text-emerald-400 border border-slate-700">
                 👤 মোড: সাধারণ কর্মী (Read-Only)
             </div>
-            <div id="loginSection" class="flex items-center space-x-1">
-                <input type="password" id="pinInput" placeholder="ম্যানেজার পিন কোড" class="bg-slate-800 text-white placeholder-slate-500 text-xs p-2 rounded border border-slate-700 focus:outline-none w-28">
-                <button onclick="verifyPin()" class="bg-emerald-600 text-white px-3 py-2 rounded text-xs font-bold hover:bg-emerald-500 transition cursor-pointer">লগইন</button>
+            <div id="loginSection" class="flex items-center bg-slate-800 p-1 rounded border border-slate-700">
+                <input type="password" id="pinInput" placeholder="ম্যানেজার পিন" class="bg-transparent text-white text-xs px-2 py-1 focus:outline-none w-24 text-center font-bold">
+                <button type="button" onclick="verifyPin()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded cursor-pointer">লগইন</button>
             </div>
-            <button id="logoutBtn" onclick="logout()" class="hidden bg-red-600 text-white px-3 py-2 rounded text-xs font-bold hover:bg-red-500 transition cursor-pointer">লগআউট</button>
+            <button id="logoutBtn" type="button" onclick="logout()" class="hidden bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded cursor-pointer">লগআউট</button>
         </div>
     </nav>
 
-    <!-- Main Layout -->
     <div class="flex pt-16 min-h-screen">
-        
-        <!-- Left Sidebar -->
-        <aside class="w-64 bg-slate-800 text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-slate-700">
-            <div class="p-4 text-xs font-semibold uppercase text-slate-500 tracking-wider">মেইন মেনু</div>
-            <nav class="mt-2 space-y-1 px-2">
-                <a href="#" class="flex items-center justify-between px-3 py-3 rounded-lg text-sm font-medium bg-emerald-600 text-white transition">
-                    <div class="flex items-center space-x-3">
-                        <i class="fa-solid fa-cart-plus"></i>
-                        <span>মালামাল রিকুইজিশন</span>
-                    </div>
-                    <span id="notifBadge" class="hidden bg-red-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full animate-pulse">0</span>
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-800 text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block">
+            <div class="p-4 text-xs font-semibold text-slate-500 uppercase">মেইন মেনু</div>
+            <nav class="mt-2 px-2">
+                <a href="#" class="flex items-center px-3 py-3 rounded-lg text-sm bg-emerald-600 text-white">
+                    <i class="fa-solid fa-cart-plus mr-3"></i><span>মালামাল রিকুইজিশন</span>
                 </a>
             </nav>
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 md:ml-64 p-6 bg-slate-50">
-            
-            <div class="mb-6 flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800">📋 মালামাল রিকুইজিশন পোর্টাল</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">কোম্পানির প্রয়োজনীয় মালামাল ক্রয়ের অনুমোদন সিস্টেম।</p>
-                </div>
-                <div id="deptFilterInfo" class="hidden text-xs bg-amber-50 text-amber-800 border border-amber-200 p-2 rounded-lg font-medium">
-                    <i class="fa-solid fa-filter mr-1"></i> শুধু আপনার ডিপার্টমেন্টের ফাইল দেখছেন।
-                </div>
-            </div>
-
+        <main class="flex-1 md:ml-64 p-4 md:p-6 bg-slate-50">
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 
-                <!-- Form -->
-                <div class="bg-white p-6 rounded-xl shadow-sm h-fit border border-slate-200">
-                    <h3 class="text-md font-bold mb-4 border-b pb-2 text-slate-800"><i class="fa-solid fa-pen-to-square text-emerald-600 mr-1"></i> নতুন আবেদন ফর্ম</h3>
-                    <form id="reqForm" onsubmit="submitRequisition(event)" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600">কর্মকর্তা ID *</label>
-                                <input type="text" id="empId" required placeholder="যেমন: MAP-014" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                <div class="space-y-6">
+                    <!-- Requisition Form -->
+                    <div id="formContainer" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="text-sm font-bold mb-4 border-b pb-2 text-slate-800 uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-to-square text-emerald-600"></i> নতুন আবেদন ফর্ম
+                        </h3>
+                        <form id="reqForm" onsubmit="submitRequisition(event)" class="space-y-4">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600">ID *</label>
+                                    <input type="text" id="empId" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600">নাম *</label>
+                                    <input type="text" id="requester" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600">আবেদনকারীর নাম *</label>
-                                <input type="text" id="requester" required placeholder="নাম লিখুন" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600">ডিপার্টমেন্ট *</label>
-                            <select id="department" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
-                                <option value="">ডিপার্টমেন্ট সিলেক্ট করুন</option>
-                                <option value="Accounts">Accounts</option>
-                                <option value="Sales">Sales</option>
-                                <option value="HR & Admin">HR & Admin</option>
-                                <option value="Factory Production">Factory Production</option>
-                                <option value="Store & Inventory">Store & Inventory</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600">মালামালের নাম ও বিবরণ *</label>
-                            <input type="text" id="itemName" required placeholder="আইটেমের নাম" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600">পরিমাণ</label>
-                                <input type="number" id="itemQty" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট *</label>
+                                <select id="department" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                    <option value="">সিলেক্ট করুন</option>
+                                    <option value="Accounts">Accounts</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="HR & Admin">HR & Admin</option>
+                                </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600">আনুমানিক খরচ (৳)</label>
-                                <input type="number" id="estCost" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                <label class="block text-xs font-bold text-slate-600">মালামালের নাম *</label>
+                                <input type="text" id="itemName" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
                             </div>
-                        </div>
-                        <button type="submit" class="w-full bg-emerald-600 text-white font-semibold py-2.5 rounded-lg text-sm cursor-pointer hover:bg-emerald-700 transition">
-                            রিকুইজিশন সাবমিট করুন
-                        </button>
-                    </form>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600">পরিমাণ *</label>
+                                    <input type="number" id="itemQty" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600">খরচ *</label>
+                                    <input type="number" id="estCost" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer">সাবমিট করুন</button>
+                        </form>
+                    </div>
+
+                    <!-- Super Admin: User Creation Panel -->
+                    <div id="superAdminPanel" class="hidden bg-white p-5 rounded-xl border border-amber-200 shadow-sm bg-amber-50/30">
+                        <h3 class="text-sm font-bold mb-4 border-b pb-2 text-amber-800 uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-plus text-amber-600"></i> নতুন ইউজার তৈরি (Super Admin)
+                        </h3>
+                        <form id="userForm" onsubmit="createNewUser(event)" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600">পিন কোড সেট করুন *</label>
+                                <input type="number" id="newUserPin" required class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600">রোল/পদবি *</label>
+                                <select id="newUserRole" required class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm" onchange="toggleDeptSelect()">
+                                    <option value="Dept_Head">Department Head</option>
+                                    <option value="Super_Admin">Super Admin</option>
+                                </select>
+                            </div>
+                            <div id="newUserDeptDiv">
+                                <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট অ্যাসাইন করুন *</label>
+                                <select id="newUserDept" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
+                                    <option value="Accounts">Accounts</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="HR & Admin">HR & Admin</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full bg-amber-600 text-white font-bold py-2 rounded-lg text-xs cursor-pointer">ইউজার যোগ করুন</button>
+                        </form>
+                    </div>
                 </div>
 
-                <!-- Table -->
-                <div class="bg-white p-6 rounded-xl shadow-sm xl:col-span-2 border border-slate-200">
-                    <h3 class="text-md font-bold mb-4 border-b pb-2 text-slate-800"><i class="fa-solid fa-list text-emerald-600 mr-1"></i> রিকুইজিশন ট্র্যাকিং হিস্ট্রি</h3>
+                <!-- Right Table -->
+                <div id="tableContainer" class="bg-white p-5 rounded-xl shadow-sm xl:col-span-2 border border-slate-200">
+                    <h3 class="text-sm font-bold mb-4 border-b pb-2 text-slate-800 uppercase flex items-center gap-1.5">
+                        <i class="fa-solid fa-list text-emerald-600"></i> রিকুইজিশন ট্র্যাকিং হিস্ট্রি
+                    </h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
-                                    <th class="p-3 w-20">ID</th>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold text-xs">
+                                    <th class="p-3 w-16">ID</th>
                                     <th class="p-3">বিবরণ ও কর্মকর্তা</th>
                                     <th class="p-3 text-center">Dept Head</th>
                                     <th class="p-3 text-center">HR & Admin</th>
-                                    <th class="p-3">অ্যাকশন</th>
+                                    <th class="p-3 text-center">অ্যাকশন</th>
                                 </tr>
                             </thead>
-                            <tbody id="tableBody" class="divide-y divide-slate-100 text-slate-600">
+                            <tbody id="tableBody" class="divide-y divide-slate-100 text-slate-600 text-xs">
                                 <tr><td colspan="5" class="p-8 text-center text-slate-400">ডাটা লোড হচ্ছে...</td></tr>
                             </tbody>
                         </table>
@@ -134,178 +148,159 @@
     </div>
 
     <script>
-        // ⚠️ আপনার গুগল ওয়েব অ্যাপের ইউআরএলটি নিচের ইনভার্টেড কমার (" ") ভেতর বসিয়ে দিন
-        const API_URL = "https://script.google.com/macros/s/AKfycbxsjMstOW9zYPnNkK4vND_GZQMSMfHzYCGdsFd25RpO-Iec90-wG530apJ0xAfsKciZ/exec"; 
+        // ⚠️ আপনার নতুন গুগল স্ক্রিপ্ট লিংকটি এখানে বসান
+        const MASTER_SCRIPT_URL = "এখানে_আপনার_নতুন_ওয়েব_অ্যাপ_লিংক_বসিয়ে_দিন"; 
 
-        // পিন কোড সেটআপ
-        const ROLES_CONFIG = {
-            "1122": { name: "Dept_Head", dept: "Accounts", label: "👔 মোড: হেড অফ অ্যাকাউন্টস" },
-            "3344": { name: "Dept_Head", dept: "Sales", label: "👔 মোড: হেড অফ সেলস" },
-            "9999": { name: "Super_Admin", dept: "All", label: "⚡ মোড: সুপার এডমিন (HR)" }
-        };
-
+        let globalData = { Sheet1: [], Users: [] };
         let currentRole = "Employee";
         let currentDept = "All";
 
-        function verifyPin() {
-            const pin = document.getElementById('pinInput').value;
-            if(ROLES_CONFIG[pin]) {
-                currentRole = ROLES_CONFIG[pin].name;
-                currentDept = ROLES_CONFIG[pin].dept;
-                document.getElementById('roleBadge').innerText = ROLES_CONFIG[pin].label;
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('logoutBtn').classList.remove('hidden');
-                if(currentRole === "Dept_Head") document.getElementById('deptFilterInfo').classList.remove('hidden');
-                document.getElementById('pinInput').value = "";
-                loadRequisitions();
-            } else {
-                alert("ভুল পিন কোড!");
+        async function loadAllData() {
+            try {
+                const res = await fetch(MASTER_SCRIPT_URL);
+                globalData = await res.json();
+                renderTable(globalData.Sheet1); // Sheet1 হচ্ছে রিকুইজিশন ডাটা ট্যাব
+            } catch (error) {
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">লিংক বা শিট চেক করুন।</td></tr>`;
             }
+        }
+
+        function verifyPin() {
+            const pin = document.getElementById('pinInput').value.trim();
+            const usersList = globalData.Users || [];
+            
+            // গুগল শিটের 'Users' ট্যাবের 'Pin' কলামের সাথে চেক করা হচ্ছে
+            const user = usersList.find(u => u.Pin.toString() === pin);
+
+            if (user) {
+                currentRole = user.Role;
+                currentDept = user.Department;
+                
+                document.getElementById('roleBadge').innerText = currentRole === "Super_Admin" ? "⚡ মোড: সুপার এডমিন (HR)" : `👔 মোড: হেড অফ ${currentDept}`;
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'block';
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                
+                if(currentRole === "Super_Admin") {
+                    document.getElementById('superAdminPanel').classList.remove('hidden');
+                }
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('pinInput').value = "";
+                renderTable(globalData.Sheet1);
+            } else {
+                alert("ভুল পিন! এটি গুগল শিটের 'Users' ট্যাবে নেই।");
+            }
+        }
+
+        async function createNewUser(e) {
+            e.preventDefault();
+            const pinVal = document.getElementById('newUserPin').value;
+            const roleVal = document.getElementById('newUserRole').value;
+            const deptVal = roleVal === "Super_Admin" ? "All" : document.getElementById('newUserDept').value;
+
+            const payload = {
+                action: "insertRow",
+                targetSheet: "Users",
+                data: {
+                    "Pin": pinVal,
+                    "Role": roleVal,
+                    "Department": deptVal
+                }
+            };
+
+            try {
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
+                alert("নতুন ইউজার সরাসরি গুগল শিটের 'Users' ট্যাবে সেভ হয়েছে!");
+                document.getElementById('userForm').reset();
+                loadAllData();
+            } catch(err) { alert("ব্যর্থ হয়েছে!"); }
+        }
+
+        async function submitRequisition(e) {
+            e.preventDefault();
+            const randId = "REQ-" + Math.floor(100 + Math.random() * 900);
+            const today = new Date().toLocaleDateString('bn-BD');
+
+            const payload = {
+                action: "insertRow",
+                targetSheet: "Sheet1",
+                data: {
+                    "id": randId, "date": today,
+                    "empId": document.getElementById('empId').value,
+                    "requester": document.getElementById('requester').value,
+                    "department": document.getElementById('department').value,
+                    "itemName": document.getElementById('itemName').value,
+                    "quantity": document.getElementById('itemQty').value,
+                    "estimatedCost": document.getElementById('estCost').value,
+                    "deptHeadStatus": "Pending", "finalStatus": "Pending",
+                    "actualCost": "", "deliveryDate": ""
+                }
+            };
+
+            try {
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
+                document.getElementById('reqForm').reset();
+                loadAllData();
+            } catch(err) {}
+        }
+
+        async function updateStatus(rowIndex, columnName, newValue) {
+            const payload = { action: "updateCell", targetSheet: "Sheet1", rowIndex, columnName, newValue };
+            try { await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) }); loadAllData(); } catch(e){}
+        }
+
+        async function submitPurchase(rowIndex) {
+            const cost = document.getElementById(`act-${rowIndex}`).value; if(!cost) return;
+            const today = new Date().toLocaleDateString('bn-BD');
+            
+            try { 
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Sheet1", rowIndex, columnName: "actualCost", newValue: cost }) });
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Sheet1", rowIndex, columnName: "deliveryDate", newValue: today }) });
+                loadAllData();
+            } catch(e){}
+        }
+
+        function toggleDeptSelect() {
+            document.getElementById('newUserDeptDiv').style.display = document.getElementById('newUserRole').value === "Super_Admin" ? "none" : "block";
         }
 
         function logout() {
             currentRole = "Employee"; currentDept = "All";
             document.getElementById('roleBadge').innerText = "👤 মোড: সাধারণ কর্মী (Read-Only)";
-            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('loginSection').style.display = 'flex';
+            document.getElementById('logoutBtn').style.display = 'none';
             document.getElementById('logoutBtn').classList.add('hidden');
-            document.getElementById('deptFilterInfo').classList.add('hidden');
-            loadRequisitions();
+            document.getElementById('superAdminPanel').classList.add('hidden');
+            document.getElementById('formContainer').style.display = 'block';
+            renderTable(globalData.Sheet1);
         }
 
-        async function loadRequisitions() {
-            try {
-                const res = await fetch(API_URL);
-                const rawData = await res.json();
-                const tbody = document.getElementById('tableBody');
-                tbody.innerHTML = "";
-                let pendingCount = 0;
-
-                if(!rawData || rawData.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`;
-                    return;
-                }
-                
-                // কলাম ম্যাপিং ঠিক করার জন্য ডাটা পার্সিং (image_7e0fff.png সমস্যা সমাধান)
-                let formattedData = rawData.map((row, index) => {
-                    return {
-                        id: row.id || row[0],
-                        date: row.date || row[1],
-                        empId: row.empId || row[2],
-                        requester: row.requester || row[3],
-                        department: row.department || row[4],
-                        itemName: row.itemName || row[5],
-                        quantity: row.quantity || row[6],
-                        estimatedCost: row.estimatedCost || row[7],
-                        deptHeadStatus: row.deptHeadStatus || row[8] || "Pending",
-                        finalStatus: row.finalStatus || row[9] || "Pending",
-                        actualCost: row.actualCost || row[10] || "",
-                        deliveryDate: row.deliveryDate || row[11] || "",
-                        rowIndex: row.rowIndex || (index + 2)
-                    };
-                });
-
-                formattedData.reverse().forEach(item => {
-                    // ডিপার্টমেন্ট ফিল্টার লজিক
-                    if(currentRole === "Dept_Head" && item.department !== currentDept) return;
-
-                    if(currentRole === "Dept_Head" && item.deptHeadStatus === "Pending") pendingCount++;
-                    if(currentRole === "Super_Admin" && item.deptHeadStatus === "Approved" && item.finalStatus === "Pending") pendingCount++;
-
-                    // ปุ่ม Dept Head
-                    let deptAction = "";
-                    if(item.deptHeadStatus === "Pending") {
-                        if(currentRole === "Dept_Head" && item.department === currentDept) {
-                            deptAction = `<div class="flex space-x-1 justify-center"><button onclick="updateStatus(${item.rowIndex}, 9, 'Approved')" class="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold cursor-pointer">Appve</button><button onclick="updateStatus(${item.rowIndex}, 9, 'Rejected')" class="bg-red-600 text-white px-2 py-0.5 rounded text-xs font-bold cursor-pointer">Reject</button></div>`;
-                        } else { deptAction = `<span class="text-amber-600 font-semibold">Pending</span>`; }
-                    } else {
-                        deptAction = item.deptHeadStatus === "Approved" ? `<span class="text-green-600 font-bold">Approved</span>` : `<span class="text-red-600 font-bold">Rejected</span>`;
-                    }
-
-                    // ปุ่ม HR / Final Admin
-                    let finalAction = `<span class="text-gray-400">—</span>`;
-                    if(item.deptHeadStatus === "Approved") {
-                        if(item.finalStatus === "Pending") {
-                            if(currentRole === "Super_Admin") {
-                                finalAction = `<div class="flex space-x-1 justify-center"><button onclick="updateStatus(${item.rowIndex}, 10, 'Approved')" class="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold cursor-pointer">Appve</button><button onclick="updateStatus(${item.rowIndex}, 10, 'Rejected')" class="bg-red-600 text-white px-2 py-0.5 rounded text-xs font-bold cursor-pointer">Reject</button></div>`;
-                            } else { finalAction = `<span class="text-amber-600 font-semibold">Pending</span>`; }
-                        } else {
-                            finalAction = item.finalStatus === "Approved" ? `<span class="text-green-600 font-bold">Approved</span>` : `<span class="text-red-600 font-bold">Rejected</span>`;
-                        }
-                    }
-
-                    // খরচ ও ডেলিভারি সেকশন
-                    let actionCol = `<span class="text-gray-400">—</span>`;
-                    if(item.finalStatus === "Approved") {
-                        if(item.actualCost) {
-                            actionCol = `<div class="text-xs"><b>৳${item.actualCost}</b><br><span class="text-gray-400">${item.deliveryDate}</span></div>`;
-                        } else if(currentRole === "Super_Admin") {
-                            actionCol = `<div class="flex flex-col space-y-1"><input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="p-1 border text-xs w-20 rounded"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white px-1 py-0.5 text-xs rounded">ডান</button></div>`;
-                        } else { actionCol = `<span class="text-blue-500 text-xs">প্রক্রিয়াধীন</span>`; }
-                    }
-
-                    tbody.innerHTML += `
-                        <tr class="border-b border-slate-100 hover:bg-slate-50">
-                            <td class="p-3 font-mono font-bold text-emerald-600 text-xs">${item.id}</td>
-                            <td class="p-3">
-                                <div class="font-bold text-slate-800 text-sm">${item.itemName} (Qty: ${item.quantity})</div>
-                                <div class="text-xs text-slate-500 mt-1">
-                                    ID: <b>${item.empId}</b> | নাম: ${item.requester}<br>
-                                    ডিপার্টমেন্ট: <b>${item.department}</b> | বাজেট: ৳${item.estimatedCost} (${item.date})
-                                </div>
-                            </td>
-                            <td class="p-3 text-center text-xs">${deptAction}</td>
-                            <td class="p-3 text-center text-xs">${finalAction}</td>
-                            <td class="p-3 text-center">${actionCol}</td>
-                        </tr>
-                    `;
-                });
-
-                const badge = document.getElementById('notifBadge');
-                if(pendingCount > 0) { badge.innerText = pendingCount; badge.classList.remove('hidden'); }
-                else { badge.classList.add('hidden'); }
-
-            } catch (error) {
-                console.error(error);
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">ডাটা লোড হচ্ছে না। লিংক চেক করুন।</td></tr>`;
+        function renderTable(requisitions) {
+            const tbody = document.getElementById('tableBody'); tbody.innerHTML = "";
+            if(!requisitions || requisitions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
             }
-        }
+            // রিভার্স করে নতুনগুলো উপরে দেখানো
+            [...requisitions].reverse().forEach(item => {
+                if(currentRole === "Dept_Head" && item.department !== currentDept) return;
 
-        async function submitRequisition(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            btn.disabled = true; btn.innerText = "সাবমিট হচ্ছে...";
-            
-            // আপনার পুরনো গুগল স্ক্রিপ্ট যেভাবে ডাটা চায়, ঠিক সেই ওল্ড সিকোয়েন্স অনুযায়ী সাজানো
-            const body = {
-                action: "create",
-                empId: document.getElementById('empId').value,
-                requester: document.getElementById('requester').value,
-                department: document.getElementById('department').value,
-                itemName: document.getElementById('itemName').value,
-                quantity: document.getElementById('itemQty').value,
-                estimatedCost: document.getElementById('estCost').value
-            };
+                let deptAction = item.deptHeadStatus === "Pending" ? 
+                    (currentRole === "Dept_Head" && item.department === currentDept ? `<button onclick="updateStatus(${item.rowIndex}, 'deptHeadStatus', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'deptHeadStatus', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">Reject</button>` : `Pending`) : item.deptHeadStatus;
 
-            try {
-                await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
-                document.getElementById('reqForm').reset();
-                await loadRequisitions();
-            } catch(err) { alert("সমস্যা হয়েছে!"); }
-            btn.disabled = false; btn.innerText = "রিকুইজিশন সাবমিট করুন";
-        }
+                let finalAction = item.finalStatus === "Pending" ? 
+                    (currentRole === "Super_Admin" && item.deptHeadStatus === "Approved" ? `<button onclick="updateStatus(${item.rowIndex}, 'finalStatus', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'finalStatus', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">Reject</button>` : `Pending`) : item.finalStatus;
 
-        async function updateStatus(rowIndex, colIndex, value) {
-            const body = { action: "update", rowIndex: rowIndex, column: colIndex === 9 ? "DeptHeadStatus" : "FinalStatus", value: value };
-            await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
-            loadRequisitions();
-        }
+                let actionCol = item.actualCost ? `৳${item.actualCost}` : (currentRole === "Super_Admin" && item.finalStatus === "Approved" ? `<input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-16 text-xs"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-1 ml-1 rounded">ডান</button>` : `—`);
 
-        async function submitPurchase(rowIndex) {
-            const cost = document.getElementById(`act-${rowIndex}`).value;
-            if(!cost) return alert("খরচ লিখুন");
-            const body = { action: "update", rowIndex: rowIndex, column: "Purchase", actualCost: cost };
-            await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
-            loadRequisitions();
+                tbody.innerHTML += `
+                    <tr class="border-b text-center">
+                        <td class="p-3 text-left font-bold text-emerald-600">${item.id}</td>
+                        <td class="p-3 text-left"><b>${item.itemName}</b> (Qty: ${item.quantity})<br><span class="text-slate-400 text-[11px]">Dept: ${item.department} | বাজেট: ৳${item.estimatedCost}</span></td>
+                        <td class="p-3">${deptAction}</td>
+                        <td class="p-3">${finalAction}</td>
+                        <td class="p-3">${actionCol}</td>
+                    </tr>`;
+            });
         }
     </script>
 </body>
