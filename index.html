@@ -19,7 +19,7 @@
             </div>
         </div>
         
-        <!-- Secure Portal Login -->
+        <!-- Secure Login -->
         <div class="flex items-center space-x-2">
             <div id="roleBadge" class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-xs font-semibold text-emerald-400">
                 👤 মোড: সাধারণ কর্মী (Read-Only)
@@ -32,69 +32,55 @@
         </div>
     </nav>
 
-    <!-- Main Layout Container -->
+    <!-- Main Layout -->
     <div class="flex pt-16 min-h-screen">
         
-        <!-- Left Sidebar (Multi-Services Menu) -->
+        <!-- Left Sidebar -->
         <aside class="w-64 bg-slate-800 text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-slate-700">
-            <div class="p-4 text-xs font-semibold uppercase text-slate-500 tracking-wider">মেইন মেনু ও সার্ভিস সমূহ</div>
+            <div class="p-4 text-xs font-semibold uppercase text-slate-500 tracking-wider">মেইন মেনু</div>
             <nav class="mt-2 space-y-1 px-2">
-                <a href="#" onclick="switchService('requisition')" id="menu-requisition" class="flex items-center justify-between px-3 py-3 rounded-lg text-sm font-medium bg-emerald-600 text-white transition">
+                <a href="#" class="flex items-center justify-between px-3 py-3 rounded-lg text-sm font-medium bg-emerald-600 text-white transition">
                     <div class="flex items-center space-x-3">
-                        <i class="fa-solid :has-squared-brackets:"></i>
+                        <i class="fa-solid fa-cart-plus"></i>
                         <span>মালামাল রিকুইজিশন</span>
                     </div>
-                    <!-- Notification Badge -->
                     <span id="notifBadge" class="hidden bg-red-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full animate-pulse">0</span>
                 </a>
-                <a href="#" onclick="switchService('leave')" id="menu-leave" class="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium hover:bg-slate-700 hover:text-slate-100 transition">
-                    <i class="fa-solid fa-calendar-check text-slate-400"></i>
-                    <span>ছুটির আবেদন (Leave)</span>
-                    <span class="bg-slate-900 text-[10px] px-1.5 py-0.5 rounded text-slate-400">Soon</span>
-                </a>
             </nav>
-            <div class="absolute bottom-4 left-4 text-xs text-slate-500">
-                &copy; 2026 Modina Auto Parts Ltd.
-            </div>
         </aside>
 
-        <!-- Right Content Area -->
+        <!-- Main Content -->
         <main class="flex-1 md:ml-64 p-6 bg-slate-50">
             
-            <!-- Dynamic Service Title Section -->
             <div class="mb-6 flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
                 <div>
-                    <h2 id="serviceTitle" class="text-xl font-bold text-slate-800">📋 মালামাল রিকুইজিশন পোর্টাল</h2>
-                    <p id="serviceSubtitle" class="text-xs text-slate-500 mt-0.5">কোম্পানির প্রয়োজনীয় মালামাল ক্রয়ের অনুমোদন ও ট্র্যাকিং সিস্টেম।</p>
+                    <h2 class="text-xl font-bold text-slate-800">📋 মালামাল রিকুইজিশন পোর্টাল</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">কোম্পানির প্রয়োজনীয় মালামাল ক্রয়ের অনুমোদন সিস্টেম।</p>
                 </div>
                 <div id="deptFilterInfo" class="hidden text-xs bg-amber-50 text-amber-800 border border-amber-200 p-2 rounded-lg font-medium">
-                    <i class="fa-solid fa-filter mr-1"></i> শুধু আপনার ডিপার্টমেন্টের রিকুইজিশনগুলো দেখানো হচ্ছে।
+                    <i class="fa-solid fa-filter mr-1"></i> শুধু আপনার ডিপার্টমেন্টের ফাইল দেখছেন।
                 </div>
             </div>
 
-            <!-- Requisition Service Container -->
-            <div id="requisitionServiceView" class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 
-                <!-- Left: Entry Form -->
+                <!-- Form -->
                 <div class="bg-white p-6 rounded-xl shadow-sm h-fit border border-slate-200">
-                    <h3 class="text-md font-bold mb-4 border-b pb-2 text-slate-800 flex items-center space-x-2">
-                        <i class="fa-solid fa-pen-to-square text-emerald-600"></i>
-                        <span>নতুন রিকুইজিশন ফর্ম</span>
-                    </h3>
+                    <h3 class="text-md font-bold mb-4 border-b pb-2 text-slate-800"><i class="fa-solid fa-pen-to-square text-emerald-600 mr-1"></i> নতুন আবেদন ফর্ম</h3>
                     <form id="reqForm" onsubmit="submitRequisition(event)" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 uppercase">কর্মকর্তা ID *</label>
-                                <input type="text" id="empId" required placeholder="যেমন: MAP-014" class="mt-1 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 focus:bg-white">
+                                <label class="block text-xs font-semibold text-slate-600">কর্মকর্তা ID *</label>
+                                <input type="text" id="empId" required placeholder="যেমন: MAP-014" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 uppercase">আবেদনকারীর নাম *</label>
-                                <input type="text" id="requester" required placeholder="নাম টাইপ করুন" class="mt-1 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 focus:bg-white">
+                                <label class="block text-xs font-semibold text-slate-600">আবেদনকারীর নাম *</label>
+                                <input type="text" id="requester" required placeholder="নাম লিখুন" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 uppercase">আপনার ডিপার্টমেন্ট *</label>
-                            <select id="department" required class="mt-1 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 focus:bg-white">
+                            <label class="block text-xs font-semibold text-slate-600">ডিপার্টমেন্ট *</label>
+                            <select id="department" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
                                 <option value="">ডিপার্টমেন্ট সিলেক্ট করুন</option>
                                 <option value="Accounts">Accounts</option>
                                 <option value="Sales">Sales</option>
@@ -104,70 +90,58 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 uppercase">মালামালের নাম / বিবরণ *</label>
-                            <input type="text" id="itemName" required placeholder="যেমন: কম্পিউটার মাউস, খাতা, ইত্যাদি" class="mt-1 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 focus:bg-white">
+                            <label class="block text-xs font-semibold text-slate-600">মালামালের নাম ও বিবরণ *</label>
+                            <input type="text" id="itemName" required placeholder="আইটেমের নাম" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 uppercase">পরিমাণ</label>
-                                <input type="number" id="itemQty" required min="1" class="mt-1 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 focus:bg-white">
+                                <label class="block text-xs font-semibold text-slate-600">পরিমাণ</label>
+                                <input type="number" id="itemQty" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 uppercase">আনুমানিক খরচ (৳)</label>
-                                <input type="number" id="estCost" required min="1" class="mt-1 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 focus:bg-white">
+                                <label class="block text-xs font-semibold text-slate-600">আনুমানিক খরচ (৳)</label>
+                                <input type="number" id="estCost" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
                             </div>
                         </div>
-                        <button type="submit" class="w-full bg-emerald-600 text-white font-semibold py-3 rounded-lg shadow-sm hover:bg-emerald-700 transition cursor-pointer text-sm flex justify-center items-center space-x-2">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            <span>রিকুইজিশন সাবমিট করুন</span>
+                        <button type="submit" class="w-full bg-emerald-600 text-white font-semibold py-2.5 rounded-lg text-sm cursor-pointer hover:bg-emerald-700 transition">
+                            রিকুইজিশন সাবমিট করুন
                         </button>
                     </form>
                 </div>
 
-                <!-- Right: Tracking Table -->
+                <!-- Table -->
                 <div class="bg-white p-6 rounded-xl shadow-sm xl:col-span-2 border border-slate-200">
-                    <h3 class="text-md font-bold mb-4 border-b pb-2 text-slate-800 flex items-center space-x-2">
-                        <i class="fa-solid fa-list text-emerald-600"></i>
-                        <span>রিকুইজিশন ট্র্যাকিং ও হিস্ট্রি</span>
-                    </h3>
+                    <h3 class="text-md font-bold mb-4 border-b pb-2 text-slate-800"><i class="fa-solid fa-list text-emerald-600 mr-1"></i> রিকুইজিশন ট্র্যাকিং হিস্ট্রি</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
                                     <th class="p-3 w-20">ID</th>
-                                    <th class="p-3">মালামাল ও বিবরণ</th>
+                                    <th class="p-3">বিবরণ ও কর্মকর্তা</th>
                                     <th class="p-3 text-center">Dept Head</th>
                                     <th class="p-3 text-center">HR & Admin</th>
-                                    <th class="p-3">প্রকৃত খরচ / অ্যাকশন</th>
+                                    <th class="p-3">অ্যাকশন</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody" class="divide-y divide-slate-100 text-slate-600">
-                                <tr><td colspan="5" class="p-8 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>ডাটা লোড হচ্ছে...</td></tr>
+                                <tr><td colspan="5" class="p-8 text-center text-slate-400">ডাটা লোড হচ্ছে...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
-            <!-- Placeholder View -->
-            <div id="fallbackServiceView" class="hidden bg-white p-12 rounded-xl shadow-sm border border-slate-200 text-center max-w-xl mx-auto mt-10">
-                <div class="text-slate-300 text-6xl mb-4"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-                <h3 class="text-xl font-bold text-slate-700">সার্ভিসটি প্রক্রিয়াধীন রয়েছে</h3>
-                <button onclick="switchService('requisition')" class="mt-6 bg-slate-800 text-white px-4 py-2 rounded text-xs font-semibold hover:bg-slate-700 transition">ফিরে যান</button>
-            </div>
-
         </main>
     </div>
 
     <script>
-        // ⚠️ আপনার কপি করা গুগল ওয়েব অ্যাপের ইউআরএলটি এখানে বসান
+        // ⚠️ আপনার গুগল ওয়েব অ্যাপের ইউআরএলটি নিচের ইনভার্টেড কমার (" ") ভেতর বসিয়ে দিন
         const API_URL = "https://script.google.com/macros/s/AKfycbwgthXP6QhzoKhe0IG0x8nbiR3odLpks6vo4lJ-QP8PYBC3MWu6ON23QcLujWB2dxqz/exec"; 
 
-        // Roles Object based on PIN
+        // পিন কোড সেটআপ
         const ROLES_CONFIG = {
             "1122": { name: "Dept_Head", dept: "Accounts", label: "👔 মোড: হেড অফ অ্যাকাউন্টস" },
             "3344": { name: "Dept_Head", dept: "Sales", label: "👔 মোড: হেড অফ সেলস" },
-            "9999": { name: "Super_Admin", dept: "All", label: "⚡ মোড: সুপার এডমিন (HR & Admin)" }
+            "9999": { name: "Super_Admin", dept: "All", label: "⚡ মোড: সুপার এডমিন (HR)" }
         };
 
         let currentRole = "Employee";
@@ -179,24 +153,19 @@
                 currentRole = ROLES_CONFIG[pin].name;
                 currentDept = ROLES_CONFIG[pin].dept;
                 document.getElementById('roleBadge').innerText = ROLES_CONFIG[pin].label;
-                document.getElementById('roleBadge').classList.replace('text-emerald-400', 'text-yellow-400');
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
-                if(currentRole === "Dept_Head") {
-                    document.getElementById('deptFilterInfo').classList.remove('hidden');
-                }
+                if(currentRole === "Dept_Head") document.getElementById('deptFilterInfo').classList.remove('hidden');
                 document.getElementById('pinInput').value = "";
                 loadRequisitions();
             } else {
-                alert("ভুল পিন কোড! দয়া করে সঠিক পিন দিন।");
+                alert("ভুল পিন কোড!");
             }
         }
 
         function logout() {
-            currentRole = "Employee";
-            currentDept = "All";
+            currentRole = "Employee"; currentDept = "All";
             document.getElementById('roleBadge').innerText = "👤 মোড: সাধারণ কর্মী (Read-Only)";
-            document.getElementById('roleBadge').classList.replace('text-yellow-400', 'text-emerald-400');
             document.getElementById('loginSection').classList.remove('hidden');
             document.getElementById('logoutBtn').classList.add('hidden');
             document.getElementById('deptFilterInfo').classList.add('hidden');
@@ -206,110 +175,107 @@
         async function loadRequisitions() {
             try {
                 const res = await fetch(API_URL);
-                const data = await res.json();
+                const rawData = await res.json();
                 const tbody = document.getElementById('tableBody');
                 tbody.innerHTML = "";
-                
                 let pendingCount = 0;
 
-                if(data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রিকুইজিশন রেকর্ড পাওয়া যায়নি।</td></tr>`;
+                if(!rawData || rawData.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`;
                     return;
                 }
                 
-                // Sort to show latest first
-                data.reverse().forEach(item => {
-                    
-                    // 📋 Logic: Filter view if user is a specific Dept Head
-                    if(currentRole === "Dept_Head" && item.department !== currentDept) {
-                        return; // Skip other departments' data
-                    }
+                // কলাম ম্যাপিং ঠিক করার জন্য ডাটা পার্সিং (image_7e0fff.png সমস্যা সমাধান)
+                let formattedData = rawData.map((row, index) => {
+                    return {
+                        id: row.id || row[0],
+                        date: row.date || row[1],
+                        empId: row.empId || row[2],
+                        requester: row.requester || row[3],
+                        department: row.department || row[4],
+                        itemName: row.itemName || row[5],
+                        quantity: row.quantity || row[6],
+                        estimatedCost: row.estimatedCost || row[7],
+                        deptHeadStatus: row.deptHeadStatus || row[8] || "Pending",
+                        finalStatus: row.finalStatus || row[9] || "Pending",
+                        actualCost: row.actualCost || row[10] || "",
+                        deliveryDate: row.deliveryDate || row[11] || "",
+                        rowIndex: row.rowIndex || (index + 2)
+                    };
+                });
 
-                    // Count notifications for active logged-in manager
+                formattedData.reverse().forEach(item => {
+                    // ডিপার্টমেন্ট ফিল্টার লজিক
+                    if(currentRole === "Dept_Head" && item.department !== currentDept) return;
+
                     if(currentRole === "Dept_Head" && item.deptHeadStatus === "Pending") pendingCount++;
                     if(currentRole === "Super_Admin" && item.deptHeadStatus === "Approved" && item.finalStatus === "Pending") pendingCount++;
 
-                    // Dept Head Action buttons or text
+                    // ปุ่ม Dept Head
                     let deptAction = "";
                     if(item.deptHeadStatus === "Pending") {
                         if(currentRole === "Dept_Head" && item.department === currentDept) {
-                            deptAction = `<div class="flex justify-center space-x-1"><button onclick="updateStatus(${item.rowIndex}, 'DeptHeadStatus', 'Approved')" class="bg-green-600 text-white px-2 py-1 rounded text-xs font-semibold hover:bg-green-700 cursor-pointer">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'DeptHeadStatus', 'Rejected')" class="bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold hover:bg-red-700 cursor-pointer">Reject</button></div>`;
-                        } else { 
-                            deptAction = `<div class="text-center"><span class="bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full text-xs font-semibold">Pending</span></div>`; 
-                        }
-                    } else if(item.deptHeadStatus === "Approved") { 
-                        deptAction = `<div class="text-center"><span class="bg-green-50 text-green-700 border border-green-200 px-2.5 py-0.5 rounded-full text-xs font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Approved</span></div>`; 
-                    } else { 
-                        deptAction = `<div class="text-center"><span class="bg-red-50 text-red-700 border border-red-200 px-2.5 py-0.5 rounded-full text-xs font-semibold"><i class="fa-solid fa-circle-xmark mr-1"></i>Rejected</span></div>`; 
+                            deptAction = `<div class="flex space-x-1 justify-center"><button onclick="updateStatus(${item.rowIndex}, 9, 'Approved')" class="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold cursor-pointer">Appve</button><button onclick="updateStatus(${item.rowIndex}, 9, 'Rejected')" class="bg-red-600 text-white px-2 py-0.5 rounded text-xs font-bold cursor-pointer">Reject</button></div>`;
+                        } else { deptAction = `<span class="text-amber-600 font-semibold">Pending</span>`; }
+                    } else {
+                        deptAction = item.deptHeadStatus === "Approved" ? `<span class="text-green-600 font-bold">Approved</span>` : `<span class="text-red-600 font-bold">Rejected</span>`;
                     }
 
-                    // Final Admin Status
-                    let finalAction = `<div class="text-center"><span class="text-slate-400 text-xs">—</span></div>`;
+                    // ปุ่ม HR / Final Admin
+                    let finalAction = `<span class="text-gray-400">—</span>`;
                     if(item.deptHeadStatus === "Approved") {
                         if(item.finalStatus === "Pending") {
                             if(currentRole === "Super_Admin") {
-                                finalAction = `<div class="flex justify-center space-x-1"><button onclick="updateStatus(${item.rowIndex}, 'FinalStatus', 'Approved')" class="bg-green-600 text-white px-2 py-1 rounded text-xs font-semibold hover:bg-green-700 cursor-pointer">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'FinalStatus', 'Rejected')" class="bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold hover:bg-red-700 cursor-pointer">Reject</button></div>`;
-                            } else { 
-                                finalAction = `<div class="text-center"><span class="bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full text-xs font-semibold">Pending</span></div>`; 
-                            }
-                        } else if(item.finalStatus === "Approved") { 
-                            finalAction = `<div class="text-center"><span class="bg-green-50 text-green-700 border border-green-200 px-2.5 py-0.5 rounded-full text-xs font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Approved</span></div>`; 
-                        } else { 
-                            finalAction = `<div class="text-center"><span class="bg-red-50 text-red-700 border border-red-200 px-2.5 py-0.5 rounded-full text-xs font-semibold"><i class="fa-solid fa-circle-xmark mr-1"></i>Rejected</span></div>`; 
+                                finalAction = `<div class="flex space-x-1 justify-center"><button onclick="updateStatus(${item.rowIndex}, 10, 'Approved')" class="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold cursor-pointer">Appve</button><button onclick="updateStatus(${item.rowIndex}, 10, 'Rejected')" class="bg-red-600 text-white px-2 py-0.5 rounded text-xs font-bold cursor-pointer">Reject</button></div>`;
+                            } else { finalAction = `<span class="text-amber-600 font-semibold">Pending</span>`; }
+                        } else {
+                            finalAction = item.finalStatus === "Approved" ? `<span class="text-green-600 font-bold">Approved</span>` : `<span class="text-red-600 font-bold">Rejected</span>`;
                         }
                     }
 
-                    // Actual Cost / Delivery 
-                    let purchaseAction = `<span class="text-slate-400 text-xs">—</span>`;
+                    // খরচ ও ডেলিভারি সেকশন
+                    let actionCol = `<span class="text-gray-400">—</span>`;
                     if(item.finalStatus === "Approved") {
                         if(item.actualCost) {
-                            purchaseAction = `<div><div class="text-emerald-700 font-bold">৳${item.actualCost}</div><div class="text-[11px] text-slate-400 mt-0.5"><i class="fa-solid fa-truck mr-1"></i>${item.deliveryDate}</div></div>`;
+                            actionCol = `<div class="text-xs"><b>৳${item.actualCost}</b><br><span class="text-gray-400">${item.deliveryDate}</span></div>`;
                         } else if(currentRole === "Super_Admin") {
-                            purchaseAction = `<div class="flex flex-col space-y-1 w-28"><input type="number" id="actCost-${item.rowIndex}" placeholder="প্রকৃত খরচ" class="p-1 border border-slate-300 text-xs rounded focus:outline-none focus:border-blue-500 bg-slate-50"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white px-2 py-0.5 rounded text-xs font-bold hover:bg-blue-700 cursor-pointer">ডেলিভারি ডান</button></div>`;
-                        } else { 
-                            purchaseAction = `<span class="text-blue-600 font-semibold text-xs flex items-center"><i class="fa-solid fa-clock mr-1"></i>ক্রয় প্রক্রিয়াধীন</span>`; 
-                        }
+                            actionCol = `<div class="flex flex-col space-y-1"><input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="p-1 border text-xs w-20 rounded"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white px-1 py-0.5 text-xs rounded">ডান</button></div>`;
+                        } else { actionCol = `<span class="text-blue-500 text-xs">প্রক্রিয়াধীন</span>`; }
                     }
 
                     tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50/80 transition border-b border-slate-100">
+                        <tr class="border-b border-slate-100 hover:bg-slate-50">
                             <td class="p-3 font-mono font-bold text-emerald-600 text-xs">${item.id}</td>
                             <td class="p-3">
-                                <div class="font-bold text-slate-800 text-sm">${item.itemName} <span class="text-xs bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded ml-1">Qty: ${item.quantity}</span></div>
-                                <div class="text-xs text-slate-400 mt-1 space-y-0.5">
-                                    <div><i class="fa-solid fa-user mr-1 text-slate-300"></i>ID: <span class="text-slate-700 font-mono font-bold">${item.empId}</span> | নাম: <span class="text-slate-600 font-medium">${item.requester}</span></div>
-                                    <div><i class="fa-solid fa-building mr-1 text-slate-300"></i>ডিপার্টমেন্ট: <span class="text-slate-700 font-bold">${item.department}</span></div>
-                                    <div><i class="fa-solid fa-bangladeshi-taka-sign mr-1 text-slate-300"></i>বাজেট: <span class="text-slate-600 font-medium">৳${item.estimatedCost}</span> | <i class="fa-solid fa-calendar text-slate-300 mx-1"></i>${item.date}</div>
+                                <div class="font-bold text-slate-800 text-sm">${item.itemName} (Qty: ${item.quantity})</div>
+                                <div class="text-xs text-slate-500 mt-1">
+                                    ID: <b>${item.empId}</b> | নাম: ${item.requester}<br>
+                                    ডিপার্টমেন্ট: <b>${item.department}</b> | বাজেট: ৳${item.estimatedCost} (${item.date})
                                 </div>
                             </td>
-                            <td class="p-3">${deptAction}</td>
-                            <td class="p-3">${finalAction}</td>
-                            <td class="p-3 align-middle">${purchaseAction}</td>
+                            <td class="p-3 text-center text-xs">${deptAction}</td>
+                            <td class="p-3 text-center text-xs">${finalAction}</td>
+                            <td class="p-3 text-center">${actionCol}</td>
                         </tr>
                     `;
                 });
 
-                // Update Notification Badge Counter
                 const badge = document.getElementById('notifBadge');
-                if(pendingCount > 0) {
-                    badge.innerText = pendingCount;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
+                if(pendingCount > 0) { badge.innerText = pendingCount; badge.classList.remove('hidden'); }
+                else { badge.classList.add('hidden'); }
 
             } catch (error) {
                 console.error(error);
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500 font-medium"><i class="fa-solid fa-triangle-exclamation mr-2"></i>ডাটা লোড সমস্যা। API URL চেক করুন।</td></tr>`;
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">ডাটা লোড হচ্ছে না। লিংক চেক করুন।</td></tr>`;
             }
         }
 
         async function submitRequisition(e) {
             e.preventDefault();
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i>প্রসেসিং...`;
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true; btn.innerText = "সাবমিট হচ্ছে...";
             
+            // আপনার পুরনো গুগল স্ক্রিপ্ট যেভাবে ডাটা চায়, ঠিক সেই ওল্ড সিকোয়েন্স অনুযায়ী সাজানো
             const body = {
                 action: "create",
                 empId: document.getElementById('empId').value,
@@ -319,39 +285,27 @@
                 quantity: document.getElementById('itemQty').value,
                 estimatedCost: document.getElementById('estCost').value
             };
+
             try {
                 await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
                 document.getElementById('reqForm').reset();
                 await loadRequisitions();
-            } catch(err) { alert("সাবমিট করতে সমস্যা হয়েছে।"); }
-            
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i><span>রিকুইজিশন সাবমিট করুন</span>`;
+            } catch(err) { alert("সমস্যা হয়েছে!"); }
+            btn.disabled = false; btn.innerText = "রিকুইজিশন সাবমিট করুন";
         }
 
-        async function updateStatus(rowIndex, column, value) {
-            const body = { action: "update", rowIndex, column, value };
+        async function updateStatus(rowIndex, colIndex, value) {
+            const body = { action: "update", rowIndex: rowIndex, column: colIndex === 9 ? "DeptHeadStatus" : "FinalStatus", value: value };
             await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
             loadRequisitions();
         }
 
         async function submitPurchase(rowIndex) {
-            const actualCost = document.getElementById(`actCost-${rowIndex}`).value;
-            if(!actualCost) return alert("দয়া করে প্রকৃত খরচ টাইপ করুন।");
-            const body = { action: "update", rowIndex, column: "Purchase", actualCost };
+            const cost = document.getElementById(`act-${rowIndex}`).value;
+            if(!cost) return alert("খরচ লিখুন");
+            const body = { action: "update", rowIndex: rowIndex, column: "Purchase", actualCost: cost };
             await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
             loadRequisitions();
-        }
-
-        function switchService(serviceName) {
-            if(serviceName !== 'requisition') {
-                document.getElementById('requisitionServiceView').classList.add('hidden');
-                document.getElementById('fallbackServiceView').classList.remove('hidden');
-            } else {
-                document.getElementById('requisitionServiceView').classList.remove('hidden');
-                document.getElementById('fallbackServiceView').classList.add('hidden');
-                loadRequisitions();
-            }
         }
     </script>
 </body>
