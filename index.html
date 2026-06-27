@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modina Auto Parts Ltd. - HR & Admin Service Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-800" onload="loadRequisitions()">
+
+    <!-- Top Navbar -->
+    <nav class="bg-slate-900 text-white p-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
+        <div class="flex items-center space-x-3">
+            <div class="bg-emerald-600 p-2 rounded text-white font-bold text-lg tracking-wider">M</div>
+            <div>
+                <h1 class="text-md font-bold leading-tight">Modina Auto Parts Ltd.</h1>
+                <p class="text-xs text-slate-400">HR & Admin Service Portal</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="text-sm hidden sm:block">
+                <span class="text-slate-400">রোল পরিবর্তন করুন:</span>
+            </div>
+            <select id="roleSwitcher" onchange="filterRoleView()" class="bg-slate-800 text-slate-200 p-2 rounded border border-slate-700 text-sm focus:outline-none focus:border-emerald-500 cursor-pointer">
+                <option value="Employee">👤 কর্মী (Employee)</option>
+                <option value="Dept_Head">👔 ডিপার্টমেন্ট হেড</option>
+                <option value="Super_Admin">⚡ সুপার অ্যাডমিন (HR & Admin)</option>
+            </select>
+        </div>
+    </nav>
+
+    <!-- Main Layout Container -->
+    <div class="flex pt-16 min-h-screen">
+        
+        <!-- Left Sidebar (Multi-Services Menu) -->
+        <aside class="w-64 bg-slate-800 text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-slate-700">
+            <div class="p-4 text-xs font-semibold uppercase text-slate-500 tracking-wider">মেইন মেনু ও সার্ভিস সমূহ</div>
+            <nav class="mt-2 space-y-1 px-2">
+                <a href="#" onclick="switchService('requisition')" id="menu-requisition" class="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium bg-emerald-600 text-white transition">
+                    <i class="fa-solid :has-squared-brackets:"></i>
+                    <span>মালামাল রিকুইজিশন</span>
+                </a>
+                <a href="#" onclick="switchService('leave')" id="menu-leave" class="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium hover:bg-slate-700 hover:text-slate-100 transition">
+                    <i class="fa-solid fa-calendar-check text-slate-400"></i>
+                    <span>ছুটির আবেদন (Leave)</span>
+                    <span class="bg-slate-900 text-[10px] px-1.5 py-0.5 rounded text-slate-400">Soon</span>
+                </a>
+                <a href="#" onclick="switchService('idcard')" id="menu-idcard" class="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium hover:bg-slate-700 hover:text-slate-100 transition">
+                    <i class="fa-solid fa-id-card text-slate-400"></i>
+                    <span>আইডি কার্ড রিকোয়েস্ট</span>
+                    <span class="bg-slate-900 text-[10px] px-1.5 py-0.5 rounded text-slate-400">Soon</span>
+                </a>
+                <a href="#" onclick="switchService('visiting')" id="menu-visiting" class="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium hover:bg-slate-700 hover:text-slate-100 transition">
+                    <i class="fa-solid fa-address-card text-slate-400"></i>
+                    <span>ভিজিটিং কার্ড অর্ডার</span>
+                    <span class="bg-slate-900 text-[10px] px-1.5 py-0.5 rounded text-slate-400">Soon</span>
+                </a>
+                <a href="#" onclick="switchService('vehicle')" id="menu-vehicle" class="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium hover:bg-slate-700 hover:text-slate-100 transition">
+                    <i class="fa-solid fa-car text-slate-400"></i>
+                    <span>গাড়ি রিকোয়েস্ট (Vehicle)</span>
+                    <span class="bg-slate-900 text-[10px] px-1.5 py-0.5 rounded text-slate-400">Soon</span>
+                </a>
+            </nav>
+            <div class="absolute bottom-4 left-4 text-xs text-slate-500">
+                &copy; 2026 Modina Auto Parts Ltd.
+            </div>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="flex-1 md:ml-64 p-6 bg-slate-50">
+            
+            <!-- Dynamic Service Title Section -->
+            <div class="mb-6">
+                <h2 id="serviceTitle" class="text-2xl font-bold text-slate-800">📋 মালামাল রিকুইজিশন পোর্টাল</h2>
+                <p id="serviceSubtitle" class="text-sm text-slate-500 mt-1">কোম্পানির প্রয়োজনীয় মালামাল ক্রয়ের অনুমোদন ও ট্র্যাকিং সিস্টেম।</p>
+            </div>
+
+            <!-- Requisition Service Container (Visible by Default) -->
+            <div id="requisitionServiceView" class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                
+                <!-- Left: Entry Form -->
+                <div class="bg-white p-6 rounded-xl shadow-sm h-fit border border-slate-200/80">
+                    <h3 class="text-md font-bold mb-4 border-b pb-2 text-slate-800 flex items-center space-x-2">
+                        <i class="fa-solid fa-pen-to-square text-emerald-600"></i>
+                        <span>নতুন রিকুইজিশন ফর্ম</span>
+                    </h3>
+                    <form id="reqForm" onsubmit="submitRequisition(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider">আবেদনকারীর নাম</label>
+                            <input type="text" id="requester" required class="mt-1.5 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white text-sm transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider">মালামালের নাম / বিবরণ</label>
+                            <input type="text" id="itemName" required placeholder="যেমন: কম্পিউটার মাউস, খাতা, ইত্যাদি" class="mt-1.5 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white text-sm transition">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider">পরিমাণ</label>
+                                <input type="number" id="itemQty" required min="1" class="mt-1.5 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white text-sm transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider">আনুমানিক খরচ (৳)</label>
+                                <input type="number" id="estCost" required min="1" class="mt-1.5 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:bg-white text-sm transition">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-600 text-white font-semibold py-3 rounded-lg shadow-sm hover:bg-emerald-700 transition cursor-pointer text-sm flex justify-center items-center space-x-2 mt-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>রিকুইজিশন সাবমিট করুন</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right: Tracking Table -->
+                <div class="bg-white p-6 rounded-xl shadow-sm xl:col-span-2 border border-slate-200/80">
+                    <h3 class="text-md font-bold mb-4 border-b pb-2 text-slate-800 flex items-center space-x-2">
+                        <i class="fa-solid fa-list text-emerald-600"></i>
+                        <span>রিকুইজিশন ট্র্যাকিং ও হিস্ট্রি</span>
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
+                                    <th class="p-3 w-20">ID</th>
+                                    <th class="p-3">মালামাল ও বিবরণ</th>
+                                    <th class="p-3 text-center">Dept Head</th>
+                                    <th class="p-3 text-center">HR & Admin (Final)</th>
+                                    <th class="p-3">অ্যাকশন / প্রকৃত খরচ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="divide-y divide-slate-100 text-slate-600">
+                                <tr><td colspan="5" class="p-8 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>ডাটা লোড হচ্ছে...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Placeholder for Future Services -->
+            <div id="fallbackServiceView" class="hidden bg-white p-12 rounded-xl shadow-sm border border-slate-200 text-center max-w-xl mx-auto mt-10">
+                <div class="text-slate-300 text-6xl mb-4">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-700">সার্ভিসটি প্রক্রিয়াধীন রয়েছে</h3>
+                <p class="text-slate-500 mt-2 text-sm">Modina Auto Parts Ltd. এর HR & Admin বিভাগের এই সার্ভিসটি খুব শীঘ্রই চালু করা হবে। ধন্যবাদ।</p>
+                <button onclick="switchService('requisition')" class="mt-6 bg-slate-800 text-white px-4 py-2 rounded text-xs font-semibold hover:bg-slate-700 transition cursor-pointer">রিকুইজিশন পেজে ফিরে যান</button>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // ⚠️ আপনার কপি করা গুগল ওয়েব অ্যাপের ইউআরএলটি নিচের বক্সে পেস্ট করুন
+        const API_URL = "https://script.google.com/macros/s/AKfycbwgthXP6QhzoKhe0IG0x8nbiR3odLpks6vo4lJ-QP8PYBC3MWu6ON23QcLujWB2dxqz/exec"; 
+
+        async function loadRequisitions() {
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+                const role = document.getElementById('roleSwitcher').value;
+                const tbody = document.getElementById('tableBody');
+                tbody.innerHTML = "";
+                
+                if(data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রিকুইজিশন রেকর্ড পাওয়া যায়নি।</td></tr>`;
+                    return;
+                }
+                
+                data.reverse().forEach(item => {
+                    // Dept Head Status logic
+                    let deptAction = "";
+                    if(item.deptHeadStatus === "Pending") {
+                        if(role === "Dept_Head") {
+                            deptAction = `<div class="flex justify-center space-x-1"><button onclick="updateStatus(${item.rowIndex}, 'DeptHeadStatus', 'Approved')" class="bg-green-600 text-white px-2 py-1 rounded text-xs hover:bg-green-700 font-medium cursor-pointer">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'DeptHeadStatus', 'Rejected')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700 font-medium cursor-pointer">Reject</button></div>`;
+                        } else { 
+                            deptAction = `<div class="text-center"><span class="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full text-xs font-semibold">Pending</span></div>`; 
+                        }
+                    } else if(item.deptHeadStatus === "Approved") { 
+                        deptAction = `<div class="text-center"><span class="bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded-full text-xs font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Approved</span></div>`; 
+                    } else { 
+                        deptAction = `<div class="text-center"><span class="bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-full text-xs font-semibold"><i class="fa-solid fa-circle-xmark mr-1"></i>Rejected</span></div>`; 
+                    }
+
+                    // Final Status logic
+                    let finalAction = `<div class="text-center"><span class="text-slate-400 text-xs">—</span></div>`;
+                    if(item.deptHeadStatus === "Approved") {
+                        if(item.finalStatus === "Pending") {
+                            if(role === "Super_Admin") {
+                                finalAction = `<div class="flex justify-center space-x-1"><button onclick="updateStatus(${item.rowIndex}, 'FinalStatus', 'Approved')" class="bg-green-600 text-white px-2 py-1 rounded text-xs hover:bg-green-700 font-medium cursor-pointer">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'FinalStatus', 'Rejected')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700 font-medium cursor-pointer">Reject</button></div>`;
+                            } else { 
+                                finalAction = `<div class="text-center"><span class="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full text-xs font-semibold">Pending</span></div>`; 
+                            }
+                        } else if(item.finalStatus === "Approved") { 
+                            finalAction = `<div class="text-center"><span class="bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded-full text-xs font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Approved</span></div>`; 
+                        } else { 
+                            finalAction = `<div class="text-center"><span class="bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-full text-xs font-semibold"><i class="fa-solid fa-circle-xmark mr-1"></i>Rejected</span></div>`; 
+                        }
+                    }
+
+                    // Purchase/Delivery Logic
+                    let purchaseAction = `<span class="text-slate-400 text-xs">—</span>`;
+                    if(item.finalStatus === "Approved") {
+                        if(item.actualCost) {
+                            purchaseAction = `<div><div class="text-emerald-700 font-bold">৳${item.actualCost}</div><div class="text-[11px] text-slate-400 mt-0.5"><i class="fa-solid fa-truck mr-1"></i>${item.deliveryDate}</div></div>`;
+                        } else if(role === "Super_Admin" || role === "Dept_Head") {
+                            purchaseAction = `<div class="flex flex-col space-y-1 w-28"><input type="number" id="actCost-${item.rowIndex}" placeholder="প্রকৃত খরচ" class="p-1 border border-slate-300 text-xs rounded-md focus:outline-none focus:border-blue-500 bg-slate-50"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white px-2 py-1 rounded-md text-xs hover:bg-blue-700 font-semibold cursor-pointer">ডেলিভারি ডান</button></div>`;
+                        } else { 
+                            purchaseAction = `<span class="text-blue-600 font-semibold text-xs flex items-center"><i class="fa-solid fa-clock mr-1"></i>কেনার অপেক্ষায়</span>`; 
+                        }
+                    }
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/80 transition border-b border-slate-100">
+                            <td class="p-3 font-mono font-bold text-emerald-600 text-xs">${item.id}</td>
+                            <td class="p-3">
+                                <div class="font-bold text-slate-800 text-sm">${item.itemName} <span class="text-xs bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded-md ml-1">Qty: ${item.quantity}</span></div>
+                                <div class="text-xs text-slate-400 mt-1 space-y-0.5">
+                                    <div><i class="fa-solid fa-user mr-1 text-slate-300"></i>আবেদন: <span class="text-slate-600 font-medium">${item.requester}</span></div>
+                                    <div><i class="fa-solid fa-bangladeshi-taka-sign mr-1 text-slate-300"></i>বাজেট: <span class="text-slate-600 font-medium">৳${item.estimatedCost}</span> | <i class="fa-solid fa-calendar text-slate-300 mx-1"></i>${item.date}</div>
+                                </div>
+                            </td>
+                            <td class="p-3">${deptAction}</td>
+                            <td class="p-3">${finalAction}</td>
+                            <td class="p-3 align-middle">${purchaseAction}</td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error(error);
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500 font-medium"><i class="fa-solid fa-triangle-exclamation mr-2"></i>ডাটা লোড করতে সমস্যা হয়েছে। API URL চেক করুন।</td></tr>`;
+            }
+        }
+
+        async function submitRequisition(e) {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i>প্রসেসিং...`;
+            
+            const body = {
+                action: "create",
+                requester: document.getElementById('requester').value,
+                itemName: document.getElementById('itemName').value,
+                quantity: document.getElementById('itemQty').value,
+                estimatedCost: document.getElementById('estCost').value
+            };
+            try {
+                await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
+                document.getElementById('reqForm').reset();
+                await loadRequisitions();
+            } catch(err) { alert("সাবমিট করতে সমস্যা হয়েছে।"); }
+            
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i><span>রিকুইজিশন সাবমিট করুন</span>`;
+        }
+
+        async function updateStatus(rowIndex, column, value) {
+            const body = { action: "update", rowIndex, column, value };
+            await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
+            loadRequisitions();
+        }
+
+        async function submitPurchase(rowIndex) {
+            const actualCost = document.getElementById(`actCost-${rowIndex}`).value;
+            if(!actualCost) return alert("দয়া করে প্রকৃত খরচ কত হয়েছে তা টাইপ করুন।");
+            const body = { action: "update", rowIndex, column: "Purchase", actualCost };
+            await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
+            loadRequisitions();
+        }
+
+        function filterRoleView() { loadRequisitions(); }
+
+        function switchService(serviceName) {
+            const reqView = document.getElementById('requisitionServiceView');
+            const fallbackView = document.getElementById('fallbackServiceView');
+            const title = document.getElementById('serviceTitle');
+            const subtitle = document.getElementById('serviceSubtitle');
+            
+            // Manage Active Class on Sidebar Menu
+            document.querySelectorAll('aside nav a').forEach(el => {
+                el.classList.remove('bg-emerald-600', 'text-white');
+                el.classList.add('hover:bg-slate-700', 'hover:text-slate-100');
+            });
+            document.getElementById(`menu-${serviceName}`).classList.add('bg-emerald-600', 'text-white');
+
+            if(serviceName === 'requisition') {
+                reqView.classList.remove('hidden');
+                fallbackView.classList.add('hidden');
+                title.innerHTML = "📋 মালামাল রিকুইজিশন পোর্টাল";
+                subtitle.innerHTML = "কোম্পানির প্রয়োজনীয় মালামাল ক্রয়ের অনুমোদন ও ট্র্যাকিং সিস্টেম।";
+                loadRequisitions();
+            } else {
+                reqView.classList.add('hidden');
+                fallbackView.classList.remove('hidden');
+                if(serviceName === 'leave') {
+                    title.innerHTML = "📅 ছুটির আবেদন (Leave Application)";
+                    subtitle.innerHTML = "অনলাইনে ছুটির আবেদন করুন এবং অ্যাপ্রুভাল স্ট্যাটাস ট্র্যাক করুন।";
+                } else if(serviceName === 'idcard') {
+                    title.innerHTML = "🪪 আইডি কার্ড রিকোয়েস্ট পোর্টাল";
+                    subtitle.innerHTML = "নতুন আইডি কার্ড বা কার্ড হারিয়ে গেলে পুনরায় ইস্যুর আবেদন ফর্ম।";
+                } else if(serviceName === 'visiting') {
+                    title.innerHTML = "📇 ভিজিটিং কার্ড অর্ডার সার্ভিস";
+                    subtitle.innerHTML = "কর্মকর্তাদের জন্য অফিশিয়াল বিজনেস/ভিজিটিং কার্ড প্রিন্টিং রিকোয়েস্ট।";
+                } else if(serviceName === 'vehicle') {
+                    title.innerHTML = "🚗 গাড়ি রিকোয়েস্ট (Vehicle Requisition)";
+                    subtitle.innerHTML = "অফিশিয়াল ও ফ্যাক্টরি ট্যুরের জন্য এডমিন থেকে গাড়ি বুকিং পোর্টাল।";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
