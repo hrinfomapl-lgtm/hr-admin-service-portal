@@ -73,7 +73,7 @@
                                     <option value="Information Technology (IT)">Information Technology (IT)</option>
                                     <option value="Marketing">Marketing</option>
                                     <option value="Administration">Administration</option>
-                                    <option value="Sales(TVS)">Sales (TVS)</option>
+                                    <option value="Sales(TVS)">Sales(TVS)</option>
                                     <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
                                     <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
                                     <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
@@ -125,7 +125,7 @@
                                     <option value="Information Technology (IT)">Information Technology (IT)</option>
                                     <option value="Marketing">Marketing</option>
                                     <option value="Administration">Administration</option>
-                                    <option value="Sales(TVS)">Sales (TVS)</option>
+                                    <option value="Sales(TVS)">Sales(TVS)</option>
                                     <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
                                     <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
                                     <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
@@ -167,7 +167,7 @@
 
     <script>
         // ⚠️ আপনার গুগল অ্যাপস স্ক্রিপ্ট লিঙ্কটি এখানে বসান
-        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnHAKwaCHmJj26tCW18LHZB0O0PNTjMQKrvK0c_0EDmfg-IlEfcCcjiDN6dZu5DBmJ/exec"; 
+        const MASTER_SCRIPT_URL = "এখানে_আপনার_ওয়েব_অ্যাপ_লিংক_বসিয়ে_দিন"; 
 
         let globalData = { Requisition: [], Users: [] };
         let currentRole = "Employee";
@@ -191,7 +191,7 @@
 
             if (user) {
                 currentRole = user.Role;
-                currentDept = user.Department;
+                currentDept = user.Department.trim(); // ক্লিন ডিপার্টমেন্ট নেম
                 
                 document.getElementById('roleBadge').innerText = currentRole === "Super_Admin" ? "⚡ মোড: সুপার এডমিন (HR)" : `👔 মোড: হেড অফ ${currentDept}`;
                 document.getElementById('loginSection').style.display = 'none';
@@ -205,7 +205,7 @@
                 document.getElementById('pinInput').value = "";
                 renderTable(globalData.Requisition);
             } else {
-                alert("ভুল পিন! এটি গুগল শিটের 'Users' ট্যাবে নেই।");
+                alert("ভুল পিন!");
             }
         }
 
@@ -300,18 +300,46 @@
             if(!requisitions || requisitions.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
             }
-            [...requisitions].reverse().forEach(item => {
-                if(currentRole === "Dept_Head" && item["ডিপার্টমেন্ট"] !== currentDept) return;
 
-                let deptAction = item["Dept Head Status"] === "Pending" ? 
-                    (currentRole === "Dept_Head" && item["ডিপার্টমেন্ট"] === currentDept ? `<button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">Reject</button>` : `Pending`) : item["Dept Head Status"];
+            // ফিল্টারড লিস্ট তৈরি
+            const filteredList = requisitions.filter(item => {
+                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim();
+                // লজিক ১: সাধারণ কর্মী মোডে সবাই সব দেখতে পাবে (Read Only)
+                if (currentRole === "Employee") return true;
+                // লজিক ২: সুপার এডমিন সব দেখতে পাবে
+                if (currentRole === "Super_Admin") return true;
+                // লজিক ৩: ডিপার্টমেন্ট হেড শুধু নিজের ডিপার্টমেন্ট দেখতে পাবে
+                if (currentRole === "Dept_Head" && itemDept === currentDept) return true;
+                return false;
+            });
 
-                let finalAction = item["Final Status"] === "Pending" ? 
-                    (currentRole === "Super_Admin" && item["Dept Head Status"] === "Approved" ? `<button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">Reject</button>` : `Pending`) : item["Final Status"];
+            if(filteredList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">আপনার ডিপার্টমেন্টের কোনো পেন্ডিং রিকুইজিশন নেই।</td></tr>`; return;
+            }
 
-                let actionCol = item["প্রকৃত খরচ (Actual)"] ? `৳${item["প্রকৃত খরচ (Actual)"]}` : (currentRole === "Super_Admin" && item["Final Status"] === "Approved" ? `<input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-16 text-xs"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-1 ml-1 rounded">ডান</button>` : `—`);
+            [...filteredList].reverse().forEach(item => {
+                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim();
 
-                // ✨ নতুন আপডেট: বিবরণ ও কর্মকর্তার ঘরে এখন আবেদনকারীর নাম ও আইডি স্পষ্ট দেখা যাবে
+                // 👑 লজিক ৪: ডিপার্টমেন্ট হেডের অ্যাকশন বাটন জেনারেট
+                let deptAction = item["Dept Head Status"];
+                if (item["Dept Head Status"] === "Pending") {
+                    if (currentRole === "Dept_Head" && itemDept === currentDept) {
+                        deptAction = `<button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1 cursor-pointer">Approve</button>
+                                      <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold cursor-pointer">Reject</button>`;
+                    }
+                }
+
+                // 👑 লজিক ৫: সুপার এডমিনের অ্যাকশন বাটন (ডিপার্টমেন্ট হেড এপ্রুভ না করলেও সরাসরি এপ্রুভ করতে পারবে)
+                let finalAction = item["Final Status"];
+                if (item["Final Status"] === "Pending") {
+                    if (currentRole === "Super_Admin") {
+                        finalAction = `<button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1 cursor-pointer">Approve</button>
+                                       <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold cursor-pointer">Reject</button>`;
+                    }
+                }
+
+                let actionCol = item["প্রকৃত খরচ (Actual)"] ? `৳${item["প্রকৃত খরচ (Actual)"]}` : (currentRole === "Super_Admin" && item["Final Status"] === "Approved" ? `<input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-16 text-xs"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-1 ml-1 rounded cursor-pointer">ডান</button>` : `—`);
+
                 tbody.innerHTML += `
                     <tr class="border-b text-center">
                         <td class="p-3 text-left font-bold text-emerald-600">${item["ID"]}</td>
@@ -322,7 +350,7 @@
                             <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
                                 <span class="text-blue-600 font-semibold"><i class="fa-solid fa-user text-[9px]"></i> ${item["আবেদনকারী"]}</span>
                                 <span class="text-slate-400">|</span>
-                                <span class="text-indigo-600 font-mono font-medium">ID: ${item["কর্মকর্তা ID"]}</span>
+                                <span class="text-indigo-600 font-mono font-medium">ID: ${item["कर्मकर्ता ID"]}</span>
                                 <span class="text-slate-400">|</span>
                                 <span class="text-emerald-700">বাজেট: ৳${item["আনুমানিক খরচ"]}</span>
                             </div>
