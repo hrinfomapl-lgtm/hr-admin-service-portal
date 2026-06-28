@@ -166,10 +166,10 @@
     </div>
 
     <script>
-        // ⚠️ আপনার নতুন তৈরি করা মাস্টার অ্যাপস স্ক্রিপ্ট লিঙ্কটি এখানে বসান
-        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwn-m2tHvTwSJa3RojUAVIx-xlzXeQe5vf2ToJ5dq7IkJpJ39YJoFzzN0POFqLnazcP/exec"; 
+        // ⚠️ আপনার গুগল অ্যাপস স্ক্রিপ্ট লিঙ্কটি এখানে বসান
+        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxantvIRMmqO4Ch20mDkxLVqyk9eMVRnkzp7qsYjtXOVHVMerLm68ruMp_1dtL-u_8/exec"; 
 
-        let globalData = { Sheet1: [], Users: [] };
+        let globalData = { Requisition: [], Users: [] };
         let currentRole = "Employee";
         let currentDept = "All";
 
@@ -177,7 +177,7 @@
             try {
                 const res = await fetch(MASTER_SCRIPT_URL);
                 globalData = await res.json();
-                renderTable(globalData.Sheet1); 
+                renderTable(globalData.Requisition); 
             } catch (error) {
                 document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">লিংক বা শিট চেক করুন।</td></tr>`;
             }
@@ -203,7 +203,7 @@
                 }
                 document.getElementById('formContainer').style.display = 'none';
                 document.getElementById('pinInput').value = "";
-                renderTable(globalData.Sheet1);
+                renderTable(globalData.Requisition);
             } else {
                 alert("ভুল পিন! এটি গুগল শিটের 'Users' ট্যাবে নেই।");
             }
@@ -240,17 +240,20 @@
 
             const payload = {
                 action: "insertRow",
-                targetSheet: "Sheet1",
+                targetSheet: "Requisition",
                 data: {
-                    "id": randId, "date": today,
-                    "empId": document.getElementById('empId').value,
-                    "requester": document.getElementById('requester').value,
-                    "department": document.getElementById('department').value,
-                    "itemName": document.getElementById('itemName').value,
-                    "quantity": document.getElementById('itemQty').value,
-                    "estimatedCost": document.getElementById('estCost').value,
-                    "deptHeadStatus": "Pending", "finalStatus": "Pending",
-                    "actualCost": "", "deliveryDate": ""
+                    "ID": randId, 
+                    "তারিখ": today,
+                    "কর্মকর্তা ID": document.getElementById('empId').value,
+                    "আবেদনকারী": document.getElementById('requester').value,
+                    "ডিপার্টমেন্ট": document.getElementById('department').value,
+                    "মালামালের নাম": document.getElementById('itemName').value,
+                    "পরিমাণ": document.getElementById('itemQty').value,
+                    "আনুমানিক খরচ": document.getElementById('estCost').value,
+                    "Dept Head Status": "Pending", 
+                    "Final Status": "Pending",
+                    "প্রকৃত খরচ (Actual)": "", 
+                    "ডেলিভারি তারিখ": ""
                 }
             };
 
@@ -262,7 +265,7 @@
         }
 
         async function updateStatus(rowIndex, columnName, newValue) {
-            const payload = { action: "updateCell", targetSheet: "Sheet1", rowIndex, columnName, newValue };
+            const payload = { action: "updateCell", targetSheet: "Requisition", rowIndex, columnName, newValue };
             try { await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) }); loadAllData(); } catch(e){}
         }
 
@@ -271,8 +274,8 @@
             const today = new Date().toLocaleDateString('bn-BD');
             
             try { 
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Sheet1", rowIndex, columnName: "actualCost", newValue: cost }) });
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Sheet1", rowIndex, columnName: "deliveryDate", newValue: today }) });
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "প্রকৃত খরচ (Actual)", newValue: cost }) });
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "ডেলিভারি তারিখ", newValue: today }) });
                 loadAllData();
             } catch(e){}
         }
@@ -289,7 +292,7 @@
             document.getElementById('logoutBtn').classList.add('hidden');
             document.getElementById('superAdminPanel').classList.add('hidden');
             document.getElementById('formContainer').style.display = 'block';
-            renderTable(globalData.Sheet1);
+            renderTable(globalData.Requisition);
         }
 
         function renderTable(requisitions) {
@@ -298,20 +301,20 @@
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
             }
             [...requisitions].reverse().forEach(item => {
-                if(currentRole === "Dept_Head" && item.department !== currentDept) return;
+                if(currentRole === "Dept_Head" && item["ডিপার্টমেন্ট"] !== currentDept) return;
 
-                let deptAction = item.deptHeadStatus === "Pending" ? 
-                    (currentRole === "Dept_Head" && item.department === currentDept ? `<button onclick="updateStatus(${item.rowIndex}, 'deptHeadStatus', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'deptHeadStatus', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">Reject</button>` : `Pending`) : item.deptHeadStatus;
+                let deptAction = item["Dept Head Status"] === "Pending" ? 
+                    (currentRole === "Dept_Head" && item["ডিপার্টমেন্ট"] === currentDept ? `<button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">Reject</button>` : `Pending`) : item["Dept Head Status"];
 
-                let finalAction = item.finalStatus === "Pending" ? 
-                    (currentRole === "Super_Admin" && item.deptHeadStatus === "Approved" ? `<button onclick="updateStatus(${item.rowIndex}, 'finalStatus', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'finalStatus', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">Reject</button>` : `Pending`) : item.finalStatus;
+                let finalAction = item["Final Status"] === "Pending" ? 
+                    (currentRole === "Super_Admin" && item["Dept Head Status"] === "Approved" ? `<button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold mr-1">Approve</button><button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">Reject</button>` : `Pending`) : item["Final Status"];
 
-                let actionCol = item.actualCost ? `৳${item.actualCost}` : (currentRole === "Super_Admin" && item.finalStatus === "Approved" ? `<input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-16 text-xs"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-1 ml-1 rounded">ডান</button>` : `—`);
+                let actionCol = item["প্রকৃত খরচ (Actual)"] ? `৳${item["প্রকৃত খরচ (Actual)"]}` : (currentRole === "Super_Admin" && item["Final Status"] === "Approved" ? `<input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-16 text-xs"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-1 ml-1 rounded">ডান</button>` : `—`);
 
                 tbody.innerHTML += `
                     <tr class="border-b text-center">
-                        <td class="p-3 text-left font-bold text-emerald-600">${item.id}</td>
-                        <td class="p-3 text-left"><b>${item.itemName}</b> (Qty: ${item.quantity})<br><span class="text-slate-400 text-[11px]">Dept: ${item.department} | বাজেট: ৳${item.estimatedCost}</span></td>
+                        <td class="p-3 text-left font-bold text-emerald-600">${item["ID"]}</td>
+                        <td class="p-3 text-left"><b>${item["মালামালের নাম"]}</b> (Qty: ${item["পরিমাণ"]})<br><span class="text-slate-400 text-[11px]">Dept: ${item["ডিপার্টমেন্ট"]} | বাজেট: ৳${item["আনুমানিক খরচ"]}</span></td>
                         <td class="p-3">${deptAction}</td>
                         <td class="p-3">${finalAction}</td>
                         <td class="p-3">${actionCol}</td>
