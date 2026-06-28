@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modina Auto Parts Ltd. - Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link class="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>.header-login-container { display: flex !important; align-items: center !important; gap: 10px; }</style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800" onload="loadAllData()">
@@ -100,10 +100,10 @@
                         </form>
                     </div>
 
-                    <!-- Super Admin Panel -->
+                    <!-- Admin User Creation Panel (Super_Admin & Dept_Head দুজনেই পাবে) -->
                     <div id="superAdminPanel" class="hidden bg-white p-5 rounded-xl border border-amber-200 shadow-sm bg-amber-50/30">
                         <h3 class="text-sm font-bold mb-4 border-b pb-2 text-amber-800 uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-plus text-amber-600"></i> নতুন ইউজার তৈরি (Super Admin)
+                            <i class="fa-solid fa-user-plus text-amber-600"></i> নতুন ইউজার তৈরি (Admin Access)
                         </h3>
                         <form id="userForm" onsubmit="createNewUser(event)" class="space-y-3">
                             <div>
@@ -112,23 +112,22 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600">রোল/পদবি *</label>
-                                <input type="text" id="newUserRole" placeholder="যেমন: Dept_Head, Super_Admin" required class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
+                                <select id="newUserRole" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
+                                    <option value="Super_Admin">Super_Admin</option>
+                                    <option value="Dept_Head">Dept_Head</option>
+                                </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট অ্যাসাইন করুন *</label>
                                 <select id="newUserDept" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
+                                    <option value="All">All Departments</option>
                                     <option value="HR & Admin">HR & Admin</option>
                                     <option value="Accounts">Accounts</option>
                                     <option value="Information Technology (IT)">Information Technology (IT)</option>
                                     <option value="Marketing">Marketing</option>
                                     <option value="Administration">Administration</option>
-                                    <option value="Sales(TVS)">Sales(TVS)</option>
                                     <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
                                     <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
-                                    <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
-                                    <option value="Retails Sales (Hossain International)">Retails Sales (Hossain International)</option>
-                                    <option value="Retails Sales (TVS Shopee)">Retails Sales (TVS Shopee)</option>
-                                    <option value="Retails Sales (Modina Autos)">Retails Sales (Modina Autos)</option>
                                 </select>
                             </div>
                             <button type="submit" class="w-full bg-amber-600 text-white font-bold py-2 rounded-lg text-xs cursor-pointer">ইউজার যোগ করুন</button>
@@ -163,11 +162,16 @@
     </div>
 
     <script>
-        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw13Gt-EvtK3H-Yi3f6N4zCROlCz7RXh2J-V_4gmBGn5mxVpYVW7yFs44vMkVnK_y5p/exec"; 
+        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgmM_PeNdtHWNyHeDL5eT6CWvB8uwUzCjaG1duJXxvAvULAqy9V4MhNkxam_2cPrUg/exec"; 
 
         let globalData = { Requisition: [], Users: [] };
         let currentRole = "Employee";
         let currentDept = "All";
+
+        // হেল্পার ফাংশন: লগইন করা পারসন অ্যাডমিন কিনা চেক করা
+        function isAdmin() {
+            return currentRole === "Super_Admin" || currentRole === "Dept_Head";
+        }
 
         async function loadAllData() {
             try {
@@ -182,18 +186,17 @@
         function verifyPin() {
             const pin = document.getElementById('pinInput').value.trim();
             const usersList = globalData.Users || [];
-            
             const user = usersList.find(u => u.Pin.toString().trim() === pin);
 
             if (user) {
                 currentRole = user.Role.toString().trim();
                 currentDept = user.Department.toString().trim(); 
                 
-                if(currentRole === "Super_Admin") {
-                    document.getElementById('roleBadge').innerText = `⚡ মোড: সুপার এডমিন`;
+                if(isAdmin()) {
+                    document.getElementById('roleBadge').innerText = `⚡ মোড: অ্যাডমিন নিয়ন্ত্রণ কারী (${currentRole})`;
                     document.getElementById('superAdminPanel').classList.remove('hidden');
                 } else {
-                    document.getElementById('roleBadge').innerText = `👔 মোড: হেড অফ ${currentDept}`;
+                    document.getElementById('roleBadge').innerText = `👔 মোড: সাধারণ স্টাফ`;
                 }
 
                 document.getElementById('loginSection').style.display = 'none';
@@ -204,7 +207,7 @@
                 document.getElementById('pinInput').value = "";
                 renderTable(globalData.Requisition);
             } else {
-                alert("ভুল পিন! এটি গুগল শিটের 'Users' ট্যাবে নেই।");
+                alert("ভুল পিন!");
             }
         }
 
@@ -238,6 +241,7 @@
                 data: {
                     "ID": randId, 
                     "তারিখ": today,
+                    "कर्मकर्ता ID": document.getElementById('empId').value,
                     "কর্মকর্তা ID": document.getElementById('empId').value,
                     "আবেদনকারী": document.getElementById('requester').value,
                     "ডিপার্টমেন্ট": document.getElementById('department').value,
@@ -291,34 +295,17 @@
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
             }
 
+            // লজিক: অ্যাডমিন হলে পুরো কোম্পানির সব দেখতে পাবে, অন্যথায় শুধুমাত্র সাধারণ ভিউ
             const filteredList = requisitions.filter(item => {
-                if (currentRole === "Employee" || currentRole === "Super_Admin") return true;
-
-                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
-                const loggedInDept = currentDept.trim().toLowerCase();
-
-                if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) {
-                    return true;
-                }
-                if (loggedInDept.includes("account") && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))) {
-                    return true;
-                }
+                if (currentRole === "Employee" || isAdmin()) return true;
                 return false;
             });
 
-            if(filteredList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400 font-bold py-6 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg">আপনার ডিপার্টমেন্টের কোনো পেন্ডিং রিকুইজিশন নেই।</td></tr>`; return;
-            }
-
             [...filteredList].reverse().forEach(item => {
-                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
-                const loggedInDept = currentDept.trim().toLowerCase();
-                const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept.includes("account") && itemDept.includes("account")));
-
-                // Dept Head Status Column Logic
+                // 1. Dept Head Status Column
                 let deptAction = item["Dept Head Status"] || "Pending";
                 if (deptAction === "Pending") {
-                    if (currentRole === "Super_Admin" || (isMyDept && currentRole !== "Employee")) {
+                    if (isAdmin()) { // সুপার অ্যাডমিন এবং ডিপার্টমেন্ট হেড দুজনেই পাবে
                         deptAction = `<div class="flex justify-center gap-1">
                                         <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-green-700">Approve</button>
                                         <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
@@ -326,10 +313,10 @@
                     }
                 }
 
-                // HR / Final Status Column Logic
+                // 2. HR / Final Status Column
                 let finalAction = item["Final Status"] || "Pending";
                 if (finalAction === "Pending") {
-                    if (currentRole === "Super_Admin") {
+                    if (isAdmin()) { // সুপার অ্যাডমিন এবং ডিপার্টমেন্ট হেড দুজনেই পাবে
                         finalAction = `<div class="flex justify-center gap-1">
                                         <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-green-700">Approve</button>
                                         <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
@@ -337,17 +324,15 @@
                     }
                 }
 
-                // 🎯 অ্যাকশন কলামের নতুন টেক্সট লজিক (টাকার পরিমাণের পরিবর্তে স্টেটাস দেখাবে)
+                // 3. Action Column Text Logic
                 let actionCol = "—";
                 
                 if (item["Dept Head Status"] === "Rejected" || item["Final Status"] === "Rejected") {
                     actionCol = `<span class="text-red-500 font-bold">Rejected</span>`;
                 } else if (item["প্রকৃত খরচ (Actual)"]) {
-                    // গুগল শিটে অলরেডি খরচ অ্যামাউন্ট থাকলে সফল দেখাবে
                     actionCol = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-green-200">Successful</span>`;
                 } else if (item["Final Status"] === "Approved") {
-                    // ফাইনাল অ্যাপ্রুভড কিন্তু খরচ সাবমিট করা হয়নি এখনো
-                    if (currentRole === "Super_Admin") {
+                    if (isAdmin()) { // সুপার অ্যাডমিন এবং ডিপার্টমেন্ট হেড দুজনেই ইনপুট দিতে পারবে
                         actionCol = `<div class="flex items-center justify-center"><input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-14 p-0.5 text-xs rounded-l focus:outline-none"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-r cursor-pointer hover:bg-blue-700 font-bold">ডান</button></div>`;
                     } else {
                         actionCol = `<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-amber-200">Under Processing</span>`;
