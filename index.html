@@ -115,16 +115,26 @@
                                 </div>
                                 
                                 <div id="itemsContainer" class="space-y-3 max-h-64 overflow-y-auto pr-1">
-                                    <!-- প্রথম রোডি ডিফল্ট থাকবে -->
+                                    <!-- ডিফল্ট ১ম রো (ইউনিট ড্রপডাউন সহ) -->
                                     <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
                                             <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                         </div>
-                                        <div class="grid grid-cols-2 gap-2">
-                                            <div>
-                                                <label class="block text-[10px] font-bold text-slate-500">পরিমাণ *</label>
-                                                <input type="number" required min="1" class="item-qty mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                                        <div class="grid grid-cols-3 gap-2">
+                                            <div class="col-span-2">
+                                                <label class="block text-[10px] font-bold text-slate-500">পরিমাণ ও ইউনিট *</label>
+                                                <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
+                                                    <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="পরিমাণ">
+                                                    <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
+                                                        <option value="Pcs">Pcs</option>
+                                                        <option value="KG">KG</option>
+                                                        <option value="Packet">Packet</option>
+                                                        <option value="Ltr">Ltr</option>
+                                                        <option value="Roll">Roll</option>
+                                                        <option value="Box">Box</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div>
                                                 <label class="block text-[10px] font-bold text-slate-500">খরচ *</label>
@@ -213,7 +223,7 @@
             return currentRole === "Super_Admin" || currentRole === "HR & Admin";
         }
 
-        // ডায়নামিক আইটেম রো যোগ করার ফাংশন
+        // নতুন আইটেম রো যোগ করার ফাংশন (ইউনিট ড্রপডাউন সহ)
         function addItemRow() {
             const container = document.getElementById('itemsContainer');
             const rowHtml = `
@@ -225,10 +235,20 @@
                         <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
                         <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500">পরিমাণ *</label>
-                            <input type="number" required min="1" class="item-qty mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="col-span-2">
+                            <label class="block text-[10px] font-bold text-slate-500">পরিমাণ ও ইউনিট *</label>
+                            <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
+                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="পরিমাণ">
+                                <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
+                                    <option value="Pcs">Pcs</option>
+                                    <option value="KG">KG</option>
+                                    <option value="Packet">Packet</option>
+                                    <option value="Ltr">Ltr</option>
+                                    <option value="Roll">Roll</option>
+                                    <option value="Box">Box</option>
+                                </select>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500">খরচ *</label>
@@ -239,7 +259,6 @@
             container.insertAdjacentHTML('beforeend', rowHtml);
         }
 
-        // আইটেম রো মুছে ফেলার ফাংশন
         function removeItemRow(btn) {
             btn.closest('.item-row').remove();
         }
@@ -302,7 +321,7 @@
             } catch(err) { alert("ব্যর্থ হয়েছে!"); }
         }
 
-        // একাধিক আইটেম একসাথে সাবমিট করার মূল ফাংশন
+        // এক সাথে একাধিক আইটেম সাবমিট করার আপডেট করা ফাংশন
         async function submitMultipleRequisitions(e) {
             e.preventDefault();
             
@@ -318,23 +337,26 @@
 
             const rowElements = document.querySelectorAll('.item-row');
             
-            // লুপ চালিয়ে প্রতিটি আইটেম আলাদা আলাদা রো হিসেবে তৈরি করা
             for (let row of rowElements) {
                 const itemName = row.querySelector('.item-name').value;
-                const itemQty = row.querySelector('.item-qty').value;
+                const itemQtyNum = row.querySelector('.item-qty').value;
+                const itemUnit = row.querySelector('.item-unit').value;
                 const estCost = row.querySelector('.item-cost').value;
+
+                // পরিমাণ এবং ইউনিট একসাথে ফরম্যাট করা (যেমন: 5 KG বা 10 Pcs)
+                const finalQtyString = `${itemQtyNum} ${itemUnit}`;
 
                 const payload = {
                     action: "insertRow",
                     targetSheet: "Requisition",
                     data: {
-                        "ID": randId, // সব আইটেমের রিকুইজিশন আইডি একই থাকবে
+                        "ID": randId,
                         "তারিখ": today,
-                        "কর্মকর্তা ID": empId,
+                        "कर्मকর্তা ID": empId,
                         "আবেদনকারী": requester,
                         "ডিপার্টমেন্ট": department,
                         "মালামালের নাম": itemName,
-                        "পরিমাণ": itemQty,
+                        "পরিমাণ": finalQtyString, // এখানে টেক্সট হিসেবে সংখ্যা + ইউনিট যাবে
                         "আনুমানিক খরচ": estCost,
                         "Dept Head Status": "Pending", 
                         "Final Status": "Pending",
@@ -350,19 +372,28 @@
                 }
             }
 
-            // সাবমিশন শেষে ফর্মটি সম্পূর্ণ রিসেট করা
+            // ফর্ম সম্পূর্ণ রিসেট করা
             document.getElementById('reqForm').reset();
-            // প্রথম রোর অতিরিক্ত সব ডাইনামিক রো রিমুভ করে ফর্ম আগের মতো করা
             document.getElementById('itemsContainer').innerHTML = `
                 <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
                         <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500">পরিমাণ *</label>
-                            <input type="number" required min="1" class="item-qty mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="col-span-2">
+                            <label class="block text-[10px] font-bold text-slate-500">পরিমাণ ও ইউনিট *</label>
+                            <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
+                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="পরিমাণ">
+                                <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
+                                    <option value="Pcs">Pcs</option>
+                                    <option value="KG">KG</option>
+                                    <option value="Packet">Packet</option>
+                                    <option value="Ltr">Ltr</option>
+                                    <option value="Roll">Roll</option>
+                                    <option value="Box">Box</option>
+                                </select>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500">খরচ *</label>
