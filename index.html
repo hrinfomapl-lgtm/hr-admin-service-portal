@@ -167,7 +167,7 @@
 
     <script>
         // ⚠️ আপনার গুগল অ্যাপস স্ক্রিপ্ট লিঙ্কটি এখানে বসান
-        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQY_JRDQ4yumJYRLvF7maBzogFsde4aSYrVzc6r_L9jtL0IhFhZ6cqmLoBlRGmGdaK/exec"; 
+        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnHAKwaCHmJj26tCW18LHZB0O0PNTjMQKrvK0c_0EDmfg-IlEfcCcjiDN6dZu5DBmJ/exec"; 
 
         let globalData = { Requisition: [], Users: [] };
         let currentRole = "Employee";
@@ -311,12 +311,27 @@
 
                 let actionCol = item["প্রকৃত খরচ (Actual)"] ? `৳${item["প্রকৃত খরচ (Actual)"]}` : (currentRole === "Super_Admin" && item["Final Status"] === "Approved" ? `<input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-16 text-xs"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-1 ml-1 rounded">ডান</button>` : `—`);
 
+                // ✨ নতুন আপডেট: বিবরণ ও কর্মকর্তার ঘরে এখন আবেদনকারীর নাম ও আইডি স্পষ্ট দেখা যাবে
                 tbody.innerHTML += `
                     <tr class="border-b text-center">
                         <td class="p-3 text-left font-bold text-emerald-600">${item["ID"]}</td>
-                        <td class="p-3 text-left"><b>${item["মালামালের নাম"]}</b> (Qty: ${item["পরিমাণ"]})<br><span class="text-slate-400 text-[11px]">Dept: ${item["ডিপার্টমেন্ট"]} | বাজেট: ৳${item["আনুমানিক খরচ"]}</span></td>
-                        <td class="p-3">${deptAction}</td>
-                        <td class="p-3">${finalAction}</td>
+                        <td class="p-3 text-left">
+                            <span class="text-xs font-bold text-slate-800">${item["মালামালের নাম"]}</span> 
+                            <span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-mono text-[10px]">Qty: ${item["পরিমাণ"]}</span>
+                            <br>
+                            <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
+                                <span class="text-blue-600 font-semibold"><i class="fa-solid fa-user text-[9px]"></i> ${item["আবেদনকারী"]}</span>
+                                <span class="text-slate-400">|</span>
+                                <span class="text-indigo-600 font-mono font-medium">ID: ${item["কর্মকর্তা ID"]}</span>
+                                <span class="text-slate-400">|</span>
+                                <span class="text-emerald-700">বাজেট: ৳${item["আনুমানিক খরচ"]}</span>
+                            </div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">
+                                <i class="fa-solid fa-building text-[9px]"></i> Dept: ${item["ডিপার্টমেন্ট"]} | <i class="fa-solid fa-calendar-days text-[9px]"></i> ${item["তারিখ"]}
+                            </div>
+                        </td>
+                        <td class="p-3 font-semibold">${deptAction}</td>
+                        <td class="p-3 font-semibold">${finalAction}</td>
                         <td class="p-3">${actionCol}</td>
                     </tr>`;
             });
