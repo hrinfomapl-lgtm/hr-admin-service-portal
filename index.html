@@ -115,7 +115,6 @@
                                 </div>
                                 
                                 <div id="itemsContainer" class="space-y-3 max-h-64 overflow-y-auto pr-1">
-                                    <!-- ডিফল্ট ১ম রো (ইউনিট ড্রপডাউন সহ) -->
                                     <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
@@ -179,6 +178,7 @@
                                     <option value="Sales(TVS)">Sales(TVS)</option>
                                     <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
                                     <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
+                                    <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
                                 </select>
                             </div>
                             <button type="submit" class="w-full bg-neutral-900 hover:bg-black text-white font-bold py-2 rounded-lg text-xs cursor-pointer transition-all">ইউজার যোগ করুন</button>
@@ -223,7 +223,6 @@
             return currentRole === "Super_Admin" || currentRole === "HR & Admin";
         }
 
-        // নতুন আইটেম রো যোগ করার ফাংশন (ইউনিট ড্রপডাউন সহ)
         function addItemRow() {
             const container = document.getElementById('itemsContainer');
             const rowHtml = `
@@ -321,7 +320,6 @@
             } catch(err) { alert("ব্যর্থ হয়েছে!"); }
         }
 
-        // এক সাথে একাধিক আইটেম সাবমিট করার আপডেট করা ফাংশন
         async function submitMultipleRequisitions(e) {
             e.preventDefault();
             
@@ -343,7 +341,6 @@
                 const itemUnit = row.querySelector('.item-unit').value;
                 const estCost = row.querySelector('.item-cost').value;
 
-                // পরিমাণ এবং ইউনিট একসাথে ফরম্যাট করা (যেমন: 5 KG বা 10 Pcs)
                 const finalQtyString = `${itemQtyNum} ${itemUnit}`;
 
                 const payload = {
@@ -356,7 +353,7 @@
                         "আবেদনকারী": requester,
                         "ডিপার্টমেন্ট": department,
                         "মালামালের নাম": itemName,
-                        "পরিমাণ": finalQtyString, // এখানে টেক্সট হিসেবে সংখ্যা + ইউনিট যাবে
+                        "পরিমাণ": finalQtyString, 
                         "আনুমানিক খরচ": estCost,
                         "Dept Head Status": "Pending", 
                         "Final Status": "Pending",
@@ -372,7 +369,6 @@
                 }
             }
 
-            // ফর্ম সম্পূর্ণ রিসেট করা
             document.getElementById('reqForm').reset();
             document.getElementById('itemsContainer').innerHTML = `
                 <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
@@ -443,9 +439,20 @@
 
             const filteredList = requisitions.filter(item => {
                 if (currentRole === "Employee" || isSuperPower()) return true;
-                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
-                const loggedInDept = currentDept.trim().toLowerCase();
+                
+                // দুই পাশের টেক্সটকে ছোট হাতের অক্ষরে রূপান্তর এবং স্পেস ক্লিন করে চেক করা হচ্ছে (যাতে Retail/Retails অমিল না হয়)
+                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
+                const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
+                
+                // মূল নাম বা আংশিক ম্যাচ (যেমন 'tazim' দুই দিকেই আছে কিনা)
                 if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) return true;
+                
+                // নির্দিষ্টভাবে Tazim Enterprise বা Retail Sales ক্রস-ম্যাচিং সেফটি
+                if (loggedInDept.includes("tazim") && itemDept.includes("tazim")) return true;
+                if (loggedInDept.includes("hossain") && itemDept.includes("hossain")) return true;
+                if (loggedInDept.includes("shopee") && itemDept.includes("shopee")) return true;
+                if (loggedInDept.includes("modina") && itemDept.includes("modina")) return true;
+                
                 if (loggedInDept.includes("account") && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))) return true;
                 return false;
             });
@@ -455,9 +462,11 @@
             }
 
             [...filteredList].reverse().forEach(item => {
-                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
-                const loggedInDept = currentDept.trim().toLowerCase();
-                const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept.includes("account") && itemDept.includes("account")));
+                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
+                const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
+                
+                // বাটন অ্যাক্টিভেশনের জন্য স্মার্ট ম্যাচিং রুল
+                const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept.includes("tazim") && itemDept.includes("tazim")) || (loggedInDept.includes("account") && itemDept.includes("account")));
 
                 let deptAction = item["Dept Head Status"] || "Pending";
                 if (deptAction === "Pending" && (isSuperPower() || (isMyDept && currentRole === "Dept_Head"))) {
@@ -500,7 +509,7 @@
                             <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
                                 <span class="text-neutral-900 font-bold"><i class="fa-solid fa-user text-[9px] text-modina"></i> ${item["আবেদনকারী"]}</span>
                                 <span class="text-slate-300">|</span>
-                                <span class="text-neutral-700 font-mono font-medium">ID: ${item["কর্মকর্তা ID"]}</span>
+                                <span class="text-neutral-700 font-mono font-medium">ID: ${item["कर्मकर्ता ID"]}</span>
                                 <span class="text-slate-300">|</span>
                                 <span class="text-modina font-bold">বাজেট: ৳${item["আনুমানিক খরচ"]}</span>
                             </div>
