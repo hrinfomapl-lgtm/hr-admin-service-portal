@@ -68,9 +68,18 @@
                                 <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট *</label>
                                 <select id="department" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
                                     <option value="">সিলেক্ট করুন</option>
-                                    <option value="Accounts">Accounts</option>
-                                    <option value="Sales">Sales</option>
                                     <option value="HR & Admin">HR & Admin</option>
+                                    <option value="Accounts">Accounts</option>
+                                    <option value="Information Technology (IT)">Information Technology (IT)</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Administration">Administration</option>
+                                    <option value="Sales(TVS)">Sales (TVS)</option>
+                                    <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
+                                    <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
+                                    <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
+                                    <option value="Retails Sales (Hossain International)">Retails Sales (Hossain International)</option>
+                                    <option value="Retails Sales (TVS Shopee)">Retails Sales (TVS Shopee)</option>
+                                    <option value="Retails Sales (Modina Autos)">Retails Sales (Modina Autos)</option>
                                 </select>
                             </div>
                             <div>
@@ -111,17 +120,18 @@
                             <div id="newUserDeptDiv">
                                 <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট অ্যাসাইন করুন *</label>
                                 <select id="newUserDept" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
-                                    <option value="Accounts">Accounts</option>
-                                    <option value="Sales & Marketing">Sales & Marketing</option>
                                     <option value="HR & Admin">HR & Admin</option>
+                                    <option value="Accounts">Accounts</option>
                                     <option value="Information Technology (IT)">Information Technology (IT)</option>
+                                    <option value="Marketing">Marketing</option>
                                     <option value="Administration">Administration</option>
+                                    <option value="Sales(TVS)">Sales (TVS)</option>
                                     <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
                                     <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
-                                    <option value="Retail Sales(Tazim Enterprise)">Retail Sales(Tazim Enterprise)</option>
-                                    <option value="Retail Sales(Hossain International)">Retail Sales(Hossain International)</option>
-                                    <option value="Retail Sales(TVS Shopee)">Retail Sales(TVS Shopee)</option>
-                                    <option value="Retail Sales(Modina Autos)">Retail Sales(Modina Autos)</option>
+                                    <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
+                                    <option value="Retails Sales (Hossain International)">Retails Sales (Hossain International)</option>
+                                    <option value="Retails Sales (TVS Shopee)">Retails Sales (TVS Shopee)</option>
+                                    <option value="Retails Sales (Modina Autos)">Retails Sales (Modina Autos)</option>
                                 </select>
                             </div>
                             <button type="submit" class="w-full bg-amber-600 text-white font-bold py-2 rounded-lg text-xs cursor-pointer">ইউজার যোগ করুন</button>
@@ -156,8 +166,8 @@
     </div>
 
     <script>
-        // ⚠️ আপনার নতুন গুগল স্ক্রিপ্ট লিংকটি এখানে বসান
-        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyytlS6qlDSMxjgEFKejzFiPhU4qvU5ZU2d92Y4qcdkL42caHYt4mSv9q2Ka907ie9h/exec"; 
+        // ⚠️ আপনার নতুন তৈরি করা মাস্টার অ্যাপস স্ক্রিপ্ট লিঙ্কটি এখানে বসান
+        const MASTER_SCRIPT_URL = "এখানে_আপনার_নতুন_ওয়েব_অ্যাপ_লিংক_বসিয়ে_দিন"; 
 
         let globalData = { Sheet1: [], Users: [] };
         let currentRole = "Employee";
@@ -167,7 +177,7 @@
             try {
                 const res = await fetch(MASTER_SCRIPT_URL);
                 globalData = await res.json();
-                renderTable(globalData.Sheet1); // Sheet1 হচ্ছে রিকুইজিশন ডাটা ট্যাব
+                renderTable(globalData.Sheet1); 
             } catch (error) {
                 document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">লিংক বা শিট চেক করুন।</td></tr>`;
             }
@@ -177,7 +187,6 @@
             const pin = document.getElementById('pinInput').value.trim();
             const usersList = globalData.Users || [];
             
-            // গুগল শিটের 'Users' ট্যাবের 'Pin' কলামের সাথে চেক করা হচ্ছে
             const user = usersList.find(u => u.Pin.toString() === pin);
 
             if (user) {
@@ -288,7 +297,6 @@
             if(!requisitions || requisitions.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
             }
-            // রিভার্স করে নতুনগুলো উপরে দেখানো
             [...requisitions].reverse().forEach(item => {
                 if(currentRole === "Dept_Head" && item.department !== currentDept) return;
 
