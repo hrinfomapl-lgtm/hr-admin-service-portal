@@ -25,13 +25,13 @@
     <!-- Top Navbar (Official Modina Theme Color) -->
     <nav class="bg-modina text-white p-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
         <div class="flex items-center space-x-3">
-            <!-- অফিশিয়াল লোগো ইমেজ ট্যাগ (image_0a76dc.png) -->
-            <div class="h-10 w-16 overflow-hidden rounded bg-black/10 flex items-center justify-center p-0.5 border border-white/10">
-                <img src="image_0a76dc.png" alt="Modina Logo" class="h-full w-full object-contain">
+            <!-- লোগো যাতে না ফাটে এবং ক্লিয়ার দেখায় সেজন্য অপ্টিমাইজড কন্টেইনার -->
+            <div class="flex items-center justify-center h-12 w-auto max-w-[120px]">
+                <img src="image_0a76dc.png" alt="Modina Logo" class="h-full w-full object-contain block">
             </div>
             <div>
-                <h1 class="text-sm font-black md:text-base tracking-wide text-white uppercase">Modina Auto Parts Ltd.</h1>
-                <p class="text-[11px] text-orange-100 font-medium">HR & Admin Service Portal</p>
+                <h1 class="text-sm font-black md:text-base tracking-wide text-white uppercase leading-none mb-0.5">Modina Auto Parts Ltd.</h1>
+                <p class="text-[11px] text-orange-100 font-medium leading-none">HR & Admin Service Portal</p>
             </div>
         </div>
         
@@ -39,7 +39,7 @@
             <div id="roleBadge" class="bg-black/30 px-2.5 py-1.5 rounded text-xs font-bold text-white border border-white/20 whitespace-nowrap">
                 👤 মোড: সাধারণ কর্মী (Read-Only)
             </div>
-            <!-- পিন ইনপুট বক্সের সাইজ বাড়িয়ে এবং টেক্সট অ্যালাইনমেন্ট ঠিক করে কেটে যাওয়ার সমস্যা সমাধান করা হলো -->
+            <!-- ম্যানেজার পিন বক্স -->
             <div id="loginSection" class="flex items-center bg-white/10 p-1 rounded border border-white/20">
                 <input type="password" id="pinInput" placeholder="ম্যানেজার পিন" class="bg-transparent text-white text-xs px-3 py-1.5 placeholder-orange-200 focus:outline-none w-32 text-left font-bold">
                 <button type="button" onclick="verifyPin()" class="bg-black text-white text-xs font-bold px-4 py-1.5 rounded cursor-pointer hover:bg-neutral-900 transition-all whitespace-nowrap">লগইন</button>
@@ -259,7 +259,6 @@
                 data: {
                     "ID": randId, 
                     "তারিখ": today,
-                    "कर्मकर्ता ID": document.getElementById('empId').value,
                     "কর্মকর্তা ID": document.getElementById('empId').value,
                     "আবেদনকারী": document.getElementById('requester').value,
                     "ডিপার্টমেন্ট": document.getElementById('department').value,
@@ -386,7 +385,7 @@
                             <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
                                 <span class="text-neutral-900 font-bold"><i class="fa-solid fa-user text-[9px] text-modina"></i> ${item["আবেদনকারী"]}</span>
                                 <span class="text-slate-300">|</span>
-                                <span class="text-neutral-700 font-mono font-medium">ID: ${item["कर्मकर्ता ID"] || item["कर्मकर्ता ID"] || item["কর্মকর্তা ID"]}</span>
+                                <span class="text-neutral-700 font-mono font-medium">ID: ${item["কর্মকর্তা ID"]}</span>
                                 <span class="text-slate-300">|</span>
                                 <span class="text-modina font-bold">বাজেট: ৳${item["আনুমানিক খরচ"]}</span>
                             </div>
