@@ -6,38 +6,51 @@
     <title>Modina Auto Parts Ltd. - Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>.header-login-container { display: flex !important; align-items: center !important; gap: 10px; }</style>
+    <style>
+        /* মদিনা অটো পার্টস লিমিটেডের অফিসিয়াল ব্র্যান্ড কালার কোড */
+        :root {
+            --modina-orange: #d3411a;    /* লোগোর গাঢ় কমলা-লাল শেড */
+            --modina-dark: #1e1e1e;      /* প্রিমিয়াম ব্ল্যাক/ডার্ক গ্রে শেড */
+            --modina-light-bg: #fff5f2;  /* সফট ব্র্যান্ড অ্যাকসেন্ট ব্যাকগ্রাউন্ড */
+        }
+        .bg-modina { background-color: var(--modina-orange) !important; }
+        .text-modina { color: var(--modina-orange) !important; }
+        .border-modina { border-color: var(--modina-orange) !important; }
+        .bg-modina-dark { background-color: var(--modina-dark) !important; }
+        .header-login-container { display: flex !important; align-items: center !important; gap: 10px; }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800" onload="loadAllData()">
 
-    <!-- Top Navbar -->
-    <nav class="bg-slate-900 text-white p-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
+    <!-- Top Navbar (Official Modina Theme Color) -->
+    <nav class="bg-modina text-white p-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
         <div class="flex items-center space-x-3">
-            <div class="bg-emerald-600 p-2 rounded font-bold text-lg">M</div>
+            <!-- লোগোর আইকনিক 'M' ডার্ক ব্যাকগ্রাউন্ডে -->
+            <div class="bg-black/20 p-2 rounded-lg font-black text-xl text-white border border-white/20">M</div>
             <div>
-                <h1 class="text-sm font-bold md:text-base">Modina Auto Parts Ltd.</h1>
-                <p class="text-[11px] text-slate-400">HR & Admin Service Portal</p>
+                <h1 class="text-sm font-black md:text-base tracking-wide text-white uppercase">Modina Auto Parts Ltd.</h1>
+                <p class="text-[11px] text-orange-100 font-medium">HR & Admin Service Portal</p>
             </div>
         </div>
         
         <div class="header-login-container">
-            <div id="roleBadge" class="bg-slate-800 px-2.5 py-1.5 rounded text-xs font-bold text-emerald-400 border border-slate-700">
+            <div id="roleBadge" class="bg-black/30 px-2.5 py-1.5 rounded text-xs font-bold text-white border border-white/20">
                 👤 মোড: সাধারণ কর্মী (Read-Only)
             </div>
-            <div id="loginSection" class="flex items-center bg-slate-800 p-1 rounded border border-slate-700">
-                <input type="password" id="pinInput" placeholder="ম্যানেজার পিন" class="bg-transparent text-white text-xs px-2 py-1 focus:outline-none w-24 text-center font-bold">
-                <button type="button" onclick="verifyPin()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded cursor-pointer">লগইন</button>
+            <div id="loginSection" class="flex items-center bg-white/10 p-1 rounded border border-white/20">
+                <input type="password" id="pinInput" placeholder="ম্যানেজার পিন" class="bg-transparent text-white text-xs px-2 py-1 placeholder-orange-200 focus:outline-none w-24 text-center font-bold">
+                <button type="button" onclick="verifyPin()" class="bg-black text-white text-xs font-bold px-3 py-1.5 rounded cursor-pointer hover:bg-neutral-900 transition-all">লগইন</button>
             </div>
-            <button id="logoutBtn" type="button" onclick="logout()" class="hidden bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded cursor-pointer">লগআউট</button>
+            <button id="logoutBtn" type="button" onclick="logout()" class="hidden bg-black text-white text-xs font-bold px-3 py-1.5 rounded cursor-pointer hover:bg-neutral-900 transition-all">লগআউট</button>
         </div>
     </nav>
 
     <div class="flex pt-16 min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 bg-slate-800 text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block">
-            <div class="p-4 text-xs font-semibold text-slate-500 uppercase">মেইন মেনু</div>
+        <aside class="w-64 bg-modina-dark text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-neutral-800">
+            <div class="p-4 text-xs font-bold text-neutral-500 uppercase tracking-wider">মেইন মেনু</div>
             <nav class="mt-2 px-2">
-                <a href="#" class="flex items-center px-3 py-3 rounded-lg text-sm bg-emerald-600 text-white">
+                <a href="#" class="flex items-center px-3 py-3 rounded-lg text-sm bg-modina text-white font-bold shadow-sm">
                     <i class="fa-solid fa-cart-plus mr-3"></i><span>মালামাল রিকুইজিশন</span>
                 </a>
             </nav>
@@ -50,23 +63,23 @@
                 <div class="space-y-6">
                     <!-- Requisition Form -->
                     <div id="formContainer" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                        <h3 class="text-sm font-bold mb-4 border-b pb-2 text-slate-800 uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-pen-to-square text-emerald-600"></i> নতুন আবেদন ফর্ম
+                        <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-to-square text-modina"></i> নতুন আবেদন ফর্ম
                         </h3>
                         <form id="reqForm" onsubmit="submitRequisition(event)" class="space-y-4">
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600">ID *</label>
-                                    <input type="text" id="empId" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                    <input type="text" id="empId" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600">নাম *</label>
-                                    <input type="text" id="requester" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                    <input type="text" id="requester" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট *</label>
-                                <select id="department" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                <select id="department" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                     <option value="">সিলেক্ট করুন</option>
                                     <option value="HR & Admin">HR & Admin</option>
                                     <option value="Accounts">Accounts</option>
@@ -84,35 +97,35 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600">মালামালের নাম *</label>
-                                <input type="text" id="itemName" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                <input type="text" id="itemName" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                             </div>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600">পরিমাণ *</label>
-                                    <input type="number" id="itemQty" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                    <input type="number" id="itemQty" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600">খরচ *</label>
-                                    <input type="number" id="estCost" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm">
+                                    <input type="number" id="estCost" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                 </div>
                             </div>
-                            <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer">সাবমিট করুন</button>
+                            <button type="submit" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-all shadow-sm">সাবমিট করুন</button>
                         </form>
                     </div>
 
-                    <!-- User Creation Panel (শুধু সুপার পাওয়ার এডমিনরাই দেখতে পাবেন) -->
-                    <div id="superAdminPanel" class="hidden bg-white p-5 rounded-xl border border-amber-200 shadow-sm bg-amber-50/30">
-                        <h3 class="text-sm font-bold mb-4 border-b pb-2 text-amber-800 uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-plus text-amber-600"></i> নতুন ইউজার তৈরি (Full Admin Access)
+                    <!-- User Creation Panel -->
+                    <div id="superAdminPanel" class="hidden bg-white p-5 rounded-xl border border-orange-200 shadow-sm" style="background-color: var(--modina-light-bg);">
+                        <h3 class="text-sm font-black mb-4 border-b pb-2 text-modina uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-plus"></i> নতুন ইউজার তৈরি (Full Admin Access)
                         </h3>
                         <form id="userForm" onsubmit="createNewUser(event)" class="space-y-3">
                             <div>
                                 <label class="block text-xs font-bold text-slate-600">পিন কোড সেট করুন *</label>
-                                <input type="number" id="newUserPin" required class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
+                                <input type="number" id="newUserPin" required class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600">রোল/পদবি *</label>
-                                <select id="newUserRole" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
+                                <select id="newUserRole" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                     <option value="Super_Admin">Super_Admin</option>
                                     <option value="HR & Admin">HR & Admin</option>
                                     <option value="Dept_Head">Dept_Head</option>
@@ -120,7 +133,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট অ্যাসাইন করুন *</label>
-                                <select id="newUserDept" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
+                                <select id="newUserDept" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                     <option value="All">All (সব দেখতে পারবে)</option>
                                     <option value="HR & Admin">HR & Admin</option>
                                     <option value="Accounts">Accounts</option>
@@ -132,20 +145,20 @@
                                     <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
                                 </select>
                             </div>
-                            <button type="submit" class="w-full bg-amber-600 text-white font-bold py-2 rounded-lg text-xs cursor-pointer">ইউজার যোগ করুন</button>
+                            <button type="submit" class="w-full bg-neutral-900 hover:bg-black text-white font-bold py-2 rounded-lg text-xs cursor-pointer transition-all">ইউজার যোগ করুন</button>
                         </form>
                     </div>
                 </div>
 
                 <!-- Right Table -->
                 <div id="tableContainer" class="bg-white p-5 rounded-xl shadow-sm xl:col-span-2 border border-slate-200">
-                    <h3 class="text-sm font-bold mb-4 border-b pb-2 text-slate-800 uppercase flex items-center gap-1.5">
-                        <i class="fa-solid fa-list text-emerald-600"></i> রিকুইজিশন ট্র্যাকিং হিস্ট্রি
+                    <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
+                        <i class="fa-solid fa-list text-modina"></i> রিকুইজিশন ট্র্যাকিং হিস্ট্রি
                     </h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold text-xs">
+                                <tr class="bg-slate-100 border-b border-slate-200 text-neutral-800 font-bold text-xs">
                                     <th class="p-3 w-16">ID</th>
                                     <th class="p-3">বিবরণ ও কর্মকর্তা</th>
                                     <th class="p-3 text-center">Dept Head</th>
@@ -170,7 +183,6 @@
         let currentRole = "Employee";
         let currentDept = "All";
 
-        // সুপার পাওয়ার ইউজার চেক (Super_Admin অথবা HR & Admin)
         function isSuperPower() {
             return currentRole === "Super_Admin" || currentRole === "HR & Admin";
         }
@@ -298,19 +310,15 @@
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
             }
 
-            // 🎯 ফিল্টারিং লজিক: 
             const filteredList = requisitions.filter(item => {
-                // ১. সাধারণ কর্মী এবং সুপার পাওয়ার ইউজাররা (Super_Admin, HR & Admin) সব দেখবে
                 if (currentRole === "Employee" || isSuperPower()) return true;
 
-                // ২. ডিপার্টমেন্টাল হেড হলে শুধুমাত্র তার ডিপার্টমেন্টের ডাটা ফিল্টার হবে
                 const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
                 const loggedInDept = currentDept.trim().toLowerCase();
 
                 if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) {
                     return true;
                 }
-                // স্পেশাল ম্যাচিং
                 if (loggedInDept.includes("account") && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))) {
                     return true;
                 }
@@ -318,7 +326,7 @@
             });
 
             if(filteredList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400 font-bold py-6 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg">আপনার ডিপার্টমেন্টের কোনো পেন্ডিং বা রিকুইজিশন রেকর্ড নেই।</td></tr>`; return;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400 font-bold py-6 bg-orange-50 text-orange-800 border border-orange-200 rounded-lg">আপনার ডিপার্টমেন্টের কোনো পেন্ডিং বা রিকুইজিশন রেকর্ড নেই।</td></tr>`; return;
             }
 
             [...filteredList].reverse().forEach(item => {
@@ -326,41 +334,40 @@
                 const loggedInDept = currentDept.trim().toLowerCase();
                 const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept.includes("account") && itemDept.includes("account")));
 
-                // ১. Dept Head Status কলাম বাটন কন্ট্রোল
+                // 1. Dept Head Status
                 let deptAction = item["Dept Head Status"] || "Pending";
                 if (deptAction === "Pending") {
-                    // সুপার পাওয়ার ইউজাররা সব পারবে অথবা নিজস্ব ডিপার্টমেন্টাল হেড তার ডিপার্টমেন্টেরটা পারবে
                     if (isSuperPower() || (isMyDept && currentRole === "Dept_Head")) {
                         deptAction = `<div class="flex justify-center gap-1">
-                                        <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-green-700">Approve</button>
+                                        <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
                                         <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
                                       </div>`;
                     }
                 }
 
-                // ২. HR & Admin Status কলাম বাটন কন্ট্রোল (শুধু Super_Admin এবং HR & Admin রা করতে পারবে)
+                // 2. HR & Admin Status
                 let finalAction = item["Final Status"] || "Pending";
                 if (finalAction === "Pending") {
                     if (isSuperPower()) { 
                         finalAction = `<div class="flex justify-center gap-1">
-                                        <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-green-700">Approve</button>
+                                        <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
                                         <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
                                        </div>`;
                     }
                 }
 
-                // ৩. অ্যাকশন কলামের নতুন টেক্সট ও ইনপুট লজিক (শুধু Super_Admin এবং HR & Admin রা ইনপুট দিতে পারবে)
+                // 3. Action Column Brand Styling
                 let actionCol = "—";
                 
                 if (item["Dept Head Status"] === "Rejected" || item["Final Status"] === "Rejected") {
                     actionCol = `<span class="text-red-500 font-bold">Rejected</span>`;
                 } else if (item["প্রকৃত খরচ (Actual)"]) {
-                    actionCol = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-green-200">Successful</span>`;
+                    actionCol = `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-emerald-200">Successful</span>`;
                 } else if (item["Final Status"] === "Approved") {
                     if (isSuperPower()) { 
-                        actionCol = `<div class="flex items-center justify-center"><input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-14 p-0.5 text-xs rounded-l focus:outline-none"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-r cursor-pointer hover:bg-blue-700 font-bold">ডান</button></div>`;
+                        actionCol = `<div class="flex items-center justify-center"><input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-14 p-0.5 text-xs rounded-l focus:outline-none focus:border-modina"><button onclick="submitPurchase(${item.rowIndex})" class="bg-modina text-white text-[10px] px-2 py-1 rounded-r cursor-pointer hover:bg-orange-800 font-bold">ডান</button></div>`;
                     } else {
-                        actionCol = `<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-amber-200">Under Processing</span>`;
+                        actionCol = `<span class="bg-orange-100 text-orange-800 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-orange-200">Under Processing</span>`;
                     }
                 } else if (item["Dept Head Status"] === "Approved") {
                     actionCol = `<span class="text-slate-400 font-medium italic">Under Processing</span>`;
@@ -368,17 +375,17 @@
 
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-slate-50/50">
-                        <td class="p-3 text-left font-bold text-emerald-600">${item["ID"]}</td>
+                        <td class="p-3 text-left font-black text-modina">${item["ID"]}</td>
                         <td class="p-3 text-left">
-                            <span class="text-xs font-bold text-slate-800">${item["মালামালের নাম"]}</span> 
-                            <span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-mono text-[10px]">Qty: ${item["পরিমাণ"]}</span>
+                            <span class="text-xs font-bold text-neutral-800">${item["মালামালের নাম"]}</span> 
+                            <span class="bg-neutral-100 text-neutral-800 px-1.5 py-0.5 rounded font-mono text-[10px] font-bold">Qty: ${item["পরিমাণ"]}</span>
                             <br>
                             <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
-                                <span class="text-blue-600 font-semibold"><i class="fa-solid fa-user text-[9px]"></i> ${item["আবেদনকারী"]}</span>
-                                <span class="text-slate-400">|</span>
-                                <span class="text-indigo-600 font-mono font-medium">ID: ${item["কর্মকর্তা ID"] || item["कर्मकर्ता ID"]}</span>
-                                <span class="text-slate-400">|</span>
-                                <span class="text-emerald-700">বাজেট: ৳${item["আনুমানিক খরচ"]}</span>
+                                <span class="text-neutral-900 font-bold"><i class="fa-solid fa-user text-[9px] text-modina"></i> ${item["আবেদনকারী"]}</span>
+                                <span class="text-slate-300">|</span>
+                                <span class="text-neutral-700 font-mono font-medium">ID: ${item["कर्मकर्ता ID"] || item["কর্মকর্তা ID"]}</span>
+                                <span class="text-slate-300">|</span>
+                                <span class="text-modina font-bold">বাজেট: ৳${item["আনুমানিক খরচ"]}</span>
                             </div>
                             <div class="text-[10px] text-slate-400 mt-0.5">
                                 <i class="fa-solid fa-building text-[9px]"></i> Dept: ${item["ডিপার্টমেন্ট"]} | <i class="fa-solid fa-calendar-days text-[9px]"></i> ${item["তারিখ"]}
