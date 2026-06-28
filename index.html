@@ -19,12 +19,13 @@
         .bg-modina-dark { background-color: var(--modina-dark) !important; }
         .header-login-container { display: flex !important; align-items: center !important; gap: 12px; }
         
-        /* লোগো ইমেজের চারপাশের কালো অংশ ক্রপ করে শুধু আসল গোল লোগোটি দেখানোর জন্য চমৎকার অবজেক্ট ফিট */
+       /* লোগো ইমেজটিকে চারপাশ থেকে একদম নিখুঁতভাবে মিডল পয়েন্টে নিয়ে আসার ফিক্স */
         .modina-logo-img {
             height: 100%;
-            width: 48px;
-            object-fit: cover;
-            object-position: -2px center; /* ইমেজ অনুযায়ী বামের লোগো পজিশন ফিক্সড */
+            width: 100%;
+            object-fit: contain;
+            object-position: center;
+            transform: scale(1.15); /* ফ্রেমের ভেতরের কালো বর্ডার দূর করে লোগো বড় করার জন্য */
             border-radius: 4px;
         }
     </style>
