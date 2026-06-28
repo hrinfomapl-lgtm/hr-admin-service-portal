@@ -166,8 +166,7 @@
     </div>
 
     <script>
-        // ⚠️ আপনার গুগল অ্যাপস স্ক্রিপ্ট লিঙ্কটি এখানে বসান
-        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGVHJEvPdjkuUjJamUuTshRrl_y0P0m-n69z8CJKZZursB5kBWs_YvspQMDlu3q-tJ/exec"; 
+        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxScKIc-uaF54asECQINBWAO0yHqNT2SzReltT3bwUTw4dMViD9-UC2SygBqN9NFtgi/exec"; 
 
         let globalData = { Requisition: [], Users: [] };
         let currentRole = "Employee";
@@ -193,12 +192,12 @@
                 currentRole = user.Role.toString().trim();
                 currentDept = user.Department.toString().trim(); 
                 
-                document.getElementById('roleBadge').innerText = currentRole === "Super_Admin" ? "⚡ মোড: সুপার এডমিন (HR)" : `👔 মোড: হেড অফ ${currentDept}`;
+                document.getElementById('roleBadge').innerText = (currentRole === "Super_Admin" || currentRole === "HR") ? "⚡ মোড: সুপার এডমিন (HR)" : `👔 মোড: হেড অফ ${currentDept}`;
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'block';
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 
-                if(currentRole === "Super_Admin") {
+                if(currentRole === "Super_Admin" || currentRole === "HR") {
                     document.getElementById('superAdminPanel').classList.remove('hidden');
                 }
                 document.getElementById('formContainer').style.display = 'none';
@@ -213,21 +212,17 @@
             e.preventDefault();
             const pinVal = document.getElementById('newUserPin').value;
             const roleVal = document.getElementById('newUserRole').value;
-            const deptVal = roleVal === "Super_Admin" ? "All" : document.getElementById('newUserDept').value;
+            const deptVal = (roleVal === "Super_Admin" || roleVal === "HR") ? "All" : document.getElementById('newUserDept').value;
 
             const payload = {
                 action: "insertRow",
                 targetSheet: "Users",
-                data: {
-                    "Pin": pinVal,
-                    "Role": roleVal,
-                    "Department": deptVal
-                }
+                data: { "Pin": pinVal, "Role": roleVal, "Department": deptVal }
             };
 
             try {
                 await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-                alert("নতুন ইউজার সরাসরি গুগল শিটের 'Users' ট্যাবে সেভ হয়েছে!");
+                alert("নতুন ইউজার সেভ হয়েছে!");
                 document.getElementById('userForm').reset();
                 loadAllData();
             } catch(err) { alert("ব্যর্থ হয়েছে!"); }
@@ -244,7 +239,7 @@
                 data: {
                     "ID": randId, 
                     "তারিখ": today,
-                    "कर्मकर्ता ID": document.getElementById('empId').value,
+                    "কর্মকর্তা ID": document.getElementById('empId').value,
                     "আবেদনকারী": document.getElementById('requester').value,
                     "ডিপার্টমেন্ট": document.getElementById('department').value,
                     "মালামালের নাম": document.getElementById('itemName').value,
@@ -281,7 +276,8 @@
         }
 
         function toggleDeptSelect() {
-            document.getElementById('newUserDeptDiv').style.display = document.getElementById('newUserRole').value === "Super_Admin" ? "none" : "block";
+            const role = document.getElementById('newUserRole').value;
+            document.getElementById('newUserDeptDiv').style.display = (role === "Super_Admin" || role === "HR") ? "none" : "block";
         }
 
         function logout() {
@@ -301,23 +297,19 @@
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
             }
 
-            // 🚀 আলটিমেট ফ্লেক্সিবল ফিল্টারিং (বাংলা/ইংরেজি বা আংশিক ম্যাচিং সমস্যার স্থায়ী সমাধান)
+            // 🎯 এখানে লজিক একদম সহজ এবং ১০০% লিক-প্রুফ করা হয়েছে
             const filteredList = requisitions.filter(item => {
-                if (currentRole === "Employee" || currentRole === "Super_Admin") return true;
+                // সাধারণ কর্মী অথবা সুপার এডমিন হলে সব ডাটা দেখবে
+                if (currentRole === "Employee" || currentRole === "Super_Admin" || currentRole === "HR") return true;
 
-                if (currentRole === "Dept_Head") {
-                    const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
-                    const loggedInDept = currentDept.trim().toLowerCase();
+                // CFO বা যেকোনো ম্যানেজারের পিন দিয়ে ঢুকলে যদি তার এসাইন করা ডিপার্টমেন্ট 'Accounts' হয়
+                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
+                const loggedInDept = currentDept.trim().toLowerCase();
 
-                    // যদি ডিপার্টমেন্টের নাম পুরোপুরি মিলে যায় অথবা একে অপরের অংশ হয় (যেমন 'Accounts' এবং 'Accounts')
-                    if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) {
-                        return true;
-                    }
-                    
-                    // স্পেশাল কেস: যদি কোনো কারণে টেক্সট বা ভাষা মিক্স থাকে
-                    if (loggedInDept === "accounts" && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))) {
-                        return true;
-                    }
+                // নামের মিল চেক (Accounts, accounts, একাউন্টস সব এলাউড)
+                if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) ||
+                    (loggedInDept === "accounts" && (itemDept.includes("account") || itemDept.includes("একাউন্ট")))) {
+                    return true;
                 }
                 return false;
             });
@@ -329,14 +321,12 @@
             [...filteredList].reverse().forEach(item => {
                 const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
                 const loggedInDept = currentDept.trim().toLowerCase();
-
-                // ম্যাচিং ফ্ল্যাগ চেক
                 const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept === "accounts" && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))));
 
-                // Dept Head-এর জন্য বাটন জেনারেট লজিক
+                // একাউন্টস হেড বা CFO যেকোনো রোল হলেই অ্যাকশন বাটন পাবে
                 let deptAction = item["Dept Head Status"] || "Pending";
                 if (deptAction === "Pending") {
-                    if (currentRole === "Dept_Head" && isMyDept) {
+                    if (isMyDept && currentRole !== "Employee") {
                         deptAction = `<div class="flex justify-center gap-1">
                                         <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-green-700">Approve</button>
                                         <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
@@ -344,10 +334,9 @@
                     }
                 }
 
-                // Super Admin-এর জন্য বাটন জেনারেট লজিক
                 let finalAction = item["Final Status"] || "Pending";
                 if (finalAction === "Pending") {
-                    if (currentRole === "Super_Admin") {
+                    if (currentRole === "Super_Admin" || currentRole === "HR") {
                         finalAction = `<div class="flex justify-center gap-1">
                                         <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-green-700">Approve</button>
                                         <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
@@ -355,7 +344,7 @@
                     }
                 }
 
-                let actionCol = item["প্রকৃত খরচ (Actual)"] ? `৳${item["প্রকৃত খরচ (Actual)"]}` : (currentRole === "Super_Admin" && item["Final Status"] === "Approved" ? `<input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-16 text-xs"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-1 ml-1 rounded cursor-pointer">ডান</button>` : `—`);
+                let actionCol = item["প্রকৃত খরচ (Actual)"] ? `৳${item["প্রকৃত খরচ (Actual)"]}` : ((currentRole === "Super_Admin" || currentRole === "HR") && item["Final Status"] === "Approved" ? `<input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-16 text-xs"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-1 ml-1 rounded cursor-pointer">ডান</button>` : `—`);
 
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-slate-50/50">
@@ -367,7 +356,7 @@
                             <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
                                 <span class="text-blue-600 font-semibold"><i class="fa-solid fa-user text-[9px]"></i> ${item["আবেদনকারী"]}</span>
                                 <span class="text-slate-400">|</span>
-                                <span class="text-indigo-600 font-mono font-medium">ID: ${item["कर्मकर्ता ID"] || item["কর্মকর্তা ID"]}</span>
+                                <span class="text-indigo-600 font-mono font-medium">ID: ${item["কর্মকর্তা ID"] || item["कर्मकर्ता ID"]}</span>
                                 <span class="text-slate-400">|</span>
                                 <span class="text-emerald-700">বাজেট: ৳${item["আনুমানিক খরচ"]}</span>
                             </div>
