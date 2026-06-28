@@ -244,7 +244,7 @@
                 data: {
                     "ID": randId, 
                     "তারিখ": today,
-                    "কর্মকর্তা ID": document.getElementById('empId').value,
+                    "कर्मकर्ता ID": document.getElementById('empId').value,
                     "আবেদনকারী": document.getElementById('requester').value,
                     "ডিপার্টমেন্ট": document.getElementById('department').value,
                     "মালামালের নাম": document.getElementById('itemName').value,
@@ -301,15 +301,24 @@
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
             }
 
-            // নিখুঁত ফিল্টারিং ম্যাচিং
+            // 🚀 আলটিমেট ফ্লেক্সিবল ফিল্টারিং (বাংলা/ইংরেজি বা আংশিক ম্যাচিং সমস্যার স্থায়ী সমাধান)
             const filteredList = requisitions.filter(item => {
-                // কলামের নাম গুগল শিট থেকে বাংলায় "ডিপার্টমেন্ট" হিসেবে আসছে
-                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
-                const loggedInDept = currentDept.trim().toLowerCase();
+                if (currentRole === "Employee" || currentRole === "Super_Admin") return true;
 
-                if (currentRole === "Employee") return true;
-                if (currentRole === "Super_Admin") return true;
-                if (currentRole === "Dept_Head" && itemDept === loggedInDept) return true;
+                if (currentRole === "Dept_Head") {
+                    const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
+                    const loggedInDept = currentDept.trim().toLowerCase();
+
+                    // যদি ডিপার্টমেন্টের নাম পুরোপুরি মিলে যায় অথবা একে অপরের অংশ হয় (যেমন 'Accounts' এবং 'Accounts')
+                    if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) {
+                        return true;
+                    }
+                    
+                    // স্পেশাল কেস: যদি কোনো কারণে টেক্সট বা ভাষা মিক্স থাকে
+                    if (loggedInDept === "accounts" && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))) {
+                        return true;
+                    }
+                }
                 return false;
             });
 
@@ -321,10 +330,13 @@
                 const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
                 const loggedInDept = currentDept.trim().toLowerCase();
 
+                // ম্যাচিং ফ্ল্যাগ চেক
+                const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept === "accounts" && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))));
+
                 // Dept Head-এর জন্য বাটন জেনারেট লজিক
                 let deptAction = item["Dept Head Status"] || "Pending";
                 if (deptAction === "Pending") {
-                    if (currentRole === "Dept_Head" && itemDept === loggedInDept) {
+                    if (currentRole === "Dept_Head" && isMyDept) {
                         deptAction = `<div class="flex justify-center gap-1">
                                         <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-green-700">Approve</button>
                                         <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
@@ -355,7 +367,7 @@
                             <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
                                 <span class="text-blue-600 font-semibold"><i class="fa-solid fa-user text-[9px]"></i> ${item["আবেদনকারী"]}</span>
                                 <span class="text-slate-400">|</span>
-                                <span class="text-indigo-600 font-mono font-medium">ID: ${item["कर्मकर्ता ID"]}</span>
+                                <span class="text-indigo-600 font-mono font-medium">ID: ${item["कर्मकर्ता ID"] || item["কর্মকর্তা ID"]}</span>
                                 <span class="text-slate-400">|</span>
                                 <span class="text-emerald-700">বাজেট: ৳${item["আনুমানিক খরচ"]}</span>
                             </div>
