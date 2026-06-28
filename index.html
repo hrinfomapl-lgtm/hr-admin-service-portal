@@ -7,11 +7,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* মদিনা অটো পার্টস লিমিটেডের অফিসিয়াল ব্র্যান্ড কালার কোড */
         :root {
-            --modina-orange: #d3411a;    /* লোগোর গাঢ় কমলা-লাল শেড */
-            --modina-dark: #1e1e1e;      /* প্রিমিয়াম ব্ল্যাক/ডার্ক গ্রে শেড */
-            --modina-light-bg: #fff5f2;  /* সফট ব্র্যান্ড অ্যাকসেন্ট ব্যাকগ্রাউন্ড */
+            --modina-orange: #d3411a;
+            --modina-dark: #1e1e1e;
+            --modina-light-bg: #fff5f2;
         }
         .bg-modina { background-color: var(--modina-orange) !important; }
         .text-modina { color: var(--modina-orange) !important; }
@@ -19,28 +18,23 @@
         .bg-modina-dark { background-color: var(--modina-dark) !important; }
         .header-login-container { display: flex !important; align-items: center !important; gap: 12px; }
         
-        /* সাইনবোর্ড লোগোটিকে বড় এবং চওড়া করার জন্য নিখুঁত স্কেলিং */
         .modina-logo-img {
             height: 100%;
             width: 100%;
             object-fit: contain;
             object-position: center;
-            transform: scale(1.3); /* ভেতরের টেক্সট ও আইকনকে আরও বড় ও স্পষ্ট করার জন্য */
+            transform: scale(1.3);
         }
     </style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800" onload="loadAllData()">
 
-    <!-- Top Navbar (Official Modina Theme Color) -->
+    <!-- Top Navbar -->
     <nav class="bg-modina text-white p-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
         <div class="flex items-center space-x-4">
-            
-            <!-- আপনার আইডিয়া অনুযায়ী দৈর্ঘ্য (Width) বাড়িয়ে h-12 এবং w-48 (চওড়া) করা হয়েছে -->
             <div class="flex items-center justify-center h-12 w-48 bg-neutral-900 rounded-lg border border-white/20 overflow-hidden shadow-inner p-1">
                 <img src="Logo_Modina.jpeg" alt="Modina Auto Parts Ltd." class="modina-logo-img">
             </div>
-
-            <!-- শুধু সাবটাইটেলটি রাখা হলো, মেইন নাম এখন ছবির ভেতরেই দেখা যাবে -->
             <div>
                 <p class="text-xs md:text-sm text-orange-50 font-bold tracking-wide border-l-2 border-white/30 pl-3 leading-none py-1">
                     HR & Admin Service Portal
@@ -52,7 +46,6 @@
             <div id="roleBadge" class="bg-black/30 px-2.5 py-1.5 rounded text-xs font-bold text-white border border-white/20 whitespace-nowrap">
                 👤 মোড: সাধারণ কর্মী (Read-Only)
             </div>
-            <!-- ম্যানেজার পিন বক্স -->
             <div id="loginSection" class="flex items-center bg-white/10 p-1 rounded border border-white/20">
                 <input type="password" id="pinInput" placeholder="ম্যানেজার পিন" class="bg-transparent text-white text-xs px-3 py-1.5 placeholder-orange-200 focus:outline-none w-32 text-left font-bold">
                 <button type="button" onclick="verifyPin()" class="bg-black text-white text-xs font-bold px-4 py-1.5 rounded cursor-pointer hover:bg-neutral-900 transition-all whitespace-nowrap">লগইন</button>
@@ -77,12 +70,12 @@
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 
                 <div class="space-y-6">
-                    <!-- Requisition Form -->
+                    <!-- Multiple Requisition Form -->
                     <div id="formContainer" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                         <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
                             <i class="fa-solid fa-pen-to-square text-modina"></i> নতুন আবেদন ফর্ম
                         </h3>
-                        <form id="reqForm" onsubmit="submitRequisition(event)" class="space-y-4">
+                        <form id="reqForm" onsubmit="submitMultipleRequisitions(event)" class="space-y-4">
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600">ID *</label>
@@ -111,21 +104,38 @@
                                     <option value="Retails Sales (Modina Autos)">Retails Sales (Modina Autos)</option>
                                 </select>
                             </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">মালামালের নাম *</label>
-                                <input type="text" id="itemName" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                            </div>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-600">পরিমাণ *</label>
-                                    <input type="number" id="itemQty" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+
+                            <!-- Dynamic Items Section -->
+                            <div class="border-t border-dashed pt-3 mt-2">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="block text-xs font-black text-neutral-700 uppercase tracking-wider">মালামালের তালিকা</label>
+                                    <button type="button" onclick="addItemRow()" class="bg-neutral-900 hover:bg-black text-white text-[11px] font-bold px-2 py-1 rounded flex items-center gap-1 cursor-pointer transition-all">
+                                        <i class="fa-solid fa-plus text-[9px]"></i> আইটেম যোগ করুন
+                                    </button>
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-600">খরচ *</label>
-                                    <input type="number" id="estCost" required min="1" class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                                
+                                <div id="itemsContainer" class="space-y-3 max-h-64 overflow-y-auto pr-1">
+                                    <!-- প্রথম রোডি ডিফল্ট থাকবে -->
+                                    <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
+                                            <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label class="block text-[10px] font-bold text-slate-500">পরিমাণ *</label>
+                                                <input type="number" required min="1" class="item-qty mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-bold text-slate-500">খরচ *</label>
+                                                <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <button type="submit" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-all shadow-sm">সাবমিট করুন</button>
+
+                            <button type="submit" id="submitBtn" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-all shadow-sm">সাবমিট করুন</button>
                         </form>
                     </div>
 
@@ -203,6 +213,37 @@
             return currentRole === "Super_Admin" || currentRole === "HR & Admin";
         }
 
+        // ডায়নামিক আইটেম রো যোগ করার ফাংশন
+        function addItemRow() {
+            const container = document.getElementById('itemsContainer');
+            const rowHtml = `
+                <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2 animated fadeIn">
+                    <button type="button" onclick="removeItemRow(this)" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-sm cursor-pointer">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
+                        <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500">পরিমাণ *</label>
+                            <input type="number" required min="1" class="item-qty mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500">খরচ *</label>
+                            <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                        </div>
+                    </div>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', rowHtml);
+        }
+
+        // আইটেম রো মুছে ফেলার ফাংশন
+        function removeItemRow(btn) {
+            btn.closest('.item-row').remove();
+        }
+
         async function loadAllData() {
             try {
                 const res = await fetch(MASTER_SCRIPT_URL);
@@ -261,35 +302,79 @@
             } catch(err) { alert("ব্যর্থ হয়েছে!"); }
         }
 
-        async function submitRequisition(e) {
+        // একাধিক আইটেম একসাথে সাবমিট করার মূল ফাংশন
+        async function submitMultipleRequisitions(e) {
             e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "সাবমিট হচ্ছে...";
+
             const randId = "REQ-" + Math.floor(100 + Math.random() * 900);
             const today = new Date().toLocaleDateString('bn-BD');
+            const empId = document.getElementById('empId').value;
+            const requester = document.getElementById('requester').value;
+            const department = document.getElementById('department').value;
 
-            const payload = {
-                action: "insertRow",
-                targetSheet: "Requisition",
-                data: {
-                    "ID": randId, 
-                    "তারিখ": today,
-                    "কর্মকর্তা ID": document.getElementById('empId').value,
-                    "আবেদনকারী": document.getElementById('requester').value,
-                    "ডিপার্টমেন্ট": document.getElementById('department').value,
-                    "মালামালের নাম": document.getElementById('itemName').value,
-                    "পরিমাণ": document.getElementById('itemQty').value,
-                    "আনুমানিক খরচ": document.getElementById('estCost').value,
-                    "Dept Head Status": "Pending", 
-                    "Final Status": "Pending",
-                    "প্রকৃত খরচ (Actual)": "", 
-                    "ডেলিভারি তারিখ": ""
+            const rowElements = document.querySelectorAll('.item-row');
+            
+            // লুপ চালিয়ে প্রতিটি আইটেম আলাদা আলাদা রো হিসেবে তৈরি করা
+            for (let row of rowElements) {
+                const itemName = row.querySelector('.item-name').value;
+                const itemQty = row.querySelector('.item-qty').value;
+                const estCost = row.querySelector('.item-cost').value;
+
+                const payload = {
+                    action: "insertRow",
+                    targetSheet: "Requisition",
+                    data: {
+                        "ID": randId, // সব আইটেমের রিকুইজিশন আইডি একই থাকবে
+                        "তারিখ": today,
+                        "কর্মকর্তা ID": empId,
+                        "আবেদনকারী": requester,
+                        "ডিপার্টমেন্ট": department,
+                        "মালামালের নাম": itemName,
+                        "পরিমাণ": itemQty,
+                        "আনুমানিক খরচ": estCost,
+                        "Dept Head Status": "Pending", 
+                        "Final Status": "Pending",
+                        "প্রকৃত খরচ (Actual)": "", 
+                        "ডেলিভারি তারিখ": ""
+                    }
+                };
+
+                try {
+                    await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
+                } catch(err) {
+                    console.error("Failed to submit row", err);
                 }
-            };
+            }
 
-            try {
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-                document.getElementById('reqForm').reset();
-                loadAllData();
-            } catch(err) {}
+            // সাবমিশন শেষে ফর্মটি সম্পূর্ণ রিসেট করা
+            document.getElementById('reqForm').reset();
+            // প্রথম রোর অতিরিক্ত সব ডাইনামিক রো রিমুভ করে ফর্ম আগের মতো করা
+            document.getElementById('itemsContainer').innerHTML = `
+                <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
+                        <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500">পরিমাণ *</label>
+                            <input type="number" required min="1" class="item-qty mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500">খরচ *</label>
+                            <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                        </div>
+                    </div>
+                </div>`;
+            
+            submitBtn.disabled = false;
+            submitBtn.innerText = "সাবমিট করুন";
+            alert("আপনার সবগুলো রিকুইজিশন একসাথে সফলভাবে সাবমিট হয়েছে!");
+            loadAllData();
         }
 
         async function updateStatus(rowIndex, columnName, newValue) {
@@ -327,16 +412,10 @@
 
             const filteredList = requisitions.filter(item => {
                 if (currentRole === "Employee" || isSuperPower()) return true;
-
                 const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
                 const loggedInDept = currentDept.trim().toLowerCase();
-
-                if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) {
-                    return true;
-                }
-                if (loggedInDept.includes("account") && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))) {
-                    return true;
-                }
+                if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) return true;
+                if (loggedInDept.includes("account") && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))) return true;
                 return false;
             });
 
@@ -349,31 +428,23 @@
                 const loggedInDept = currentDept.trim().toLowerCase();
                 const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept.includes("account") && itemDept.includes("account")));
 
-                // 1. Dept Head Status
                 let deptAction = item["Dept Head Status"] || "Pending";
-                if (deptAction === "Pending") {
-                    if (isSuperPower() || (isMyDept && currentRole === "Dept_Head")) {
-                        deptAction = `<div class="flex justify-center gap-1">
-                                        <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
-                                        <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
-                                      </div>`;
-                    }
+                if (deptAction === "Pending" && (isSuperPower() || (isMyDept && currentRole === "Dept_Head"))) {
+                    deptAction = `<div class="flex justify-center gap-1">
+                                    <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
+                                    <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
+                                  </div>`;
                 }
 
-                // 2. HR & Admin Status
                 let finalAction = item["Final Status"] || "Pending";
-                if (finalAction === "Pending") {
-                    if (isSuperPower()) { 
-                        finalAction = `<div class="flex justify-center gap-1">
-                                        <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
-                                        <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
-                                       </div>`;
-                    }
+                if (finalAction === "Pending" && isSuperPower()) {
+                    finalAction = `<div class="flex justify-center gap-1">
+                                    <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
+                                    <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
+                                   </div>`;
                 }
 
-                // 3. Action Column Brand Styling
                 let actionCol = "—";
-                
                 if (item["Dept Head Status"] === "Rejected" || item["Final Status"] === "Rejected") {
                     actionCol = `<span class="text-red-500 font-bold">Rejected</span>`;
                 } else if (item["প্রকৃত খরচ (Actual)"]) {
