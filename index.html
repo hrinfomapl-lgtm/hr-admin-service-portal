@@ -100,7 +100,7 @@
                         </form>
                     </div>
 
-                    <!-- Super Admin: User Creation Panel -->
+                    <!-- Super Admin Panel -->
                     <div id="superAdminPanel" class="hidden bg-white p-5 rounded-xl border border-amber-200 shadow-sm bg-amber-50/30">
                         <h3 class="text-sm font-bold mb-4 border-b pb-2 text-amber-800 uppercase flex items-center gap-1.5">
                             <i class="fa-solid fa-user-plus text-amber-600"></i> নতুন ইউজার তৈরি (Super Admin)
@@ -112,12 +112,9 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600">রোল/পদবি *</label>
-                                <select id="newUserRole" required class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm" onchange="toggleDeptSelect()">
-                                    <option value="Dept_Head">Department Head</option>
-                                    <option value="Super_Admin">Super Admin</option>
-                                </select>
+                                <input type="text" id="newUserRole" placeholder="যেমন: Dept_Head, Super_Admin" required class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
                             </div>
-                            <div id="newUserDeptDiv">
+                            <div>
                                 <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট অ্যাসাইন করুন *</label>
                                 <select id="newUserDept" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm">
                                     <option value="HR & Admin">HR & Admin</option>
@@ -166,7 +163,7 @@
     </div>
 
     <script>
-        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxScKIc-uaF54asECQINBWAO0yHqNT2SzReltT3bwUTw4dMViD9-UC2SygBqN9NFtgi/exec"; 
+        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw13Gt-EvtK3H-Yi3f6N4zCROlCz7RXh2J-V_4gmBGn5mxVpYVW7yFs44vMkVnK_y5p/exec"; 
 
         let globalData = { Requisition: [], Users: [] };
         let currentRole = "Employee";
@@ -192,14 +189,17 @@
                 currentRole = user.Role.toString().trim();
                 currentDept = user.Department.toString().trim(); 
                 
-                document.getElementById('roleBadge').innerText = (currentRole === "Super_Admin" || currentRole === "HR") ? "⚡ মোড: সুপার এডমিন (HR)" : `👔 মোড: হেড অফ ${currentDept}`;
+                if(currentRole === "Super_Admin") {
+                    document.getElementById('roleBadge').innerText = `⚡ মোড: সুপার এডমিন`;
+                    document.getElementById('superAdminPanel').classList.remove('hidden');
+                } else {
+                    document.getElementById('roleBadge').innerText = `👔 মোড: হেড অফ ${currentDept}`;
+                }
+
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'block';
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 
-                if(currentRole === "Super_Admin" || currentRole === "HR") {
-                    document.getElementById('superAdminPanel').classList.remove('hidden');
-                }
                 document.getElementById('formContainer').style.display = 'none';
                 document.getElementById('pinInput').value = "";
                 renderTable(globalData.Requisition);
@@ -210,16 +210,15 @@
 
         async function createNewUser(e) {
             e.preventDefault();
-            const pinVal = document.getElementById('newUserPin').value;
-            const roleVal = document.getElementById('newUserRole').value;
-            const deptVal = (roleVal === "Super_Admin" || roleVal === "HR") ? "All" : document.getElementById('newUserDept').value;
-
             const payload = {
                 action: "insertRow",
                 targetSheet: "Users",
-                data: { "Pin": pinVal, "Role": roleVal, "Department": deptVal }
+                data: {
+                    "Pin": document.getElementById('newUserPin').value,
+                    "Role": document.getElementById('newUserRole').value,
+                    "Department": document.getElementById('newUserDept').value
+                }
             };
-
             try {
                 await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
                 alert("নতুন ইউজার সেভ হয়েছে!");
@@ -275,11 +274,6 @@
             } catch(e){}
         }
 
-        function toggleDeptSelect() {
-            const role = document.getElementById('newUserRole').value;
-            document.getElementById('newUserDeptDiv').style.display = (role === "Super_Admin" || role === "HR") ? "none" : "block";
-        }
-
         function logout() {
             currentRole = "Employee"; currentDept = "All";
             document.getElementById('roleBadge').innerText = "👤 মোড: সাধারণ কর্মী (Read-Only)";
@@ -297,18 +291,16 @@
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
             }
 
-            // 🎯 এখানে লজিক একদম সহজ এবং ১০০% লিক-প্রুফ করা হয়েছে
             const filteredList = requisitions.filter(item => {
-                // সাধারণ কর্মী অথবা সুপার এডমিন হলে সব ডাটা দেখবে
-                if (currentRole === "Employee" || currentRole === "Super_Admin" || currentRole === "HR") return true;
+                if (currentRole === "Employee" || currentRole === "Super_Admin") return true;
 
-                // CFO বা যেকোনো ম্যানেজারের পিন দিয়ে ঢুকলে যদি তার এসাইন করা ডিপার্টমেন্ট 'Accounts' হয়
                 const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
                 const loggedInDept = currentDept.trim().toLowerCase();
 
-                // নামের মিল চেক (Accounts, accounts, একাউন্টস সব এলাউড)
-                if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) ||
-                    (loggedInDept === "accounts" && (itemDept.includes("account") || itemDept.includes("একাউন্ট")))) {
+                if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) {
+                    return true;
+                }
+                if (loggedInDept.includes("account") && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))) {
                     return true;
                 }
                 return false;
@@ -321,12 +313,12 @@
             [...filteredList].reverse().forEach(item => {
                 const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase();
                 const loggedInDept = currentDept.trim().toLowerCase();
-                const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept === "accounts" && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))));
+                const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept.includes("account") && itemDept.includes("account")));
 
-                // একাউন্টস হেড বা CFO যেকোনো রোল হলেই অ্যাকশন বাটন পাবে
+                // Dept Head Status Column Logic
                 let deptAction = item["Dept Head Status"] || "Pending";
                 if (deptAction === "Pending") {
-                    if (isMyDept && currentRole !== "Employee") {
+                    if (currentRole === "Super_Admin" || (isMyDept && currentRole !== "Employee")) {
                         deptAction = `<div class="flex justify-center gap-1">
                                         <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-green-700">Approve</button>
                                         <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
@@ -334,9 +326,10 @@
                     }
                 }
 
+                // HR / Final Status Column Logic
                 let finalAction = item["Final Status"] || "Pending";
                 if (finalAction === "Pending") {
-                    if (currentRole === "Super_Admin" || currentRole === "HR") {
+                    if (currentRole === "Super_Admin") {
                         finalAction = `<div class="flex justify-center gap-1">
                                         <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-green-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-green-700">Approve</button>
                                         <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
@@ -344,7 +337,24 @@
                     }
                 }
 
-                let actionCol = item["প্রকৃত খরচ (Actual)"] ? `৳${item["প্রকৃত খরচ (Actual)"]}` : ((currentRole === "Super_Admin" || currentRole === "HR") && item["Final Status"] === "Approved" ? `<input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-16 text-xs"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-1 ml-1 rounded cursor-pointer">ডান</button>` : `—`);
+                // 🎯 অ্যাকশন কলামের নতুন টেক্সট লজিক (টাকার পরিমাণের পরিবর্তে স্টেটাস দেখাবে)
+                let actionCol = "—";
+                
+                if (item["Dept Head Status"] === "Rejected" || item["Final Status"] === "Rejected") {
+                    actionCol = `<span class="text-red-500 font-bold">Rejected</span>`;
+                } else if (item["প্রকৃত খরচ (Actual)"]) {
+                    // গুগল শিটে অলরেডি খরচ অ্যামাউন্ট থাকলে সফল দেখাবে
+                    actionCol = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-green-200">Successful</span>`;
+                } else if (item["Final Status"] === "Approved") {
+                    // ফাইনাল অ্যাপ্রুভড কিন্তু খরচ সাবমিট করা হয়নি এখনো
+                    if (currentRole === "Super_Admin") {
+                        actionCol = `<div class="flex items-center justify-center"><input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-14 p-0.5 text-xs rounded-l focus:outline-none"><button onclick="submitPurchase(${item.rowIndex})" class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-r cursor-pointer hover:bg-blue-700 font-bold">ডান</button></div>`;
+                    } else {
+                        actionCol = `<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-amber-200">Under Processing</span>`;
+                    }
+                } else if (item["Dept Head Status"] === "Approved") {
+                    actionCol = `<span class="text-slate-400 font-medium italic">Under Processing</span>`;
+                }
 
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-slate-50/50">
@@ -366,7 +376,7 @@
                         </td>
                         <td class="p-3 text-center font-semibold text-xs">${deptAction}</td>
                         <td class="p-3 text-center font-semibold text-xs">${finalAction}</td>
-                        <td class="p-3 text-center">${actionCol}</td>
+                        <td class="p-3 text-center font-bold">${actionCol}</td>
                     </tr>`;
             });
         }
