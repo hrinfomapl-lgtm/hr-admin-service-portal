@@ -25,6 +25,50 @@
             object-position: center;
             transform: scale(1.3);
         }
+
+        /* HR Form Dropdown Styles based on image_16.png layout */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all;
+            border-width: 1px;
+            border-color: transparent;
+        }
+        
+        .main-menu-btn {
+            background-color: var(--modina-orange);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .dropdown-container {
+            display: none;
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 4px;
+            padding: 4px 8px;
+        }
+
+        .dropdown-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all;
+        }
+        
+        .dropdown-link:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: white;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800" onload="loadAllData()">
@@ -55,13 +99,37 @@
     </nav>
 
     <div class="flex pt-16 min-h-screen">
-        <!-- Sidebar -->
+        <!-- Sidebar with new HR Form menu based on image_16.png -->
         <aside class="w-64 bg-modina-dark text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-neutral-800">
             <div class="p-4 text-xs font-bold text-neutral-500 uppercase tracking-wider">মেইন মেনু</div>
-            <nav class="mt-2 px-2">
-                <a href="#" class="flex items-center px-3 py-3 rounded-lg text-sm bg-modina text-white font-bold shadow-sm">
-                    <i class="fa-solid fa-cart-plus mr-3"></i><span>মালামাল রিকুইজিশন</span>
+            <nav class="mt-2 px-2 space-y-1">
+                
+                <!-- Existing Goods Requisition Menu -->
+                <a href="#" class="sidebar-link main-menu-btn">
+                    <i class="fa-solid fa-cart-plus mr-3"></i><span>ma_lamal Rikuyijisana</span>
                 </a>
+
+                <!-- New HR Form Menu with Dropdown functionality -->
+                <div class="relative">
+                    <button type="button" onclick="toggleHrDropdown()" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-file-invoice mr-3"></i><span>HR Form</span>
+                        <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                    </button>
+                    <div id="hrDropdown" class="dropdown-container">
+                        <!-- এখানে Leave Form এর আসল রূপান্তরিত গিটহ্যাক লিঙ্কটি বসিয়ে দেওয়া হয়েছে -->
+                        <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/a3b48e45fd59543eae8c1def96ed1f390b00c3ff/Leave%20Form.pdf" class="dropdown-link" target="_blank">
+                            <i class="fa-solid fa-calendar-minus mr-2 text-xs"></i> 1. Leave form
+                        </a>
+                        <!-- বাকি দুটি ফর্মের লিঙ্ক পরে এভাবে পরিবর্তন করে নিতে পারবেন -->
+                        <a href="#" class="dropdown-link" target="_blank">
+                            <i class="fa-solid fa-clock mr-2 text-xs"></i> 2. Late Attendance Form
+                        </a>
+                        <a href="#" class="dropdown-link" target="_blank">
+                            <i class="fa-solid fa-door-open mr-2 text-xs"></i> 3. Early Leave Form
+                        </a>
+                    </div>
+                </div>
+
             </nav>
         </aside>
 
@@ -73,7 +141,7 @@
                     <!-- Multiple Requisition Form -->
                     <div id="formContainer" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                         <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-pen-to-square text-modina"></i> নতুন আবেদন ফর্ম
+                            <i class="fa-solid fa-pen-to-square text-modina"></i> nyuna abedana pharma
                         </h3>
                         <form id="reqForm" onsubmit="submitMultipleRequisitions(event)" class="space-y-4">
                             <div class="grid grid-cols-2 gap-3">
@@ -82,14 +150,14 @@
                                     <input type="text" id="empId" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-600">নাম *</label>
+                                    <label class="block text-xs font-bold text-slate-600">nama *</label>
                                     <input type="text" id="requester" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট *</label>
+                                <label class="block text-xs font-bold text-slate-600">dipartamenta *</label>
                                 <select id="department" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                    <option value="">সিলেক্ট করুন</option>
+                                    <option value="">silekta karuna</option>
                                     <option value="HR & Admin">HR & Admin</option>
                                     <option value="Accounts">Accounts</option>
                                     <option value="Information Technology (IT)">Information Technology (IT)</option>
@@ -108,23 +176,23 @@
                             <!-- Dynamic Items Section -->
                             <div class="border-t border-dashed pt-3 mt-2">
                                 <div class="flex justify-between items-center mb-2">
-                                    <label class="block text-xs font-black text-neutral-700 uppercase tracking-wider">মালামালের তালিকা</label>
+                                    <label class="block text-xs font-black text-neutral-700 uppercase tracking-wider">ma_lamalera talika</label>
                                     <button type="button" onclick="addItemRow()" class="bg-neutral-900 hover:bg-black text-white text-[11px] font-bold px-2 py-1 rounded flex items-center gap-1 cursor-pointer transition-all">
-                                        <i class="fa-solid fa-plus text-[9px]"></i> আইটেম যোগ করুন
+                                        <i class="fa-solid fa-plus text-[9px]"></i> aitema yoga karuna
                                     </button>
                                 </div>
                                 
                                 <div id="itemsContainer" class="space-y-3 max-h-64 overflow-y-auto pr-1">
                                     <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
                                         <div>
-                                            <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
+                                            <label class="block text-[10px] font-bold text-slate-500">ma_lamalera nama *</label>
                                             <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                         </div>
                                         <div class="grid grid-cols-3 gap-2">
                                             <div class="col-span-2">
-                                                <label class="block text-[10px] font-bold text-slate-500">পরিমাণ ও ইউনিট *</label>
+                                                <label class="block text-[10px] font-bold text-slate-500">parimana o yunita *</label>
                                                 <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
-                                                    <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="পরিমাণ">
+                                                    <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="parimana">
                                                     <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
                                                         <option value="Pcs">Pcs</option>
                                                         <option value="KG">KG</option>
@@ -136,7 +204,7 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <label class="block text-[10px] font-bold text-slate-500">খরচ *</label>
+                                                <label class="block text-[10px] font-bold text-slate-500">kharaca *</label>
                                                 <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                             </div>
                                         </div>
@@ -144,22 +212,22 @@
                                 </div>
                             </div>
 
-                            <button type="submit" id="submitBtn" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-all shadow-sm">সাবমিট করুন</button>
+                            <button type="submit" id="submitBtn" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-all shadow-sm">sabamita karuna</button>
                         </form>
                     </div>
 
                     <!-- User Creation Panel -->
                     <div id="superAdminPanel" class="hidden bg-white p-5 rounded-xl border border-orange-200 shadow-sm" style="background-color: var(--modina-light-bg);">
                         <h3 class="text-sm font-black mb-4 border-b pb-2 text-modina uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-plus"></i> নতুন ইউজার তৈরি (Full Admin Access)
+                            <i class="fa-solid fa-user-plus"></i> nyuna yujara tairi (Full Admin Access)
                         </h3>
                         <form id="userForm" onsubmit="createNewUser(event)" class="space-y-3">
                             <div>
-                                <label class="block text-xs font-bold text-slate-600">পিন কোড সেট করুন *</label>
+                                <label class="block text-xs font-bold text-slate-600">pina koda seta karuna *</label>
                                 <input type="number" id="newUserPin" required class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-600">রোল/পদবি *</label>
+                                <label class="block text-xs font-bold text-slate-600">rola/padabi *</label>
                                 <select id="newUserRole" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                                     <option value="Super_Admin">Super_Admin</option>
                                     <option value="HR & Admin">HR & Admin</option>
@@ -167,9 +235,9 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-600">ডিপার্টমেন্ট অ্যাসাইন করুন *</label>
+                                <label class="block text-xs font-bold text-slate-600">dipartamenta ayasaina karuna *</label>
                                 <select id="newUserDept" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                    <option value="All">All (সব দেখতে পারবে)</option>
+                                    <option value="All">All (saba dekhate parabe)</option>
                                     <option value="HR & Admin">HR & Admin</option>
                                     <option value="Accounts">Accounts</option>
                                     <option value="Information Technology (IT)">Information Technology (IT)</option>
@@ -181,7 +249,7 @@
                                     <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
                                 </select>
                             </div>
-                            <button type="submit" class="w-full bg-neutral-900 hover:bg-black text-white font-bold py-2 rounded-lg text-xs cursor-pointer transition-all">ইউজার যোগ করুন</button>
+                            <button type="submit" class="w-full bg-neutral-900 hover:bg-black text-white font-bold py-2 rounded-lg text-xs cursor-pointer transition-all">yujara yoga karuna</button>
                         </form>
                     </div>
                 </div>
@@ -189,21 +257,21 @@
                 <!-- Right Table -->
                 <div id="tableContainer" class="bg-white p-5 rounded-xl shadow-sm xl:col-span-2 border border-slate-200">
                     <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
-                        <i class="fa-solid fa-list text-modina"></i> রিকুইজিশন ট্র্যাকিং হিস্ট্রি
+                        <i class="fa-solid fa-list text-modina"></i> rikuyijisana tryakina histri
                     </h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
                                 <tr class="bg-slate-100 border-b border-slate-200 text-neutral-800 font-bold text-xs">
                                     <th class="p-3 w-16">ID</th>
-                                    <th class="p-3">বিবরণ ও কর্মকর্তা</th>
+                                    <th class="p-3">bibarana o karmakarta</th>
                                     <th class="p-3 text-center">Dept Head</th>
                                     <th class="p-3 text-center">HR & Admin</th>
-                                    <th class="p-3 text-center">অ্যাকশন</th>
+                                    <th class="p-3 text-center">ayakasana</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody" class="divide-y divide-slate-100 text-slate-600 text-xs">
-                                <tr><td colspan="5" class="p-8 text-center text-slate-400">ডাটা লোড হচ্ছে...</td></tr>
+                                <tr><td colspan="5" class="p-8 text-center text-slate-400">data loda hacche...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -223,6 +291,15 @@
             return currentRole === "Super_Admin" || currentRole === "HR & Admin";
         }
 
+        function toggleHrDropdown() {
+            const dropdown = document.getElementById('hrDropdown');
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            } else {
+                dropdown.style.display = 'block';
+            }
+        }
+
         function addItemRow() {
             const container = document.getElementById('itemsContainer');
             const rowHtml = `
@@ -231,14 +308,14 @@
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
+                        <label class="block text-[10px] font-bold text-slate-500">ma_lamalera nama *</label>
                         <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                     </div>
                     <div class="grid grid-cols-3 gap-2">
                         <div class="col-span-2">
-                            <label class="block text-[10px] font-bold text-slate-500">পরিমাণ ও ইউনিট *</label>
+                            <label class="block text-[10px] font-bold text-slate-500">parimana o yunita *</label>
                             <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
-                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="পরিমাণ">
+                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="parimana">
                                 <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
                                     <option value="Pcs">Pcs</option>
                                     <option value="KG">KG</option>
@@ -250,7 +327,7 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500">খরচ *</label>
+                            <label class="block text-[10px] font-bold text-slate-500">kharaca *</label>
                             <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                         </div>
                     </div>
@@ -268,7 +345,7 @@
                 globalData = await res.json();
                 renderTable(globalData.Requisition); 
             } catch (error) {
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">লিংক বা শিট চেক করুন।</td></tr>`;
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">linka ba sita ceka karuna।</td></tr>`;
             }
         }
 
@@ -282,10 +359,10 @@
                 currentDept = user.Department.toString().trim(); 
                 
                 if(isSuperPower()) {
-                    document.getElementById('roleBadge').innerText = `⚡ মোড: এডমিন প্যানেল (${currentRole})`;
+                    document.getElementById('roleBadge').innerText = `⚡ mode: edamina pyanela (${currentRole})`;
                     document.getElementById('superAdminPanel').classList.remove('hidden');
                 } else {
-                    document.getElementById('roleBadge').innerText = `👔 মোড: হেড অফ ${currentDept}`;
+                    document.getElementById('roleBadge').innerText = `👔 mode: heda aphha ${currentDept}`;
                     document.getElementById('superAdminPanel').classList.add('hidden');
                 }
 
@@ -297,7 +374,7 @@
                 document.getElementById('pinInput').value = "";
                 renderTable(globalData.Requisition);
             } else {
-                alert("ভুল পিন! এটি গুগল শিটের 'Users' ট্যাবে নেই।");
+                alert("bhula pina! eti gugala sitera 'Users' tyabe nei।");
             }
         }
 
@@ -314,10 +391,10 @@
             };
             try {
                 await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-                alert("নতুন ইউজার সেভ হয়েছে!");
+                alert("nyuna yujara sebha hayeche!");
                 document.getElementById('userForm').reset();
                 loadAllData();
-            } catch(err) { alert("ব্যর্থ হয়েছে!"); }
+            } catch(err) { alert("byartha hayeche!"); }
         }
 
         async function submitMultipleRequisitions(e) {
@@ -325,7 +402,7 @@
             
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.innerText = "সাবমিট হচ্ছে...";
+            submitBtn.innerText = "sabamita hacche...";
 
             const randId = "REQ-" + Math.floor(100 + Math.random() * 900);
             const today = new Date().toLocaleDateString('bn-BD');
@@ -348,17 +425,17 @@
                     targetSheet: "Requisition",
                     data: {
                         "ID": randId,
-                        "তারিখ": today,
-                        "कर्मকর্তা ID": empId,
-                        "আবেদনকারী": requester,
-                        "ডিপার্টমেন্ট": department,
-                        "মালামালের নাম": itemName,
-                        "পরিমাণ": finalQtyString, 
-                        "আনুমানিক খরচ": estCost,
+                        "tarikha": today,
+                        "karmakarta ID": empId,
+                        "abedanakari": requester,
+                        "dipartamenta": department,
+                        "ma_lamalera nama": itemName,
+                        "parimana": finalQtyString, 
+                        "anumanika kharaca": estCost,
                         "Dept Head Status": "Pending", 
                         "Final Status": "Pending",
-                        "প্রকৃত খরচ (Actual)": "", 
-                        "ডেলিভারি তারিখ": ""
+                        "prakrta kharaca (Actual)": "", 
+                        "delibhari tarikha": ""
                     }
                 };
 
@@ -373,14 +450,14 @@
             document.getElementById('itemsContainer').innerHTML = `
                 <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500">মালামালের নাম *</label>
+                        <label class="block text-[10px] font-bold text-slate-500">ma_lamalera nama *</label>
                         <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                     </div>
                     <div class="grid grid-cols-3 gap-2">
                         <div class="col-span-2">
-                            <label class="block text-[10px] font-bold text-slate-500">পরিমাণ ও ইউনিট *</label>
+                            <label class="block text-[10px] font-bold text-slate-500">parimana o yunita *</label>
                             <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
-                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="পরিমাণ">
+                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="parimana">
                                 <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
                                     <option value="Pcs">Pcs</option>
                                     <option value="KG">KG</option>
@@ -392,15 +469,15 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500">খরচ *</label>
+                            <label class="block text-[10px] font-bold text-slate-500">kharaca *</label>
                             <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                         </div>
                     </div>
                 </div>`;
             
             submitBtn.disabled = false;
-            submitBtn.innerText = "সাবমিট করুন";
-            alert("আপনার সবগুলো রিকুইজিশন একসাথে সফলভাবে সাবমিট হয়েছে!");
+            submitBtn.innerText = "sabamita karuna";
+            alert("apanara sabagulo rikuyijisana ekasathe saphalabhabe sabamita hayeche!");
             loadAllData();
         }
 
@@ -414,15 +491,15 @@
             const today = new Date().toLocaleDateString('bn-BD');
             
             try { 
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "প্রকৃত খরচ (Actual)", newValue: cost }) });
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "ডেলিভারি তারিখ", newValue: today }) });
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "prakrta kharaca (Actual)", newValue: cost }) });
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "delibhari tarikha", newValue: today }) });
                 loadAllData();
             } catch(e){}
         }
 
         function logout() {
             currentRole = "Employee"; currentDept = "All";
-            document.getElementById('roleBadge').innerText = "👤 মোড: সাধারণ কর্মী (Read-Only)";
+            document.getElementById('roleBadge').innerText = "👤 mode: sadharana karmari (Read-Only)";
             document.getElementById('loginSection').style.display = 'flex';
             document.getElementById('logoutBtn').style.display = 'none';
             document.getElementById('logoutBtn').classList.add('hidden');
@@ -434,38 +511,34 @@
         function renderTable(requisitions) {
             const tbody = document.getElementById('tableBody'); tbody.innerHTML = "";
             if(!requisitions || requisitions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">কোনো রেকর্ড নেই।</td></tr>`; return;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">kono rekorda nei।</td></tr>`; return;
             }
 
             const filteredList = requisitions.filter(item => {
                 if (currentRole === "Employee" || isSuperPower()) return true;
                 
-                // দুই পাশের টেক্সটকে ছোট হাতের অক্ষরে রূপান্তর এবং স্পেস ক্লিন করে চেক করা হচ্ছে (যাতে Retail/Retails অমিল না হয়)
-                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
+                const itemDept = (item["dipartamenta"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
                 const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
                 
-                // মূল নাম বা আংশিক ম্যাচ (যেমন 'tazim' দুই দিকেই আছে কিনা)
                 if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) return true;
                 
-                // নির্দিষ্টভাবে Tazim Enterprise বা Retail Sales ক্রস-ম্যাচিং সেফটি
                 if (loggedInDept.includes("tazim") && itemDept.includes("tazim")) return true;
                 if (loggedInDept.includes("hossain") && itemDept.includes("hossain")) return true;
                 if (loggedInDept.includes("shopee") && itemDept.includes("shopee")) return true;
                 if (loggedInDept.includes("modina") && itemDept.includes("modina")) return true;
                 
-                if (loggedInDept.includes("account") && (itemDept.includes("account") || itemDept.includes("একাউন্ট"))) return true;
+                if (loggedInDept.includes("account") && (itemDept.includes("account") || itemDept.includes("ekayunta"))) return true;
                 return false;
             });
 
             if(filteredList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400 font-bold py-6 bg-orange-50 text-orange-800 border border-orange-200 rounded-lg">আপনার ডিপার্টমেন্টের কোনো পেন্ডিং বা রিকুইজিশন রেকর্ড নেই।</td></tr>`; return;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400 font-bold py-6 bg-orange-50 text-orange-800 border border-orange-200 rounded-lg">apanara dipartamentera kono pendina ba rikuyijisana rekorda nei।</td></tr>`; return;
             }
 
             [...filteredList].reverse().forEach(item => {
-                const itemDept = (item["ডিপার্টমেন্ট"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
+                const itemDept = (item["dipartamenta"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
                 const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
                 
-                // বাটন অ্যাক্টিভেশনের জন্য স্মার্ট ম্যাচিং রুল
                 const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept.includes("tazim") && itemDept.includes("tazim")) || (loggedInDept.includes("account") && itemDept.includes("account")));
 
                 let deptAction = item["Dept Head Status"] || "Pending";
@@ -487,11 +560,11 @@
                 let actionCol = "—";
                 if (item["Dept Head Status"] === "Rejected" || item["Final Status"] === "Rejected") {
                     actionCol = `<span class="text-red-500 font-bold">Rejected</span>`;
-                } else if (item["প্রকৃত খরচ (Actual)"]) {
+                } else if (item["prakrta kharaca (Actual)"]) {
                     actionCol = `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-emerald-200">Successful</span>`;
                 } else if (item["Final Status"] === "Approved") {
                     if (isSuperPower()) { 
-                        actionCol = `<div class="flex items-center justify-center"><input type="number" id="act-${item.rowIndex}" placeholder="খরচ" class="border text-center w-14 p-0.5 text-xs rounded-l focus:outline-none focus:border-modina"><button onclick="submitPurchase(${item.rowIndex})" class="bg-modina text-white text-[10px] px-2 py-1 rounded-r cursor-pointer hover:bg-orange-800 font-bold">ডান</button></div>`;
+                        actionCol = `<div class="flex items-center justify-center"><input type="number" id="act-${item.rowIndex}" placeholder="kharaca" class="border text-center w-14 p-0.5 text-xs rounded-l focus:outline-none focus:border-modina"><button onclick="submitPurchase(${item.rowIndex})" class="bg-modina text-white text-[10px] px-2 py-1 rounded-r cursor-pointer hover:bg-orange-800 font-bold">dana</button></div>`;
                     } else {
                         actionCol = `<span class="bg-orange-100 text-orange-800 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-orange-200">Under Processing</span>`;
                     }
@@ -503,18 +576,18 @@
                     <tr class="border-b hover:bg-slate-50/50">
                         <td class="p-3 text-left font-black text-modina">${item["ID"]}</td>
                         <td class="p-3 text-left">
-                            <span class="text-xs font-bold text-neutral-800">${item["মালামালের নাম"]}</span> 
-                            <span class="bg-neutral-100 text-neutral-800 px-1.5 py-0.5 rounded font-mono text-[10px] font-bold">Qty: ${item["পরিমাণ"]}</span>
+                            <span class="text-xs font-bold text-neutral-800">${item["ma_lamalera nama"]}</span> 
+                            <span class="bg-neutral-100 text-neutral-800 px-1.5 py-0.5 rounded font-mono text-[10px] font-bold">Qty: ${item["parimana"]}</span>
                             <br>
                             <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
-                                <span class="text-neutral-900 font-bold"><i class="fa-solid fa-user text-[9px] text-modina"></i> ${item["আবেদনকারী"]}</span>
+                                <span class="text-neutral-900 font-bold"><i class="fa-solid fa-user text-[9px] text-modina"></i> ${item["abedanakari"]}</span>
                                 <span class="text-slate-300">|</span>
-                                <span class="text-neutral-700 font-mono font-medium">ID: ${item["कर्मकर्ता ID"]}</span>
+                                <span class="text-neutral-700 font-mono font-medium">ID: ${item["karmakarta ID"]}</span>
                                 <span class="text-slate-300">|</span>
-                                <span class="text-modina font-bold">বাজেট: ৳${item["আনুমানিক খরচ"]}</span>
+                                <span class="text-modina font-bold">bajeta: ৳${item["anumanika kharaca"]}</span>
                             </div>
                             <div class="text-[10px] text-slate-400 mt-0.5">
-                                <i class="fa-solid fa-building text-[9px]"></i> Dept: ${item["ডিপার্টমেন্ট"]} | <i class="fa-solid fa-calendar-days text-[9px]"></i> ${item["তারিখ"]}
+                                <i class="fa-solid fa-building text-[9px]"></i> Dept: ${item["dipartamenta"]} | <i class="fa-solid fa-calendar-days text-[9px]"></i> ${item["tarikha"]}
                             </div>
                         </td>
                         <td class="p-3 text-center font-semibold text-xs">${deptAction}</td>
