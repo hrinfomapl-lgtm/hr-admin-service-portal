@@ -113,7 +113,6 @@
                         <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
                     </button>
                     <div id="hrDropdown" class="dropdown-container">
-                        <!-- Leave Form Live Link Applied Successfully -->
                         <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/a3b48e45fd59543eae8c1def96ed1f390b00c3ff/Leave%20Form.pdf" class="dropdown-link" target="_blank">
                             <i class="fa-solid fa-calendar-minus mr-2 text-xs"></i> 1. Leave form
                         </a>
@@ -277,7 +276,7 @@
     </div>
 
     <script>
-        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgmM_PeNdtHWNyHeDL5eT6CWvB8uwUzCjaG1duJXxvAvULAqy9V4MhNkxam_2cPrUg/exec"; 
+        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLMUqqa6YDEEM4BgU9Rc1y7rqiEwWX9loxGRrZdl081N74_EsPuHjTFH46gJCNPquc/exec"; 
 
         let globalData = { Requisition: [], Users: [] };
         let currentRole = "Employee";
@@ -397,7 +396,7 @@
             submitBtn.innerText = "Submitting...";
 
             const randId = "REQ-" + Math.floor(100 + Math.random() * 900);
-            const today = new Date().toLocaleDateString('en-US');
+            const today = new Date().toLocaleDateString('bn-BD'); // Google Sheet এর সাথে সামঞ্জস্য রেখে বাংলা ডেট ফরম্যাট
             const empId = document.getElementById('empId').value;
             const requester = document.getElementById('requester').value;
             const department = document.getElementById('department').value;
@@ -412,22 +411,23 @@
 
                 const finalQtyString = `${itemQtyNum} ${itemUnit}`;
 
+                // আপনার আসল গুগল শিটের কলাম হেডার ম্যাচিং সাবমিশন পেলোড
                 const payload = {
                     action: "insertRow",
                     targetSheet: "Requisition",
                     data: {
                         "ID": randId,
-                        "tarikha": today,
-                        "karmakarta ID": empId,
-                        "abedanakari": requester,
-                        "dipartamenta": department,
-                        "ma_lamalera nama": itemName,
-                        "parimana": finalQtyString, 
-                        "anumanika kharaca": estCost,
+                        "Date": today,
+                        "Employee ID": empId,
+                        "Employee Name": requester,
+                        "Department": department,
+                        "Material Name": itemName,
+                        "Quantity & Unit": finalQtyString, 
+                        "Est. Cost": estCost,
                         "Dept Head Status": "Pending", 
                         "Final Status": "Pending",
-                        "prakrta kharaca (Actual)": "", 
-                        "delibhari tarikha": ""
+                        "Actual Cost": "", 
+                        "Delivery Date": ""
                     }
                 };
 
@@ -480,11 +480,11 @@
 
         async function submitPurchase(rowIndex) {
             const cost = document.getElementById(`act-${rowIndex}`).value; if(!cost) return;
-            const today = new Date().toLocaleDateString('en-US');
+            const today = new Date().toLocaleDateString('bn-BD');
             
             try { 
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "prakrta kharaca (Actual)", newValue: cost }) });
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "delibhari tarikha", newValue: today }) });
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Actual Cost", newValue: cost }) });
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Delivery Date", newValue: today }) });
                 loadAllData();
             } catch(e){}
         }
@@ -509,7 +509,7 @@
             const filteredList = requisitions.filter(item => {
                 if (currentRole === "Employee" || isSuperPower()) return true;
                 
-                const itemDept = (item["dipartamenta"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
+                const itemDept = (item["Department"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
                 const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
                 
                 if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) return true;
@@ -518,7 +518,7 @@
                 if (loggedInDept.includes("hossain") && itemDept.includes("hossain")) return true;
                 if (loggedInDept.includes("shopee") && itemDept.includes("shopee")) return true;
                 if (loggedInDept.includes("modina") && itemDept.includes("modina")) return true;
-                if (loggedInDept.includes("account") && (itemDept.includes("account") || itemDept.includes("ekayunta"))) return true;
+                if (loggedInDept.includes("account") && itemDept.includes("account")) return true;
                 return false;
             });
 
@@ -527,7 +527,7 @@
             }
 
             [...filteredList].reverse().forEach(item => {
-                const itemDept = (item["dipartamenta"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
+                const itemDept = (item["Department"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
                 const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
                 
                 const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept.includes("tazim") && itemDept.includes("tazim")) || (loggedInDept.includes("account") && itemDept.includes("account")));
@@ -551,7 +551,7 @@
                 let actionCol = "—";
                 if (item["Dept Head Status"] === "Rejected" || item["Final Status"] === "Rejected") {
                     actionCol = `<span class="text-red-500 font-bold">Rejected</span>`;
-                } else if (item["prakrta kharaca (Actual)"]) {
+                } else if (item["Actual Cost"]) {
                     actionCol = `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-emerald-200">Successful</span>`;
                 } else if (item["Final Status"] === "Approved") {
                     if (isSuperPower()) { 
@@ -563,14 +563,14 @@
                     actionCol = `<span class="text-slate-400 font-medium italic">Processing</span>`;
                 }
 
-                // Internal Mapping using your exact Sheet column headers to avoid 'undefined'
-                const matName = item["ma_lamalera nama"] || "N/A";
-                const matQty = item["parimana"] || "N/A";
-                const requesterName = item["abedanakari"] || "N/A";
-                const requesterId = item["karmakarta ID"] || "N/A";
-                const matBudget = item["anumanika kharaca"] || "0";
-                const matDept = item["dipartamenta"] || "N/A";
-                const reqDate = item["tarikha"] || "N/A";
+                // আপনার গুগল শিটের আসল হেডার বা কলাম নামের সাথে নিখুঁত ম্যাপিং
+                const matName = item["Material Name"] || "N/A";
+                const matQty = item["Quantity & Unit"] || "N/A";
+                const requesterName = item["Employee Name"] || "N/A";
+                const requesterId = item["Employee ID"] || "N/A";
+                const matBudget = item["Est. Cost"] || "0";
+                const matDept = item["Department"] || "N/A";
+                const reqDate = item["Date"] || "N/A";
 
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-slate-50/50">
