@@ -72,7 +72,6 @@
 </head>
 <body class="bg-gray-50 font-sans text-gray-800" onload="loadAllData()">
 
-    <!-- Top Navbar -->
     <nav class="bg-modina text-white p-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
         <div class="flex items-center space-x-4">
             <div class="flex items-center justify-center h-12 w-48 bg-neutral-900 rounded-lg border border-white/20 overflow-hidden shadow-inner p-1">
@@ -98,7 +97,6 @@
     </nav>
 
     <div class="flex pt-16 min-h-screen">
-        <!-- Sidebar -->
         <aside class="w-64 bg-modina-dark text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-neutral-800">
             <div class="p-4 text-xs font-bold text-neutral-500 uppercase tracking-wider">Main Menu</div>
             <nav class="mt-2 px-2 space-y-1">
@@ -116,10 +114,10 @@
                         <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/a3b48e45fd59543eae8c1def96ed1f390b00c3ff/Leave%20Form.pdf" class="dropdown-link" target="_blank">
                             <i class="fa-solid fa-calendar-minus mr-2 text-xs"></i> 1. Leave form
                         </a>
-                        <a href="#" class="dropdown-link" target="_blank">
+                        <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Late_Attendance_Form.pdf" class="dropdown-link" target="_blank">
                             <i class="fa-solid fa-clock mr-2 text-xs"></i> 2. Late Attendance Form
                         </a>
-                        <a href="#" class="dropdown-link" target="_blank">
+                        <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Early_Leave_Form.pdf" class="dropdown-link" target="_blank">
                             <i class="fa-solid fa-door-open mr-2 text-xs"></i> 3. Early Leave Form
                         </a>
                     </div>
@@ -128,12 +126,10 @@
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <main class="flex-1 md:ml-64 p-4 md:p-6 bg-slate-50">
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 
                 <div class="space-y-6">
-                    <!-- Requisition Form -->
                     <div id="formContainer" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                         <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
                             <i class="fa-solid fa-pen-to-square text-modina"></i> New Requisition Form
@@ -168,7 +164,6 @@
                                 </select>
                             </div>
 
-                            <!-- Items Section -->
                             <div class="border-t border-dashed pt-3 mt-2">
                                 <div class="flex justify-between items-center mb-2">
                                     <label class="block text-xs font-black text-neutral-700 uppercase tracking-wider">Material List</label>
@@ -211,7 +206,6 @@
                         </form>
                     </div>
 
-                    <!-- User Creation Panel -->
                     <div id="superAdminPanel" class="hidden bg-white p-5 rounded-xl border border-orange-200 shadow-sm" style="background-color: var(--modina-light-bg);">
                         <h3 class="text-sm font-black mb-4 border-b pb-2 text-modina uppercase flex items-center gap-1.5">
                             <i class="fa-solid fa-user-plus"></i> Create New Admin User
@@ -249,7 +243,6 @@
                     </div>
                 </div>
 
-                <!-- Right Table -->
                 <div id="tableContainer" class="bg-white p-5 rounded-xl shadow-sm xl:col-span-2 border border-slate-200">
                     <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
                         <i class="fa-solid fa-list text-modina"></i> Requisition Tracking History
@@ -396,7 +389,7 @@
             submitBtn.innerText = "Submitting...";
 
             const randId = "REQ-" + Math.floor(100 + Math.random() * 900);
-            const today = new Date().toLocaleDateString('bn-BD'); // Google Sheet এর সাথে সামঞ্জস্য রেখে বাংলা ডেট ফরম্যাট
+            const today = new Date().toLocaleDateString('bn-BD'); 
             const empId = document.getElementById('empId').value;
             const requester = document.getElementById('requester').value;
             const department = document.getElementById('department').value;
@@ -411,7 +404,6 @@
 
                 const finalQtyString = `${itemQtyNum} ${itemUnit}`;
 
-                // আপনার আসল গুগল শিটের কলাম হেডার ম্যাচিং সাবমিশন পেলোড
                 const payload = {
                     action: "insertRow",
                     targetSheet: "Requisition",
@@ -563,7 +555,6 @@
                     actionCol = `<span class="text-slate-400 font-medium italic">Processing</span>`;
                 }
 
-                // আপনার গুগল শিটের আসল হেডার বা কলাম নামের সাথে নিখুঁত ম্যাপিং
                 const matName = item["Material Name"] || "N/A";
                 const matQty = item["Quantity & Unit"] || "N/A";
                 const requesterName = item["Employee Name"] || "N/A";
