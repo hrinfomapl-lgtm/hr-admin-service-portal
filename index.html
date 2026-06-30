@@ -17,7 +17,7 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col antialiased">
 
-    <!-- Web App Header -->
+    <!-- Header -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -54,7 +54,7 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">User ID</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center left-0 pl-3.5 text-slate-400">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                             <i class="fa-solid fa-user-shield"></i>
                         </span>
                         <input type="text" id="userIdInput" placeholder="Enter your official ID" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-500 focus:bg-white transition-all duration-200">
@@ -67,16 +67,15 @@
             </div>
         </div>
 
-        <!-- Dashboard Section (Hidden by default) -->
+        <!-- Dashboard Section -->
         <div id="dashboard" class="hidden w-full space-y-6 animate-fade-in">
             
-            <!-- Employee Action: New Requisition Form -->
+            <!-- New Requisition Form (With VAT Department Added) -->
             <div id="requisitionFormCard" class="hidden bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
                 <div class="flex items-center gap-2.5 mb-5 pb-3 border-b border-slate-100">
                     <i class="fa-solid fa-square-plus text-indigo-500 text-lg"></i>
                     <h2 class="text-base font-bold text-slate-800">Create New Requisition</h2>
                 </div>
-                <!-- কলাম গ্রিড ৪ করা হয়েছে ডিপার্টমেন্ট যুক্ত করার জন্য -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
                     <div>
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Department</label>
@@ -84,7 +83,7 @@
                             <option value="">Select Department</option>
                             <option value="VAT">VAT</option>
                             <option value="Accounts">Accounts</option>
-                            <option value="HR">HR & Admin</option>
+                            <option value="HR & Admin">HR & Admin</option>
                             <option value="Store">Store</option>
                         </select>
                     </div>
@@ -150,7 +149,7 @@
         </div>
     </main>
 
-    <!-- Global App Configuration & Scripts -->
+    <!-- Scripts -->
     <script>
         const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLMUqqa6YDEEM4BgU9Rc1y7rqiEwWX9loxGRrZdl081N74_EsPuHjTFH46gJCNPquc/exec";
 
@@ -196,8 +195,6 @@
             if (currentSession.Role === "Employee") {
                 roleEl.className = "text-[11px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5 bg-blue-50 text-blue-700 border border-blue-100";
                 document.getElementById("requisitionFormCard").classList.remove("hidden");
-                
-                // যদি ইউজারের নিজস্ব ডিপার্টমেন্ট আগে থেকেই ফিক্সড থাকে, তবে ড্রপডাউন অটো-সিলেক্ট হবে
                 if(currentSession.Department) {
                     document.getElementById("matDept").value = currentSession.Department;
                 }
@@ -254,6 +251,7 @@
                             <p class="text-sm font-semibold text-slate-800 mt-0.5">${item["Employee Name"] || 'Unknown'}</p>
                             <p class="text-[11px] text-slate-500 font-medium">ID: ${item["Employee ID"] || 'N/A'} • ${item["Department"] || 'N/A'}</p>
                             
+                            <!-- Edit / Delete অপশন (শুধুমাত্র Pending অবস্থায় দেখাবে) -->
                             ${currentSession.Role === 'Employee' && item["Dept Head Status"] === 'Pending' ? `
                                 <div class="mt-1.5 flex gap-2">
                                     <button onclick="editRequisition(${item.rowIndex}, '${matName.replace(/'/g, "\\'")}', '${matQty.replace(/'/g, "\\'")}', ${matBudget})" class="text-blue-600 hover:text-blue-800 font-bold text-[10px] cursor-pointer flex items-center gap-0.5">
@@ -318,7 +316,7 @@
                 timestamp: new Date().toISOString(),
                 empId: currentSession.ID,
                 empName: currentSession.Name,
-                dept: dept, // ড্রপডাউন থেকে সিলেক্ট করা ডিপার্টমেন্ট (VAT ইত্যাদি) যাবে
+                dept: dept,
                 matName: name,
                 qty: qty,
                 budget: budget
