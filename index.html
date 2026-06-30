@@ -3,589 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modina Auto Parts Ltd. - Portal</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Store Portal - Material Requisition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --modina-orange: #d3411a;
-            --modina-dark: #1e1e1e;
-            --modina-light-bg: #fff5f2;
-        }
-        .bg-modina { background-color: var(--modina-orange) !important; }
-        .text-modina { color: var(--modina-orange) !important; }
-        .border-modina { border-color: var(--modina-orange) !important; }
-        .bg-modina-dark { background-color: var(--modina-dark) !important; }
-        .header-login-container { display: flex !important; align-items: center !important; gap: 12px; }
-        
-        .modina-logo-img {
-            height: 100%;
-            width: 100%;
-            object-fit: contain;
-            object-position: center;
-            transform: scale(1.3);
-        }
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all;
-            border-width: 1px;
-            border-color: transparent;
-        }
-        
-        .main-menu-btn {
-            background-color: var(--modina-orange);
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .dropdown-container {
-            display: none;
-            background-color: rgba(0,0,0,0.1);
-            border-radius: 8px;
-            margin-top: 4px;
-            padding: 4px 8px;
-        }
-
-        .dropdown-link {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 13px;
-            color: #cbd5e1;
-            cursor: pointer;
-            transition: all;
-        }
-        
-        .dropdown-link:hover {
-            background-color: rgba(255,255,255,0.05);
-            color: white;
-        }
-    </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800" onload="loadAllData()">
+<body class="bg-slate-100 min-h-screen py-8 px-4" onload="loadAllData()">
 
-    <nav class="bg-modina text-white p-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
-        <div class="flex items-center space-x-4">
-            <div class="flex items-center justify-center h-12 w-48 bg-neutral-900 rounded-lg border border-white/20 overflow-hidden shadow-inner p-1">
-                <img src="Logo_Modina.jpeg" alt="Modina Auto Parts Ltd." class="modina-logo-img">
-            </div>
-            <div>
-                <p class="text-xs md:text-sm text-orange-50 font-bold tracking-wide border-l-2 border-white/30 pl-3 leading-none py-1">
-                    HR & Admin Service Portal
-                </p>
-            </div>
-        </div>
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <div class="header-login-container">
-            <div id="roleBadge" class="bg-black/30 px-2.5 py-1.5 rounded text-xs font-bold text-white border border-white/20 whitespace-nowrap">
-                👤 Mode: General Employee (Read-Only)
+        <!-- Left Column: NEW REQUISITION FORM -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 lg:col-span-1 h-fit">
+            <div class="flex items-center gap-2 mb-6 pb-2 border-b border-slate-200">
+                <i class="fa-solid fa-pen-to-square text-orange-600 text-lg"></i>
+                <h2 class="text-base font-extrabold text-slate-800 uppercase tracking-wide">New Requisition Form</h2>
             </div>
-            <div id="loginSection" class="flex items-center bg-white/10 p-1 rounded border border-white/20">
-                <input type="password" id="pinInput" placeholder="Manager PIN" class="bg-transparent text-white text-xs px-3 py-1.5 placeholder-orange-200 focus:outline-none w-32 text-left font-bold">
-                <button type="button" onclick="verifyPin()" class="bg-black text-white text-xs font-bold px-4 py-1.5 rounded cursor-pointer hover:bg-neutral-900 transition-all whitespace-nowrap">Login</button>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Employee ID *</label>
+                        <input type="text" id="empId" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Name *</label>
+                        <input type="text" id="empName" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Department *</label>
+                    <select id="matDept" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                        <option value="">Select Department</option>
+                        <!-- Vat Department added at the top -->
+                        <option value="Vat">Vat</option> 
+                        <option value="HR & Admin">HR & Admin</option>
+                        <option value="Accounts">Accounts</option>
+                        <option value="Information Technology (IT)">Information Technology (IT)</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Administration">Administration</option>
+                        <option value="Sales(TVS)">Sales(TVS)</option>
+                        <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
+                        <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
+                        <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
+                        <option value="Retails Sales (Hossain International)">Retails Sales (Hossain International)</option>
+                        <option value="Retails Sales (TVS Shopee)">Retails Sales (TVS Shopee)</option>
+                        <option value="Retails Sales (Modina Autos)">Retails Sales (Modina Autos)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Material Description *</label>
+                    <input type="text" id="matName" placeholder="e.g., khata, Sticky notepad" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Qty & Unit *</label>
+                        <input type="text" id="matQty" placeholder="e.g., 2 Pcs" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Budget (৳) *</label>
+                        <input type="number" id="matBudget" placeholder="e.g., 20" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                    </div>
+                </div>
+
+                <button onclick="submitRequisition()" class="w-full mt-2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-sm transition-all shadow-sm">
+                    Submit Requisition
+                </button>
             </div>
-            <button id="logoutBtn" type="button" onclick="logout()" class="hidden bg-black text-white text-xs font-bold px-4 py-1.5 rounded cursor-pointer hover:bg-neutral-900 transition-all">Logout</button>
         </div>
-    </nav>
 
-    <div class="flex pt-16 min-h-screen">
-        <aside class="w-64 bg-modina-dark text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-neutral-800">
-            <div class="p-4 text-xs font-bold text-neutral-500 uppercase tracking-wider">Main Menu</div>
-            <nav class="mt-2 px-2 space-y-1">
-                
-                <a href="#" class="sidebar-link main-menu-btn">
-                    <i class="fa-solid fa-cart-plus mr-3"></i><span>Material Requisition</span>
-                </a>
-
-                <div class="relative">
-                    <button type="button" onclick="toggleHrDropdown()" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
-                        <i class="fa-solid fa-file-invoice mr-3"></i><span>HR Form</span>
-                        <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
-                    </button>
-                    <div id="hrDropdown" class="dropdown-container">
-                        <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/a3b48e45fd59543eae8c1def96ed1f390b00c3ff/Leave%20Form.pdf" class="dropdown-link" target="_blank">
-                            <i class="fa-solid fa-calendar-minus mr-2 text-xs"></i> 1. Leave form
-                        </a>
-                        <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Late_Attendance_Form.pdf" class="dropdown-link" target="_blank">
-                            <i class="fa-solid fa-clock mr-2 text-xs"></i> 2. Late Attendance Form
-                        </a>
-                        <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Early_Leave_Form.pdf" class="dropdown-link" target="_blank">
-                            <i class="fa-solid fa-door-open mr-2 text-xs"></i> 3. Early Leave Form
-                        </a>
-                    </div>
+        <!-- Right Column: REQUISITION TRACKING HISTORY -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 lg:col-span-2 flex flex-col">
+            <div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-200">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-orange-600 text-lg"></i>
+                    <h2 class="text-base font-extrabold text-slate-800 uppercase tracking-wide">Requisition Tracking History</h2>
                 </div>
-
-            </nav>
-        </aside>
-
-        <main class="flex-1 md:ml-64 p-4 md:p-6 bg-slate-50">
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                
-                <div class="space-y-6">
-                    <div id="formContainer" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                        <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-pen-to-square text-modina"></i> New Requisition Form
-                        </h3>
-                        <form id="reqForm" onsubmit="submitMultipleRequisitions(event)" class="space-y-4">
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-600">Employee ID *</label>
-                                    <input type="text" id="empId" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-600">Name *</label>
-                                    <input type="text" id="requester" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">Department *</label>
-                                <select id="department" required class="mt-1 w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                    <option value="">Select Department</option>
-                                    <option value="HR & Admin">HR & Admin</option>
-                                    <option value="Accounts">Accounts</option>
-                                    <option value="Information Technology (IT)">Information Technology (IT)</option>
-                                    <option value="Marketing">Marketing</option>
-                                    <option value="Administration">Administration</option>
-                                    <option value="Sales(TVS)">Sales(TVS)</option>
-                                    <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
-                                    <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
-                                    <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
-                                    <option value="Retails Sales (Hossain International)">Retails Sales (Hossain International)</option>
-                                    <option value="Retails Sales (TVS Shopee)">Retails Sales (TVS Shopee)</option>
-                                    <option value="Retails Sales (Modina Autos)">Retails Sales (Modina Autos)</option>
-                                </select>
-                            </div>
-
-                            <div class="border-t border-dashed pt-3 mt-2">
-                                <div class="flex justify-between items-center mb-2">
-                                    <label class="block text-xs font-black text-neutral-700 uppercase tracking-wider">Material List</label>
-                                    <button type="button" onclick="addItemRow()" class="bg-neutral-900 hover:bg-black text-white text-[11px] font-bold px-2 py-1 rounded flex items-center gap-1 cursor-pointer transition-all">
-                                        <i class="fa-solid fa-plus text-[9px]"></i> Add Item
-                                    </button>
-                                </div>
-                                
-                                <div id="itemsContainer" class="space-y-3 max-h-64 overflow-y-auto pr-1">
-                                    <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
-                                        <div>
-                                            <label class="block text-[10px] font-bold text-slate-500">Material Name *</label>
-                                            <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                        </div>
-                                        <div class="grid grid-cols-3 gap-2">
-                                            <div class="col-span-2">
-                                                <label class="block text-[10px] font-bold text-slate-500">Quantity & Unit *</label>
-                                                <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
-                                                    <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="Qty">
-                                                    <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
-                                                        <option value="Pcs">Pcs</option>
-                                                        <option value="KG">KG</option>
-                                                        <option value="Packet">Packet</option>
-                                                        <option value="Ltr">Ltr</option>
-                                                        <option value="Roll">Roll</option>
-                                                        <option value="Box">Box</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label class="block text-[10px] font-bold text-slate-500">Est. Cost *</label>
-                                                <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button type="submit" id="submitBtn" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-all shadow-sm">Submit Requisition</button>
-                        </form>
-                    </div>
-
-                    <div id="superAdminPanel" class="hidden bg-white p-5 rounded-xl border border-orange-200 shadow-sm" style="background-color: var(--modina-light-bg);">
-                        <h3 class="text-sm font-black mb-4 border-b pb-2 text-modina uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-plus"></i> Create New Admin User
-                        </h3>
-                        <form id="userForm" onsubmit="createNewUser(event)" class="space-y-3">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">Set PIN Code *</label>
-                                <input type="number" id="newUserPin" required class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">Role / Designation *</label>
-                                <select id="newUserRole" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                    <option value="Super_Admin">Super_Admin</option>
-                                    <option value="HR & Admin">HR & Admin</option>
-                                    <option value="Dept_Head">Dept_Head</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">Assign Department *</label>
-                                <select id="newUserDept" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                    <option value="All">All Departments</option>
-                                    <option value="HR & Admin">HR & Admin</option>
-                                    <option value="Accounts">Accounts</option>
-                                    <option value="Information Technology (IT)">Information Technology (IT)</option>
-                                    <option value="Marketing">Marketing</option>
-                                    <option value="Administration">Administration</option>
-                                    <option value="Sales(TVS)">Sales(TVS)</option>
-                                    <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
-                                    <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
-                                    <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="w-full bg-neutral-900 hover:bg-black text-white font-bold py-2 rounded-lg text-xs cursor-pointer transition-all">Save User</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div id="tableContainer" class="bg-white p-5 rounded-xl shadow-sm xl:col-span-2 border border-slate-200">
-                    <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
-                        <i class="fa-solid fa-list text-modina"></i> Requisition Tracking History
-                    </h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-100 border-b border-slate-200 text-neutral-800 font-bold text-xs">
-                                    <th class="p-3 w-16">ID</th>
-                                    <th class="p-3">Description & Personnel</th>
-                                    <th class="p-3 text-center">Dept Head</th>
-                                    <th class="p-3 text-center">HR & Admin</th>
-                                    <th class="p-3 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody" class="divide-y divide-slate-100 text-slate-600 text-xs">
-                                <tr><td colspan="5" class="p-8 text-center text-slate-400">Loading data...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <button onclick="loadAllData()" class="text-slate-400 hover:text-blue-600 transition-all">
+                    <i class="fa-solid fa-rotate text-sm"></i>
+                </button>
             </div>
-        </main>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                        <tr class="bg-blue-50/50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                            <th class="px-4 py-3 w-20">ID</th>
+                            <th class="px-4 py-3">Description & Personnel</th>
+                            <th class="px-4 py-3 text-center">Dept Head</th>
+                            <th class="px-4 py-3 text-center">HR & Admin</th>
+                            <th class="px-4 py-3 text-center w-24">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="text-sm font-medium text-slate-700 divide-y divide-slate-100">
+                        <!-- Dynamic Rows Loop -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="tableLoader" class="hidden py-8 text-center text-xs font-semibold text-slate-400">
+                <i class="fa-solid fa-circle-notch animate-spin text-blue-600 text-xl mr-2"></i> Loading tracking ledger...
+            </div>
+        </div>
     </div>
 
     <script>
-        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLMUqqa6YDEEM4BgU9Rc1y7rqiEwWX9loxGRrZdl081N74_EsPuHjTFH46gJCNPquc/exec"; 
-
-        let globalData = { Requisition: [], Users: [] };
-        let currentRole = "Employee";
-        let currentDept = "All";
-
-        function isSuperPower() {
-            return currentRole === "Super_Admin" || currentRole === "HR & Admin";
-        }
-
-        function toggleHrDropdown() {
-            const dropdown = document.getElementById('hrDropdown');
-            dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function addItemRow() {
-            const container = document.getElementById('itemsContainer');
-            const rowHtml = `
-                <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
-                    <button type="button" onclick="removeItemRow(this)" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-sm cursor-pointer">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500">Material Name *</label>
-                        <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                    </div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div class="col-span-2">
-                            <label class="block text-[10px] font-bold text-slate-500">Quantity & Unit *</label>
-                            <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
-                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="Qty">
-                                <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
-                                    <option value="Pcs">Pcs</option>
-                                    <option value="KG">KG</option>
-                                    <option value="Packet">Packet</option>
-                                    <option value="Ltr">Ltr</option>
-                                    <option value="Roll">Roll</option>
-                                    <option value="Box">Box</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500">Est. Cost *</label>
-                            <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                        </div>
-                    </div>
-                </div>`;
-            container.insertAdjacentHTML('beforeend', rowHtml);
-        }
-
-        function removeItemRow(btn) {
-            btn.closest('.item-row').remove();
-        }
+        const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLMUqqa6YDEEM4BgU9Rc1y7rqiEwWX9loxGRrZdl081N74_EsPuHjTFH46gJCNPquc/exec";
+        let cachedDatabase = [];
 
         async function loadAllData() {
+            toggleLoader(true);
             try {
-                const res = await fetch(MASTER_SCRIPT_URL);
-                globalData = await res.json();
-                renderTable(globalData.Requisition); 
-            } catch (error) {
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">Failed to connect. Please check URL or Sheet.</td></tr>`;
+                const res = await fetch(`${MASTER_SCRIPT_URL}?action=getRequisitions`);
+                cachedDatabase = await res.json();
+                renderTable();
+            } catch(e) {
+                console.error("Cloud Error", e);
+            } finally {
+                toggleLoader(false);
             }
         }
 
-        function verifyPin() {
-            const pin = document.getElementById('pinInput').value.trim();
-            const usersList = globalData.Users || [];
-            const user = usersList.find(u => u.Pin.toString().trim() === pin);
+        function renderTable() {
+            const tbody = document.getElementById("tableBody");
+            tbody.innerHTML = "";
 
-            if (user) {
-                currentRole = user.Role.toString().trim();
-                currentDept = user.Department.toString().trim(); 
-                
-                if(isSuperPower()) {
-                    document.getElementById('roleBadge').innerText = `⚡ Mode: Admin Panel (${currentRole})`;
-                    document.getElementById('superAdminPanel').classList.remove('hidden');
-                } else {
-                    document.getElementById('roleBadge').innerText = `👔 Mode: Dept Head (${currentDept})`;
-                    document.getElementById('superAdminPanel').classList.add('hidden');
-                }
-
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('logoutBtn').style.display = 'block';
-                document.getElementById('logoutBtn').classList.remove('hidden');
-                
-                document.getElementById('formContainer').style.display = 'none';
-                document.getElementById('pinInput').value = "";
-                renderTable(globalData.Requisition);
-            } else {
-                alert("Incorrect PIN! User not found in Google Sheet.");
-            }
-        }
-
-        async function createNewUser(e) {
-            e.preventDefault();
-            const payload = {
-                action: "insertRow",
-                targetSheet: "Users",
-                data: {
-                    "Pin": document.getElementById('newUserPin').value,
-                    "Role": document.getElementById('newUserRole').value,
-                    "Department": document.getElementById('newUserDept').value
-                }
-            };
-            try {
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-                alert("New user created successfully!");
-                document.getElementById('userForm').reset();
-                loadAllData();
-            } catch(err) { alert("Submission failed!"); }
-        }
-
-        async function submitMultipleRequisitions(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Submitting...";
-
-            const randId = "REQ-" + Math.floor(100 + Math.random() * 900);
-            const today = new Date().toLocaleDateString('bn-BD'); 
-            const empId = document.getElementById('empId').value;
-            const requester = document.getElementById('requester').value;
-            const department = document.getElementById('department').value;
-
-            const rowElements = document.querySelectorAll('.item-row');
-            
-            for (let row of rowElements) {
-                const itemName = row.querySelector('.item-name').value;
-                const itemQtyNum = row.querySelector('.item-qty').value;
-                const itemUnit = row.querySelector('.item-unit').value;
-                const estCost = row.querySelector('.item-cost').value;
-
-                const finalQtyString = `${itemQtyNum} ${itemUnit}`;
-
-                const payload = {
-                    action: "insertRow",
-                    targetSheet: "Requisition",
-                    data: {
-                        "ID": randId,
-                        "Date": today,
-                        "Employee ID": empId,
-                        "Employee Name": requester,
-                        "Department": department,
-                        "Material Name": itemName,
-                        "Quantity & Unit": finalQtyString, 
-                        "Est. Cost": estCost,
-                        "Dept Head Status": "Pending", 
-                        "Final Status": "Pending",
-                        "Actual Cost": "", 
-                        "Delivery Date": ""
-                    }
-                };
-
-                try {
-                    await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-                } catch(err) {
-                    console.error("Row submission failed", err);
-                }
+            if(cachedDatabase.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 text-xs">No active logs.</td></tr>`;
+                return;
             }
 
-            document.getElementById('reqForm').reset();
-            document.getElementById('itemsContainer').innerHTML = `
-                <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500">Material Name *</label>
-                        <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                    </div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div class="col-span-2">
-                            <label class="block text-[10px] font-bold text-slate-500">Quantity & Unit *</label>
-                            <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
-                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="Qty">
-                                <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
-                                    <option value="Pcs">Pcs</option>
-                                    <option value="KG">KG</option>
-                                    <option value="Packet">Packet</option>
-                                    <option value="Ltr">Ltr</option>
-                                    <option value="Roll">Roll</option>
-                                    <option value="Box">Box</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500">Est. Cost *</label>
-                            <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                        </div>
-                    </div>
-                </div>`;
-            
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Submit Requisition";
-            alert("All requisitions submitted successfully!");
-            loadAllData();
-        }
-
-        async function updateStatus(rowIndex, columnName, newValue) {
-            const payload = { action: "updateCell", targetSheet: "Requisition", rowIndex, columnName, newValue };
-            try { await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) }); loadAllData(); } catch(e){}
-        }
-
-        async function submitPurchase(rowIndex) {
-            const cost = document.getElementById(`act-${rowIndex}`).value; if(!cost) return;
-            const today = new Date().toLocaleDateString('bn-BD');
-            
-            try { 
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Actual Cost", newValue: cost }) });
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Delivery Date", newValue: today }) });
-                loadAllData();
-            } catch(e){}
-        }
-
-        function logout() {
-            currentRole = "Employee"; currentDept = "All";
-            document.getElementById('roleBadge').innerText = "👤 Mode: General Employee (Read-Only)";
-            document.getElementById('loginSection').style.display = 'flex';
-            document.getElementById('logoutBtn').style.display = 'none';
-            document.getElementById('logoutBtn').classList.add('hidden');
-            document.getElementById('superAdminPanel').classList.add('hidden');
-            document.getElementById('formContainer').style.display = 'block';
-            renderTable(globalData.Requisition);
-        }
-
-        function renderTable(requisitions) {
-            const tbody = document.getElementById('tableBody'); tbody.innerHTML = "";
-            if(!requisitions || requisitions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">No records found.</td></tr>`; return;
-            }
-
-            const filteredList = requisitions.filter(item => {
-                if (currentRole === "Employee" || isSuperPower()) return true;
-                
-                const itemDept = (item["Department"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
-                const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
-                
-                if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) return true;
-                
-                if (loggedInDept.includes("tazim") && itemDept.includes("tazim")) return true;
-                if (loggedInDept.includes("hossain") && itemDept.includes("hossain")) return true;
-                if (loggedInDept.includes("shopee") && itemDept.includes("shopee")) return true;
-                if (loggedInDept.includes("modina") && itemDept.includes("modina")) return true;
-                if (loggedInDept.includes("account") && itemDept.includes("account")) return true;
-                return false;
-            });
-
-            if(filteredList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-orange-800 bg-orange-50 font-bold border border-orange-200 rounded-lg">No pending or requisition history records for your department.</td></tr>`; return;
-            }
-
-            [...filteredList].reverse().forEach(item => {
-                const itemDept = (item["Department"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
-                const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
-                
-                const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept) || (loggedInDept.includes("tazim") && itemDept.includes("tazim")) || (loggedInDept.includes("account") && itemDept.includes("account")));
-
-                let deptAction = item["Dept Head Status"] || "Pending";
-                if (deptAction === "Pending" && (isSuperPower() || (isMyDept && currentRole === "Dept_Head"))) {
-                    deptAction = `<div class="flex justify-center gap-1">
-                                    <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
-                                    <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
-                                  </div>`;
-                }
-
-                let finalAction = item["Final Status"] || "Pending";
-                if (finalAction === "Pending" && isSuperPower()) {
-                    finalAction = `<div class="flex justify-center gap-1">
-                                    <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
-                                    <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
-                                   </div>`;
-                }
-
-                let actionCol = "—";
-                if (item["Dept Head Status"] === "Rejected" || item["Final Status"] === "Rejected") {
-                    actionCol = `<span class="text-red-500 font-bold">Rejected</span>`;
-                } else if (item["Actual Cost"]) {
-                    actionCol = `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-emerald-200">Successful</span>`;
-                } else if (item["Final Status"] === "Approved") {
-                    if (isSuperPower()) { 
-                        actionCol = `<div class="flex items-center justify-center"><input type="number" id="act-${item.rowIndex}" placeholder="Cost" class="border text-center w-14 p-0.5 text-xs rounded-l focus:outline-none focus:border-modina"><button onclick="submitPurchase(${item.rowIndex})" class="bg-modina text-white text-[10px] px-2 py-1 rounded-r cursor-pointer hover:bg-orange-800 font-bold">Done</button></div>`;
-                    } else {
-                        actionCol = `<span class="bg-orange-100 text-orange-800 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-orange-200">Processing</span>`;
-                    }
-                } else if (item["Dept Head Status"] === "Approved") {
-                    actionCol = `<span class="text-slate-400 font-medium italic">Processing</span>`;
-                }
-
+            cachedDatabase.reverse().forEach(item => {
+                const reqId = item["Req ID"] || `REQ-${item.rowIndex + 400}`; 
                 const matName = item["Material Name"] || "N/A";
                 const matQty = item["Quantity & Unit"] || "N/A";
-                const requesterName = item["Employee Name"] || "N/A";
-                const requesterId = item["Employee ID"] || "N/A";
                 const matBudget = item["Est. Cost"] || "0";
-                const matDept = item["Department"] || "N/A";
-                const reqDate = item["Date"] || "N/A";
+                const empName = item["Employee Name"] || "Unknown";
+                const empId = item["Employee ID"] || "N/A";
+                const dept = item["Department"] || "N/A";
+                const dateStr = item["DateStr"] || "৩০/৬/২০২৬";
 
                 tbody.innerHTML += `
-                    <tr class="border-b hover:bg-slate-50/50">
-                        <td class="p-3 text-left font-black text-modina">${item["ID"]}</td>
-                        <td class="p-3 text-left">
-                            <span class="text-xs font-bold text-neutral-800">${matName}</span> 
-                            <span class="bg-neutral-100 text-neutral-800 px-1.5 py-0.5 rounded font-mono text-[10px] font-bold">Qty: ${matQty}</span>
-                            <br>
-                            <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
-                                <span class="text-neutral-900 font-bold"><i class="fa-solid fa-user text-[9px] text-modina"></i> ${requesterName}</span>
-                                <span class="text-slate-300">|</span>
-                                <span class="text-neutral-700 font-mono font-medium">ID: ${requesterId}</span>
-                                <span class="text-slate-300">|</span>
-                                <span class="text-modina font-bold">Budget: ৳${matBudget}</span>
+                    <tr class="hover:bg-slate-50/50 transition-all">
+                        <td class="px-4 py-4 font-black text-orange-600 text-xs">${reqId}</td>
+                        <td class="px-4 py-4">
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold text-slate-800 text-sm">${matName}</span>
+                                <span class="bg-slate-100 text-slate-500 font-bold text-[10px] px-1.5 py-0.5 rounded border border-slate-200">Qty: ${matQty}</span>
                             </div>
-                            <div class="text-[10px] text-slate-400 mt-0.5">
-                                <i class="fa-solid fa-building text-[9px]"></i> Dept: ${matDept} | <i class="fa-solid fa-calendar-days text-[9px]"></i> ${reqDate}
+                            <div class="text-[11px] text-slate-500 font-medium mt-1 space-y-0.5">
+                                <p><i class="fa-solid fa-user text-[10px] text-slate-400"></i> <span class="font-bold text-slate-700">${empName}</span> <span class="text-slate-300">|</span> ID: ${empId} <span class="text-slate-300">|</span> Budget: <span class="text-orange-600 font-bold">৳${matBudget}</span></p>
+                                <p class="text-slate-400"><i class="fa-solid fa-building text-[10px]"></i> Dept: ${dept} <span class="text-slate-300">|</span> <i class="fa-solid fa-calendar-days text-[10px]"></i> ${dateStr}</p>
                             </div>
                         </td>
-                        <td class="p-3 text-center font-semibold text-xs">${deptAction}</td>
-                        <td class="p-3 text-center font-semibold text-xs">${finalAction}</td>
-                        <td class="p-3 text-center font-bold">${actionCol}</td>
-                    </tr>`;
+                        <td class="px-4 py-4 text-center text-xs font-bold">${renderBadge(item["Dept Head Status"])}</td>
+                        <td class="px-4 py-4 text-center text-xs font-bold">${renderBadge(item["HR & Admin Status"])}</td>
+                        <td class="px-4 py-4 text-center">
+                            <!-- Action Column: Edit & Delete Icons Added Inside The Row -->
+                            <div class="flex items-center justify-center gap-3">
+                                <button onclick="editRequisition(${item.rowIndex}, '${matName.replace(/'/g, "\\'")}', '${matQty.replace(/'/g, "\\'")}', ${matBudget})" class="text-blue-500 hover:text-blue-700 transition-all p-1 cursor-pointer" title="Edit">
+                                    <i class="fa-solid fa-pencil text-sm"></i>
+                                </button>
+                                <button onclick="deleteRequisition(${item.rowIndex})" class="text-red-400 hover:text-red-600 transition-all p-1 cursor-pointer" title="Delete">
+                                    <i class="fa-solid fa-trash-can text-sm"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
             });
+        }
+
+        function renderBadge(status) {
+            status = status || "Pending";
+            if(status === "Approved" || status === "SUCCESSFUL") {
+                return `<span class="bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-md border border-emerald-100 text-[11px] font-extrabold tracking-wide uppercase">Approved</span>`;
+            }
+            if(status === "Rejected" || status === "Declined") {
+                return `<span class="bg-rose-50 text-rose-600 px-2.5 py-1 rounded-md border border-rose-100 text-[11px] font-extrabold tracking-wide uppercase">Rejected</span>`;
+            }
+            return `<span class="text-slate-400 font-semibold">Pending</span>`;
+        }
+
+        async function submitRequisition() {
+            const empId = document.getElementById("empId").value.trim();
+            const empName = document.getElementById("empName").value.trim();
+            const dept = document.getElementById("matDept").value;
+            const name = document.getElementById("matName").value.trim();
+            const qty = document.getElementById("matQty").value.trim();
+            const budget = document.getElementById("matBudget").value.trim();
+
+            if (!empId || !empName || !dept || !name || !qty || !budget) return alert("All fields marked with * are required.");
+
+            toggleLoader(true);
+            const payload = {
+                action: "addRequisition",
+                empId, empName, dept, matName: name, qty, budget
+            };
+
+            try {
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
+                document.getElementById("matName").value = "";
+                document.getElementById("matQty").value = "";
+                document.getElementById("matBudget").value = "";
+                await loadAllData();
+            } catch (e) {
+                alert("Submission failed.");
+                toggleLoader(false);
+            }
+        }
+
+        async function editRequisition(rowIndex, currentName, currentQty, currentBudget) {
+            const newName = prompt("Edit Material Description:", currentName);
+            if (newName === null) return;
+            const newQty = prompt("Edit Quantity & Unit:", currentQty);
+            if (newQty === null) return;
+            const newBudget = prompt("Edit Budget Amount (৳):", currentBudget);
+            if (newBudget === null) return;
+
+            toggleLoader(true);
+            try {
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Material Name", newValue: newName }) });
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Quantity & Unit", newValue: newQty }) });
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Est. Cost", newValue: newBudget }) });
+                await loadAllData(); 
+            } catch (e) {
+                alert("Update failed.");
+                toggleLoader(false);
+            }
+        }
+
+        async function deleteRequisition(rowIndex) {
+            if (!confirm("Are you sure you want to delete this log permanently?")) return;
+            
+            toggleLoader(true);
+            try {
+                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "deleteRow", targetSheet: "Requisition", rowIndex }) });
+                await loadAllData();
+            } catch (e) {
+                alert("Deletion failed.");
+                toggleLoader(false);
+            }
+        }
+
+        function toggleLoader(show) {
+            const loader = document.getElementById("tableLoader");
+            if (show) loader.classList.remove("hidden");
+            else loader.classList.add("hidden");
         }
     </script>
 </body>
