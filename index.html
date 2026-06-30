@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material Requisition Portal</title>
+    <title>HR & Admin Service Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,108 +11,127 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-[#f0f4f9] min-h-screen py-10 px-4" onload="loadAllData()">
+<body class="bg-[#f4f7fc] min-h-screen antialiased" onload="loadAllData()">
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- NEW REQUISITION FORM (Your Exact Original Form) -->
-        <div class="bg-white rounded-2xl shadow-sm p-6 lg:col-span-1 border border-slate-100">
-            <div class="flex items-center gap-2 mb-6">
-                <i class="fa-solid fa-pen-to-square text-orange-600 text-lg"></i>
-                <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">New Requisition Form</h2>
-            </div>
-            
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Employee ID *</label>
-                        <input type="text" id="empId" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Name *</label>
-                        <input type="text" id="empName" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
-                    </div>
+    <!-- Top Navigation / Header with Logo -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <!-- Company Logo Container -->
+                <div class="p-2.5 bg-blue-600 rounded-xl text-white shadow-md shadow-blue-100 flex items-center justify-center">
+                    <i class="fa-solid fa-building-shield text-xl"></i>
                 </div>
-
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Department *</label>
-                    <select id="matDept" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
-                        <option value="">Select Department</option>
-                        <!-- ADDED VAT OPTION HERE -->
-                        <option value="Vat">Vat</option>
-                        <option value="HR & Admin">HR & Admin</option>
-                        <option value="Accounts">Accounts</option>
-                        <option value="Information Technology (IT)">Information Technology (IT)</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Administration">Administration</option>
-                        <option value="Sales(TVS)">Sales(TVS)</option>
-                        <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
-                        <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
-                        <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
-                        <option value="Retails Sales (Hossain International)">Retails Sales (Hossain International)</option>
-                        <option value="Retails Sales (TVS Shopee)">Retails Sales (TVS Shopee)</option>
-                        <option value="Retails Sales (Modina Autos)">Retails Sales (Modina Autos)</option>
-                    </select>
+                    <h1 class="text-lg font-bold text-slate-900 tracking-tight">HR & Admin Service Portal</h1>
+                    <p class="text-[11px] text-slate-500 font-medium">Modina Auto Parts Enterprise</p>
                 </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Material Description *</label>
-                    <input type="text" id="matName" placeholder="e.g., khata, Sticky notepad" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Qty & Unit *</label>
-                        <input type="text" id="matQty" placeholder="e.g., 2 Pcs" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Budget (৳) *</label>
-                        <input type="number" id="matBudget" placeholder="e.g., 20" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
-                    </div>
-                </div>
-
-                <button onclick="submitRequisition()" class="w-full mt-2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-sm transition-all shadow-sm">
-                    Submit Requisition
-                </button>
             </div>
         </div>
+    </header>
 
-        <!-- REQUISITION TRACKING HISTORY (Your Exact Original Tracking Table) -->
-        <div class="bg-white rounded-2xl shadow-sm p-6 lg:col-span-2 border border-slate-100 flex flex-col">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-list-check text-orange-600 text-lg"></i>
-                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">Requisition Tracking History</h2>
-                </div>
-                <button onclick="loadAllData()" class="text-slate-400 hover:text-blue-600 transition-all">
-                    <i class="fa-solid fa-rotate text-sm"></i>
-                </button>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse min-w-[600px]">
-                    <thead>
-                        <tr class="bg-[#f8fafc] border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
-                            <th class="px-4 py-3 w-16">ID</th>
-                            <th class="px-4 py-3">Description & Personnel</th>
-                            <th class="px-4 py-3 text-center">Dept Head</th>
-                            <th class="px-4 py-3 text-center">HR & Admin</th>
-                            <th class="px-4 py-3 text-center w-24">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody" class="text-sm font-medium text-slate-700 divide-y divide-slate-100">
-                        <!-- Dynamic Rows Loop -->
-                    </tbody>
-                </table>
-            </div>
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div id="tableLoader" class="hidden py-8 text-center text-xs font-semibold text-slate-400">
-                <i class="fa-solid fa-circle-notch animate-spin text-blue-600 text-xl mr-2"></i> Loading tracking ledger...
+            <!-- Left Column: NEW REQUISITION FORM -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 lg:col-span-1 border border-slate-100 h-fit">
+                <div class="flex items-center gap-2 mb-6 pb-2 border-b border-slate-100">
+                    <i class="fa-solid fa-pen-to-square text-orange-600 text-lg"></i>
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">New Requisition Form</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Employee ID *</label>
+                            <input type="text" id="empId" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Name *</label>
+                            <input type="text" id="empName" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Department *</label>
+                        <select id="matDept" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                            <option value="">Select Department</option>
+                            <!-- Vat Option added successfully -->
+                            <option value="Vat">Vat</option>
+                            <option value="HR & Admin">HR & Admin</option>
+                            <option value="Accounts">Accounts</option>
+                            <option value="Information Technology (IT)">Information Technology (IT)</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Administration">Administration</option>
+                            <option value="Sales(TVS)">Sales(TVS)</option>
+                            <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
+                            <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
+                            <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
+                            <option value="Retails Sales (Hossain International)">Retails Sales (Hossain International)</option>
+                            <option value="Retails Sales (TVS Shopee)">Retails Sales (TVS Shopee)</option>
+                            <option value="Retails Sales (Modina Autos)">Retails Sales (Modina Autos)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Material Description *</label>
+                        <input type="text" id="matName" placeholder="e.g., khata, Sticky notepad" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Qty & Unit *</label>
+                            <input type="text" id="matQty" placeholder="e.g., 2 Pcs" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Budget (৳) *</label>
+                            <input type="number" id="matBudget" placeholder="e.g., 20" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                        </div>
+                    </div>
+
+                    <button onclick="submitRequisition()" class="w-full mt-2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-sm transition-all shadow-sm">
+                        Submit Requisition
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: REQUISITION TRACKING HISTORY -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 lg:col-span-2 border border-slate-100 flex flex-col">
+                <div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-orange-600 text-lg"></i>
+                        <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">Requisition Tracking History</h2>
+                    </div>
+                    <button onclick="loadAllData()" class="text-slate-400 hover:text-blue-600 transition-all">
+                        <i class="fa-solid fa-rotate text-sm"></i>
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[650px]">
+                        <thead>
+                            <tr class="bg-[#f8fafc] border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                                <th class="px-4 py-3 w-16">ID</th>
+                                <th class="px-4 py-3">Description & Personnel</th>
+                                <th class="px-4 py-3 text-center">Dept Head</th>
+                                <th class="px-4 py-3 text-center">HR & Admin</th>
+                                <th class="px-4 py-3 text-center w-24">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="text-sm font-medium text-slate-700 divide-y divide-slate-100">
+                            <!-- Rows Dynamically Injected -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="tableLoader" class="hidden py-8 text-center text-xs font-semibold text-slate-400">
+                    <i class="fa-solid fa-circle-notch animate-spin text-blue-600 text-xl mr-2"></i> Loading tracking ledger...
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- Scripts -->
+    <!-- Scripts Operations -->
     <script>
         const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLMUqqa6YDEEM4BgU9Rc1y7rqiEwWX9loxGRrZdl081N74_EsPuHjTFH46gJCNPquc/exec";
         let cachedDatabase = [];
@@ -124,7 +143,7 @@
                 cachedDatabase = await res.json();
                 renderTable();
             } catch(e) {
-                console.error("Cloud Error", e);
+                console.error("Cloud Connection Lost", e);
             } finally {
                 toggleLoader(false);
             }
@@ -135,7 +154,7 @@
             tbody.innerHTML = "";
 
             if(cachedDatabase.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 text-xs">No active logs.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 text-xs">No active request logs found.</td></tr>`;
                 return;
             }
 
@@ -165,7 +184,7 @@
                         <td class="px-4 py-4 text-center text-xs font-bold">${renderBadge(item["Dept Head Status"])}</td>
                         <td class="px-4 py-4 text-center text-xs font-bold">${renderBadge(item["HR & Admin Status"])}</td>
                         <td class="px-4 py-4 text-center">
-                            <!-- EDIT AND DELETE BUTTONS PLACED HERE INSTEAD OF DASH -->
+                            <!-- EDIT AND DELETE WORKING CONTROLS -->
                             <div class="flex items-center justify-center gap-3">
                                 <button onclick="editRequisition(${item.rowIndex}, '${matName.replace(/'/g, "\\'")}', '${matQty.replace(/'/g, "\\'")}', ${matBudget})" class="text-blue-500 hover:text-blue-700 transition-all p-1 cursor-pointer" title="Edit">
                                     <i class="fa-solid fa-pencil text-sm"></i>
@@ -182,7 +201,7 @@
 
         function renderBadge(status) {
             status = status || "Pending";
-            if(status === "Approved" || status === "SUCCESSFUL") {
+            if(status === "Approved" || status === "SUCCESSFUL" || status === "Approved") {
                 return `<span class="bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-md border border-emerald-100 text-[11px] font-extrabold tracking-wide uppercase">Approved</span>`;
             }
             if(status === "Rejected" || status === "Declined") {
@@ -202,10 +221,7 @@
             if (!empId || !empName || !dept || !name || !qty || !budget) return alert("All fields marked with * are required.");
 
             toggleLoader(true);
-            const payload = {
-                action: "addRequisition",
-                empId, empName, dept, matName: name, qty, budget
-            };
+            const payload = { action: "addRequisition", empId, empName, dept, matName: name, qty, budget };
 
             try {
                 await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
