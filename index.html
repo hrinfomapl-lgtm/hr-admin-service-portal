@@ -3,39 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store Portal - Material Requisition</title>
+    <title>Material Requisition Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-100 min-h-screen py-8 px-4" onload="loadAllData()">
+<body class="bg-[#f0f4f9] min-h-screen py-10 px-4" onload="loadAllData()">
 
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <!-- Left Column: NEW REQUISITION FORM -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 lg:col-span-1 h-fit">
-            <div class="flex items-center gap-2 mb-6 pb-2 border-b border-slate-200">
+        <!-- NEW REQUISITION FORM (Your Exact Original Form) -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 lg:col-span-1 border border-slate-100">
+            <div class="flex items-center gap-2 mb-6">
                 <i class="fa-solid fa-pen-to-square text-orange-600 text-lg"></i>
-                <h2 class="text-base font-extrabold text-slate-800 uppercase tracking-wide">New Requisition Form</h2>
+                <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">New Requisition Form</h2>
             </div>
             
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Employee ID *</label>
-                        <input type="text" id="empId" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                        <input type="text" id="empId" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Name *</label>
-                        <input type="text" id="empName" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                        <input type="text" id="empName" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Department *</label>
-                    <select id="matDept" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                    <select id="matDept" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
                         <option value="">Select Department</option>
-                        <!-- Vat Department added at the top -->
-                        <option value="Vat">Vat</option> 
+                        <!-- ADDED VAT OPTION HERE -->
+                        <option value="Vat">Vat</option>
                         <option value="HR & Admin">HR & Admin</option>
                         <option value="Accounts">Accounts</option>
                         <option value="Information Technology (IT)">Information Technology (IT)</option>
@@ -53,17 +57,17 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Material Description *</label>
-                    <input type="text" id="matName" placeholder="e.g., khata, Sticky notepad" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                    <input type="text" id="matName" placeholder="e.g., khata, Sticky notepad" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Qty & Unit *</label>
-                        <input type="text" id="matQty" placeholder="e.g., 2 Pcs" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                        <input type="text" id="matQty" placeholder="e.g., 2 Pcs" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Budget (৳) *</label>
-                        <input type="number" id="matBudget" placeholder="e.g., 20" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
+                        <input type="number" id="matBudget" placeholder="e.g., 20" class="w-full px-3 py-2 bg-[#f8fafc] border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 transition-all">
                     </div>
                 </div>
 
@@ -73,12 +77,12 @@
             </div>
         </div>
 
-        <!-- Right Column: REQUISITION TRACKING HISTORY -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 lg:col-span-2 flex flex-col">
-            <div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-200">
+        <!-- REQUISITION TRACKING HISTORY (Your Exact Original Tracking Table) -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 lg:col-span-2 border border-slate-100 flex flex-col">
+            <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-list-check text-orange-600 text-lg"></i>
-                    <h2 class="text-base font-extrabold text-slate-800 uppercase tracking-wide">Requisition Tracking History</h2>
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">Requisition Tracking History</h2>
                 </div>
                 <button onclick="loadAllData()" class="text-slate-400 hover:text-blue-600 transition-all">
                     <i class="fa-solid fa-rotate text-sm"></i>
@@ -88,8 +92,8 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse min-w-[600px]">
                     <thead>
-                        <tr class="bg-blue-50/50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
-                            <th class="px-4 py-3 w-20">ID</th>
+                        <tr class="bg-[#f8fafc] border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                            <th class="px-4 py-3 w-16">ID</th>
                             <th class="px-4 py-3">Description & Personnel</th>
                             <th class="px-4 py-3 text-center">Dept Head</th>
                             <th class="px-4 py-3 text-center">HR & Admin</th>
@@ -108,6 +112,7 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script>
         const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLMUqqa6YDEEM4BgU9Rc1y7rqiEwWX9loxGRrZdl081N74_EsPuHjTFH46gJCNPquc/exec";
         let cachedDatabase = [];
@@ -160,7 +165,7 @@
                         <td class="px-4 py-4 text-center text-xs font-bold">${renderBadge(item["Dept Head Status"])}</td>
                         <td class="px-4 py-4 text-center text-xs font-bold">${renderBadge(item["HR & Admin Status"])}</td>
                         <td class="px-4 py-4 text-center">
-                            <!-- Action Column: Edit & Delete Icons Added Inside The Row -->
+                            <!-- EDIT AND DELETE BUTTONS PLACED HERE INSTEAD OF DASH -->
                             <div class="flex items-center justify-center gap-3">
                                 <button onclick="editRequisition(${item.rowIndex}, '${matName.replace(/'/g, "\\'")}', '${matQty.replace(/'/g, "\\'")}', ${matBudget})" class="text-blue-500 hover:text-blue-700 transition-all p-1 cursor-pointer" title="Edit">
                                     <i class="fa-solid fa-pencil text-sm"></i>
