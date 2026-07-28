@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modina Auto Parts Ltd. - Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -16,7 +17,6 @@
         .text-modina { color: var(--modina-orange) !important; }
         .border-modina { border-color: var(--modina-orange) !important; }
         .bg-modina-dark { background-color: var(--modina-dark) !important; }
-        .header-login-container { display: flex !important; align-items: center !important; gap: 12px; }
         
         .modina-logo-img {
             height: 100%;
@@ -29,20 +29,16 @@
         .sidebar-link {
             display: flex;
             align-items: center;
-            padding: 12px;
+            padding: 10px 14px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: all;
-            border-width: 1px;
-            border-color: transparent;
+            color: #cbd5e1;
         }
-        
-        .main-menu-btn {
-            background-color: var(--modina-orange);
+        .sidebar-link:hover {
+            background-color: rgba(255,255,255,0.08);
             color: white;
-            font-weight: bold;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
         .dropdown-container {
@@ -58,53 +54,51 @@
             align-items: center;
             padding: 8px 12px;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 12px;
             color: #cbd5e1;
             cursor: pointer;
-            transition: all;
             text-decoration: none;
         }
-        
         .dropdown-link:hover {
             background-color: rgba(255,255,255,0.1);
             color: white;
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800" onload="loadAllData()">
+<body class="bg-slate-100 font-sans text-gray-800" onload="loadAllData()">
 
     <!-- Header Navigation -->
-    <nav class="bg-modina text-white p-4 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
+    <nav class="bg-modina text-white p-3 shadow-md flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-16">
         <div class="flex items-center space-x-4">
-            <div class="flex items-center justify-center h-12 w-48 bg-neutral-900 rounded-lg border border-white/20 overflow-hidden shadow-inner p-1">
+            <div class="flex items-center justify-center h-11 w-44 bg-neutral-900 rounded-lg border border-white/20 overflow-hidden shadow-inner p-1">
                 <img src="Logo_Modina.jpeg" alt="Modina Auto Parts Ltd." class="modina-logo-img">
             </div>
             <div>
-                <p class="text-xs md:text-sm text-orange-50 font-bold tracking-wide border-l-2 border-white/30 pl-3 leading-none py-1">
+                <p id="portalHeaderTitle" class="text-xs md:text-sm text-orange-50 font-bold tracking-wide border-l-2 border-white/30 pl-3 leading-none py-1">
                     HR & Admin Service Portal
                 </p>
             </div>
         </div>
 
         <!-- HR & Admin Portal Quick Login Buttons (Email/Password Based) -->
-        <div class="hidden lg:flex items-center space-x-2">
-            <button type="button" onclick="openLoginModal('HR Portal')" class="bg-black/30 hover:bg-black/50 text-white text-xs font-bold px-3 py-1.5 rounded border border-white/20 transition-all cursor-pointer flex items-center gap-1.5">
+        <div id="topPortalBtns" class="hidden lg:flex items-center space-x-2">
+            <button type="button" onclick="openLoginModal('HR Portal')" class="bg-black/30 hover:bg-black/50 text-white text-xs font-bold px-3 py-1.5 rounded border border-white/20 cursor-pointer flex items-center gap-1.5">
                 <i class="fa-solid fa-user-gear text-orange-300"></i> HR Portal
             </button>
-            <button type="button" onclick="openLoginModal('Admin Portal')" class="bg-black/30 hover:bg-black/50 text-white text-xs font-bold px-3 py-1.5 rounded border border-white/20 transition-all cursor-pointer flex items-center gap-1.5">
+            <button type="button" onclick="openLoginModal('Admin Portal')" class="bg-black/30 hover:bg-black/50 text-white text-xs font-bold px-3 py-1.5 rounded border border-white/20 cursor-pointer flex items-center gap-1.5">
                 <i class="fa-solid fa-shield-halved text-orange-300"></i> Admin Portal
             </button>
         </div>
         
-        <!-- Manager PIN Section (Only for Quick Requisition & Approval) -->
-        <div class="header-login-container">
-            <div id="roleBadge" class="bg-black/30 px-2.5 py-1.5 rounded text-xs font-bold text-white border border-white/20 whitespace-nowrap">
-                👤 Mode: General Employee (Read-Only)
+        <!-- Right User Section -->
+        <div class="flex items-center gap-3">
+            <div id="roleBadge" class="bg-black/30 px-2.5 py-1.5 rounded text-xs font-bold text-white border border-white/20">
+                👤 Mode: General Employee
             </div>
             
-            <div id="loginSection" class="flex items-center bg-white/10 p-1 rounded border border-white/20">
-                <input type="password" id="pinInput" placeholder="Manager PIN" class="bg-transparent text-white text-xs px-3 py-1.5 placeholder-orange-200 focus:outline-none w-28 text-left font-bold" onkeypress="if(event.key === 'Enter') verifyPin()">
-                <button type="button" onclick="verifyPin()" class="bg-black text-white text-xs font-bold px-3 py-1.5 rounded cursor-pointer hover:bg-neutral-900 transition-all whitespace-nowrap">Manager PIN Login</button>
+            <div id="pinLoginSection" class="flex items-center bg-white/10 p-1 rounded border border-white/20">
+                <input type="password" id="pinInput" placeholder="Manager PIN" class="bg-transparent text-white text-xs px-3 py-1.5 placeholder-orange-200 focus:outline-none w-28 font-bold" onkeypress="if(event.key === 'Enter') verifyPin()">
+                <button type="button" onclick="verifyPin()" class="bg-black text-white text-xs font-bold px-3 py-1.5 rounded cursor-pointer hover:bg-neutral-900 transition-all">PIN Login</button>
             </div>
             
             <button id="logoutBtn" type="button" onclick="logout()" class="hidden bg-black text-white text-xs font-bold px-4 py-1.5 rounded cursor-pointer hover:bg-neutral-900 transition-all">Logout</button>
@@ -113,7 +107,7 @@
 
     <!-- Email & Password Login Modal for HR / Admin -->
     <div id="loginModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative border border-slate-200">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 relative border border-slate-200">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -121,36 +115,37 @@
                 <div class="inline-flex p-3 bg-orange-100 text-modina rounded-full mb-2">
                     <i class="fa-solid fa-lock text-xl"></i>
                 </div>
-                <h3 id="modalTitle" class="text-lg font-bold text-slate-800">Portal Login</h3>
+                <h3 id="modalTitle" class="text-lg font-bold text-slate-800">HR Portal Login</h3>
                 <p class="text-xs text-slate-500">Sign in with your Email and Password</p>
             </div>
             <form onsubmit="handleEmailPasswordLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">Email / User ID</label>
-                    <input type="email" id="loginEmail" required placeholder="admin@modina.com" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                    <input type="email" id="loginEmail" required placeholder="hr@modina.com" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">Password</label>
                     <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
                 </div>
-                <button type="submit" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm transition-all shadow-md">Login to Portal</button>
+                <button type="submit" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm transition-all shadow-md cursor-pointer">Login to Internal HR Dashboard</button>
             </form>
         </div>
     </div>
 
-    <!-- Sidebar & Main Content Area -->
-    <div class="flex pt-16 min-h-screen">
+
+    <!-- ================================================================= -->
+    <!-- SECTION 1: REQUISITION PORTAL (১ম ছবি - সাধারণ কর্মী ও ম্যানেজারদের জন্য) -->
+    <!-- ================================================================= -->
+    <div id="requisitionPortal" class="flex pt-16 min-h-screen">
         <aside class="w-64 bg-modina-dark text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-neutral-800 overflow-y-auto">
             <div class="p-4 text-xs font-bold text-neutral-500 uppercase tracking-wider">Main Menu</div>
             <nav class="mt-2 px-2 space-y-1">
-                
-                <a href="#" class="sidebar-link main-menu-btn">
+                <a href="#" class="sidebar-link bg-modina text-white font-bold">
                     <i class="fa-solid fa-cart-plus mr-3"></i><span>Material Requisition</span>
                 </a>
 
-                <!-- HR Form Dropdown Section (Accessible to all) -->
                 <div class="relative">
-                    <button type="button" onclick="toggleHrDropdown()" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white flex justify-between items-center">
+                    <button type="button" onclick="toggleHrDropdown()" class="w-full sidebar-link flex justify-between items-center">
                         <div class="flex items-center">
                             <i class="fa-solid fa-file-invoice mr-3"></i><span>HR Form</span>
                         </div>
@@ -158,23 +153,21 @@
                     </button>
                     <div id="hrDropdown" class="dropdown-container">
                         <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/a3b48e45fd59543eae8c1def96ed1f390b00c3ff/Leave%20Form.pdf" class="dropdown-link" target="_blank">
-                            <i class="fa-solid fa-calendar-minus mr-2 text-xs"></i> 1. Leave form
+                            <i class="fa-solid fa-calendar-minus mr-2"></i> 1. Leave form
                         </a>
                         <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Late_Attendance_Form.pdf" class="dropdown-link" target="_blank">
-                            <i class="fa-solid fa-clock mr-2 text-xs"></i> 2. Late Attendance Form
+                            <i class="fa-solid fa-clock mr-2"></i> 2. Late Attendance Form
                         </a>
                         <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Early_Leave_Form.pdf" class="dropdown-link" target="_blank">
-                            <i class="fa-solid fa-door-open mr-2 text-xs"></i> 3. Early Leave Form
+                            <i class="fa-solid fa-door-open mr-2"></i> 3. Early Leave Form
                         </a>
                     </div>
                 </div>
-
             </nav>
         </aside>
 
         <main class="flex-1 md:ml-64 p-4 md:p-6 bg-slate-50">
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                
                 <div class="space-y-6">
                     <!-- Requisition Submission Form -->
                     <div id="formContainer" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -205,21 +198,16 @@
                                     <option value="Sales(TVS)">Sales(TVS)</option>
                                     <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
                                     <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
-                                    <option value="Retails Sales (Tazim Enterprise)">Retails Sales (Tazim Enterprise)</option>
-                                    <option value="Retails Sales (Hossain International)">Retails Sales (Hossain International)</option>
-                                    <option value="Retails Sales (TVS Shopee)">Retails Sales (TVS Shopee)</option>
-                                    <option value="Retails Sales (Modina Autos)">Retails Sales (Modina Autos)</option>
                                 </select>
                             </div>
 
                             <div class="border-t border-dashed pt-3 mt-2">
                                 <div class="flex justify-between items-center mb-2">
                                     <label class="block text-xs font-black text-neutral-700 uppercase tracking-wider">Material List</label>
-                                    <button type="button" onclick="addItemRow()" class="bg-neutral-900 hover:bg-black text-white text-[11px] font-bold px-2 py-1 rounded flex items-center gap-1 cursor-pointer transition-all">
+                                    <button type="button" onclick="addItemRow()" class="bg-neutral-900 text-white text-[11px] font-bold px-2 py-1 rounded flex items-center gap-1 cursor-pointer">
                                         <i class="fa-solid fa-plus text-[9px]"></i> Add Item
                                     </button>
                                 </div>
-                                
                                 <div id="itemsContainer" class="space-y-3 max-h-64 overflow-y-auto pr-1">
                                     <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
                                         <div>
@@ -231,14 +219,12 @@
                                                 <label class="block text-[10px] font-bold text-slate-500">Quantity & Unit *</label>
                                                 <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
                                                     <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="Qty">
-                                                    <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
+                                                    <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none">
                                                         <option value="Pcs">Pcs</option>
                                                         <option value="KG">KG</option>
                                                         <option value="Packet">Packet</option>
                                                         <option value="Ltr">Ltr</option>
-                                                        <option value="Roll">Roll</option>
                                                         <option value="Box">Box</option>
-                                                        <option value="Strip">Strip</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -251,61 +237,12 @@
                                 </div>
                             </div>
 
-                            <button type="submit" id="submitBtn" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-all shadow-sm">Submit Requisition</button>
-                        </form>
-                    </div>
-
-                    <!-- Create User Panel (Only for Super Admin via Email/Pass Login) -->
-                    <div id="superAdminPanel" class="hidden bg-white p-5 rounded-xl border border-orange-200 shadow-sm" style="background-color: var(--modina-light-bg);">
-                        <h3 class="text-sm font-black mb-4 border-b pb-2 text-modina uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-plus"></i> Add New User / PIN Access
-                        </h3>
-                        <form id="userForm" onsubmit="createNewUser(event)" class="space-y-3">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">Email *</label>
-                                <input type="email" id="newUserEmail" required placeholder="user@modina.com" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">Password *</label>
-                                <input type="password" id="newUserPass" required placeholder="••••••••" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">Manager PIN *</label>
-                                <input type="number" id="newUserPin" required placeholder="e.g. 5555" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">Role / Designation *</label>
-                                <select id="newUserRole" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                    <option value="Super_Admin">Super_Admin</option>
-                                    <option value="HR & Admin">HR & Admin</option>
-                                    <option value="Dept_Head">Dept_Head</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600">Assign Department *</label>
-                                <select id="newUserDept" class="mt-1 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                                    <option value="Super Admin">Super Admin</option>
-                                    <option value="HR & Admin">HR & Admin</option>
-                                    <option value="Accounts">Accounts</option>
-                                    <option value="Information Technology (IT)">Information Technology (IT)</option>
-                                    <option value="Marketing">Marketing</option>
-                                    <option value="Administration">Administration</option>
-                                    <option value="Head of TVS">Head of TVS</option>
-                                    <option value="Sales & Marketing">Sales & Marketing</option>
-                                    <option value="Warehouse (Unit-1)">Warehouse (Unit-1)</option>
-                                    <option value="Warehouse (Unit-2)">Warehouse (Unit-2)</option>
-                                    <option value="Retail Sales (Tazim Enterprise)">Retail Sales (Tazim Enterprise)</option>
-                                    <option value="Retail Sales (Hossain International)">Retail Sales (Hossain International)</option>
-                                    <option value="Retail Sales (TVS Shopee)">Retail Sales (TVS Shopee)</option>
-                                    <option value="Retail Sales (Modina Autos)">Retail Sales (Modina Autos)</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="w-full bg-neutral-900 hover:bg-black text-white font-bold py-2 rounded-lg text-xs cursor-pointer transition-all">Save User Record</button>
+                            <button type="submit" id="submitBtn" class="w-full bg-modina hover:bg-orange-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer shadow-sm">Submit Requisition</button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Requisition History Table -->
+                <!-- Requisition Table -->
                 <div id="tableContainer" class="bg-white p-5 rounded-xl shadow-sm xl:col-span-2 border border-slate-200">
                     <h3 class="text-sm font-black mb-4 border-b pb-2 text-neutral-800 uppercase flex items-center gap-1.5">
                         <i class="fa-solid fa-list text-modina"></i> Requisition Tracking History
@@ -331,16 +268,123 @@
         </main>
     </div>
 
+
+    <!-- ================================================================= -->
+    <!-- SECTION 2: HR INTERNAL DASHBOARD (২য় ছবি - ইমেল পাসওয়ার্ড দিয়ে লগইন করার পর) -->
+    <!-- ================================================================= -->
+    <div id="hrInternalDashboard" class="hidden flex pt-16 min-h-screen">
+        <!-- HR Internal Sidebar -->
+        <aside class="w-60 bg-slate-900 text-slate-300 fixed bottom-0 top-16 left-0 border-r border-slate-800 overflow-y-auto">
+            <div class="p-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">HRM Controls</div>
+            <nav class="space-y-0.5 px-2">
+                <a href="#" class="sidebar-link bg-sky-600 text-white font-bold rounded-lg">
+                    <i class="fa-solid fa-gauge mr-3"></i><span>Dashboard</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="fa-solid fa-sliders mr-3"></i><span>Global Setting</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="fa-solid fa-mobile-screen mr-3"></i><span>Smart HRM App</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="fa-solid fa-users-gear mr-3"></i><span>HRM</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="fa-solid fa-store mr-3"></i><span>General Store</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="fa-solid fa-newspaper mr-3"></i><span>News & Events</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- HR Dashboard Content -->
+        <main class="flex-1 ml-60 p-5 bg-slate-100">
+            <!-- Top Welcome Banner & Stats -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-sky-200 to-sky-100 p-5 rounded-2xl border border-sky-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Hello, <span id="welcomeUserName">Asif Ahmed Bin Sattar</span>! 👋</h2>
+                        <p class="text-xs text-slate-600 mt-1">Track & manage your team progress here</p>
+                    </div>
+                    <p class="text-xs font-bold text-sky-800 mt-4"><i class="fa-solid fa-calendar text-sky-600 mr-1"></i> Tuesday, July 28, 2026</p>
+                </div>
+
+                <!-- Top Stats Cards -->
+                <div class="lg:col-span-2 grid grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
+                        <div class="p-3 bg-orange-500 text-white rounded-xl text-xl"><i class="fa-solid fa-users"></i></div>
+                        <div>
+                            <h3 class="text-2xl font-black text-slate-800">145</h3>
+                            <p class="text-xs font-semibold text-slate-500">Total Employees</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
+                        <div class="p-3 bg-orange-500 text-white rounded-xl text-xl"><i class="fa-solid fa-user-check"></i></div>
+                        <div>
+                            <h3 class="text-2xl font-black text-slate-800">7</h3>
+                            <p class="text-xs font-semibold text-slate-500">Total Present</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
+                        <div class="p-3 bg-orange-500 text-white rounded-xl text-xl"><i class="fa-solid fa-user-xmark"></i></div>
+                        <div>
+                            <h3 class="text-2xl font-black text-slate-800">138</h3>
+                            <p class="text-xs font-semibold text-slate-500">Total Absent</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Overview Chart & Leave Summary Table -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Attendance Overview Bar Chart -->
+                <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-slate-800">Attendance Overview</h3>
+                        <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-md font-bold border">2026-07</span>
+                    </div>
+                    <div class="h-64">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Right Side Summary Panels -->
+                <div class="space-y-6">
+                    <!-- Leave Panel -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xs font-bold text-slate-700 mb-3 border-b pb-2">Leave Summary</h3>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between items-center"><span class="text-slate-600">On Leave Today</span><span class="bg-red-100 text-red-600 font-bold px-2 py-0.5 rounded">0 (0.00%)</span></div>
+                            <div class="flex justify-between items-center"><span class="text-slate-600">On Leave Tomorrow</span><span class="bg-yellow-100 text-yellow-700 font-bold px-2 py-0.5 rounded">0 (0.00%)</span></div>
+                            <div class="flex justify-between items-center"><span class="text-slate-600">Today Outwork</span><span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded">0 (0.00%)</span></div>
+                            <div class="flex justify-between items-center"><span class="text-slate-600">Tomorrow Outwork</span><span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded">0 (0.00%)</span></div>
+                            <div class="flex justify-between items-center"><span class="text-slate-600">Pending Outwork</span><span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded">0 (0.00%)</span></div>
+                            <div class="flex justify-between items-center"><span class="text-slate-600">Today Short Leave</span><span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded">0 (0.00%)</span></div>
+                            <div class="flex justify-between items-center"><span class="text-slate-600">Today OT Hours</span><span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded">0.00 (0.00%)</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Employee Status Doughnut Chart -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xs font-bold text-slate-700 mb-2">Employee Status</h3>
+                        <div class="h-44 flex justify-center">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script Operations -->
     <script>
         const MASTER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLMUqqa6YDEEM4BgU9Rc1y7rqiEwWX9loxGRrZdl081N74_EsPuHjTFH46gJCNPquc/exec"; 
 
         let globalData = { Requisition: [], Users: [] };
         let currentRole = "Employee";
         let currentDept = "All";
-
-        function isSuperPower() {
-            return currentRole === "Super_Admin" || currentRole === "HR & Admin";
-        }
 
         function toggleHrDropdown() {
             const dropdown = document.getElementById('hrDropdown');
@@ -356,46 +400,6 @@
             document.getElementById('loginModal').classList.add('hidden');
         }
 
-        function addItemRow() {
-            const container = document.getElementById('itemsContainer');
-            const rowHtml = `
-                <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
-                    <button type="button" onclick="removeItemRow(this)" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-sm cursor-pointer">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500">Material Name *</label>
-                        <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                    </div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div class="col-span-2">
-                            <label class="block text-[10px] font-bold text-slate-500">Quantity & Unit *</label>
-                            <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
-                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="Qty">
-                                <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none cursor-pointer">
-                                    <option value="Pcs">Pcs</option>
-                                    <option value="KG">KG</option>
-                                    <option value="Packet">Packet</option>
-                                    <option value="Ltr">Ltr</option>
-                                    <option value="Roll">Roll</option>
-                                    <option value="Box">Box</option>
-                                    <option value="Strip">Strip</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500">Est. Cost *</label>
-                            <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
-                        </div>
-                    </div>
-                </div>`;
-            container.insertAdjacentHTML('beforeend', rowHtml);
-        }
-
-        function removeItemRow(btn) {
-            btn.closest('.item-row').remove();
-        }
-
         async function loadAllData() {
             try {
                 const res = await fetch(MASTER_SCRIPT_URL);
@@ -406,7 +410,7 @@
             }
         }
 
-        // Manager PIN Login (For Quick Requisition Approvals)
+        // Manager PIN Login (Requisition Approve/Reject-এর জন্য)
         function verifyPin() {
             const inputPin = document.getElementById('pinInput').value.trim();
             if (!inputPin) {
@@ -422,21 +426,17 @@
                 currentDept = String(user.Department).trim(); 
                 
                 document.getElementById('roleBadge').innerText = `👔 Manager Mode: (${currentDept})`;
-                document.getElementById('superAdminPanel').classList.add('hidden');
-
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('logoutBtn').style.display = 'block';
+                document.getElementById('pinLoginSection').style.display = 'none';
                 document.getElementById('logoutBtn').classList.remove('hidden');
-                
                 document.getElementById('formContainer').style.display = 'none';
-                document.getElementById('pinInput').value = "";
+                
                 renderTable(globalData.Requisition);
             } else {
-                alert("Incorrect Manager PIN!");
+                alert("Invalid Manager PIN!");
             }
         }
 
-        // Email & Password Login (For Full HR & Admin Portal Access)
+        // Email & Password Login (HR & Admin Dashboard-এ ঢোকার জন্য)
         function handleEmailPasswordLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
@@ -444,7 +444,6 @@
 
             const usersList = globalData.Users || [];
             
-            // Check matching email & password in Google Sheet Users
             const user = usersList.find(u => 
                 u.Email && u.Password && 
                 String(u.Email).trim().toLowerCase() === email.toLowerCase() && 
@@ -455,55 +454,78 @@
                 currentRole = String(user.Role).trim();
                 currentDept = String(user.Department).trim();
 
-                if(currentRole === "Super_Admin") {
-                    document.getElementById('roleBadge').innerText = `⚡ Mode: Super Admin Portal`;
-                    document.getElementById('superAdminPanel').classList.remove('hidden');
-                } else if(currentRole === "HR & Admin") {
-                    document.getElementById('roleBadge').innerText = `💼 Mode: HR & Admin Portal`;
-                    document.getElementById('superAdminPanel').classList.add('hidden');
-                } else {
-                    document.getElementById('roleBadge').innerText = `👤 Mode: ${currentRole}`;
-                    document.getElementById('superAdminPanel').classList.add('hidden');
-                }
-
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('logoutBtn').style.display = 'block';
+                // 🛑 Requisition Portal হাইড করা এবং ✅ HR Internal Dashboard শো করা
+                document.getElementById('requisitionPortal').classList.add('hidden');
+                document.getElementById('topPortalBtns').classList.add('hidden');
+                document.getElementById('pinLoginSection').classList.add('hidden');
+                document.getElementById('hrInternalDashboard').classList.remove('hidden');
+                
+                document.getElementById('welcomeUserName').innerText = user.Name || email.split('@')[0];
+                document.getElementById('roleBadge').innerText = `💼 Portal Mode: ${currentRole}`;
+                document.getElementById('portalHeaderTitle').innerText = "HRM & Admin Internal Services";
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 
                 closeLoginModal();
-                renderTable(globalData.Requisition);
+                initCharts(); // Graph Render
             } else {
-                alert("Invalid Email or Password! Make sure your credentials exist in Google Sheet.");
+                alert("Invalid Email or Password! Make sure credentials exist in Google Sheet.");
             }
         }
 
-        async function createNewUser(e) {
-            e.preventDefault();
-            const payload = {
-                action: "insertRow",
-                targetSheet: "Users",
-                data: {
-                    "Email": document.getElementById('newUserEmail').value,
-                    "Password": document.getElementById('newUserPass').value,
-                    "Pin": document.getElementById('newUserPin').value,
-                    "Role": document.getElementById('newUserRole').value,
-                    "Department": document.getElementById('newUserDept').value
-                }
-            };
-            try {
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-                alert("New User successfully added to Google Sheet!");
-                document.getElementById('userForm').reset();
-                loadAllData();
-            } catch(err) { alert("Submission failed!"); }
+        function logout() {
+            // HR Dashboard অফ করে Requisition Portal অন করা
+            document.getElementById('hrInternalDashboard').classList.add('hidden');
+            document.getElementById('requisitionPortal').classList.remove('hidden');
+            document.getElementById('topPortalBtns').classList.remove('hidden');
+            
+            currentRole = "Employee"; 
+            currentDept = "All";
+            
+            document.getElementById('roleBadge').innerText = "👤 Mode: General Employee";
+            document.getElementById('portalHeaderTitle').innerText = "HR & Admin Service Portal";
+            document.getElementById('pinLoginSection').style.display = 'flex';
+            document.getElementById('pinLoginSection').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            document.getElementById('formContainer').style.display = 'block';
+            
+            renderTable(globalData.Requisition);
+        }
+
+        // Requisition Functions
+        function addItemRow() {
+            const container = document.getElementById('itemsContainer');
+            const rowHtml = `
+                <div class="item-row p-3 bg-slate-50 rounded-lg border border-slate-200 relative space-y-2">
+                    <button type="button" onclick="this.closest('.item-row').remove()" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-sm cursor-pointer">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500">Material Name *</label>
+                        <input type="text" required class="item-name mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="col-span-2">
+                            <label class="block text-[10px] font-bold text-slate-500">Quantity & Unit *</label>
+                            <div class="flex mt-0.5 shadow-sm rounded-lg overflow-hidden border border-slate-300 bg-white">
+                                <input type="number" required min="1" class="item-qty w-full p-2 text-sm focus:outline-none" placeholder="Qty">
+                                <select class="item-unit bg-slate-100 px-1.5 text-xs font-bold border-l border-slate-300 focus:outline-none">
+                                    <option value="Pcs">Pcs</option><option value="KG">KG</option><option value="Packet">Packet</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500">Est. Cost *</label>
+                            <input type="number" required min="1" class="item-cost mt-0.5 w-full p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-modina focus:outline-none">
+                        </div>
+                    </div>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', rowHtml);
         }
 
         async function submitMultipleRequisitions(e) {
             e.preventDefault();
-            
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Submitting...";
+            submitBtn.disabled = true; submitBtn.innerText = "Submitting...";
 
             const randId = "REQ-" + Math.floor(100 + Math.random() * 900);
             const today = new Date().toLocaleDateString('bn-BD'); 
@@ -512,102 +534,26 @@
             const department = document.getElementById('department').value;
 
             const rowElements = document.querySelectorAll('.item-row');
-            
             for (let row of rowElements) {
                 const itemName = row.querySelector('.item-name').value;
                 const itemQtyNum = row.querySelector('.item-qty').value;
                 const itemUnit = row.querySelector('.item-unit').value;
                 const estCost = row.querySelector('.item-cost').value;
 
-                const finalQtyString = `${itemQtyNum} ${itemUnit}`;
-
                 const payload = {
                     action: "insertRow",
                     targetSheet: "Requisition",
                     data: {
-                        "ID": randId,
-                        "Date": today,
-                        "Employee ID": empId,
-                        "Employee Name": requester,
-                        "Department": department,
-                        "Material Name": itemName,
-                        "Quantity & Unit": finalQtyString, 
-                        "Est. Cost": estCost,
-                        "Dept Head Status": "Pending", 
-                        "Final Status": "Pending",
-                        "Actual Cost": "", 
-                        "Delivery Date": ""
+                        "ID": randId, "Date": today, "Employee ID": empId, "Employee Name": requester,
+                        "Department": department, "Material Name": itemName, "Quantity & Unit": `${itemQtyNum} ${itemUnit}`,
+                        "Est. Cost": estCost, "Dept Head Status": "Pending", "Final Status": "Pending"
                     }
                 };
-
-                try {
-                    await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-                } catch(err) {
-                    console.error("Row submission failed", err);
-                }
+                try { await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) }); } catch(err){}
             }
-
             document.getElementById('reqForm').reset();
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Submit Requisition";
-            alert("All requisitions submitted successfully!");
-            loadAllData();
-        }
-
-        async function updateStatus(rowIndex, columnName, newValue) {
-            const payload = { action: "updateCell", targetSheet: "Requisition", rowIndex, columnName, newValue };
-            try { await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) }); loadAllData(); } catch(e){}
-        }
-
-        async function submitPurchase(rowIndex) {
-            const cost = document.getElementById(`act-${rowIndex}`).value; if(!cost) return;
-            const today = new Date().toLocaleDateString('bn-BD');
-            
-            try { 
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Actual Cost", newValue: cost }) });
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Delivery Date", newValue: today }) });
-                loadAllData();
-            } catch(e){}
-        }
-
-        async function editRequisition(rowIndex, currentName, currentQty, currentBudget) {
-            const newName = prompt("Enter new Material Name:", currentName);
-            if (newName === null) return;
-            const newQty = prompt("Enter new Quantity & Unit:", currentQty);
-            if (newQty === null) return;
-            const newBudget = prompt("Enter new Estimated Cost:", currentBudget);
-            if (newBudget === null) return;
-
-            try {
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Material Name", newValue: newName }) });
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Quantity & Unit", newValue: newQty }) });
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Est. Cost", newValue: newBudget }) });
-                loadAllData(); 
-            } catch (e) {
-                alert("Failed to update.");
-            }
-        }
-
-        async function deleteRequisition(rowIndex) {
-            if (!confirm("Are you sure you want to delete this requisition permanently?")) return;
-            try {
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Dept Head Status", newValue: "Cancelled" }) });
-                await fetch(MASTER_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateCell", targetSheet: "Requisition", rowIndex, columnName: "Final Status", newValue: "Cancelled" }) });
-                loadAllData();
-            } catch (e) {
-                alert("Failed to delete.");
-            }
-        }
-
-        function logout() {
-            currentRole = "Employee"; currentDept = "All";
-            document.getElementById('roleBadge').innerText = "👤 Mode: General Employee (Read-Only)";
-            document.getElementById('loginSection').style.display = 'flex';
-            document.getElementById('logoutBtn').style.display = 'none';
-            document.getElementById('logoutBtn').classList.add('hidden');
-            document.getElementById('superAdminPanel').classList.add('hidden');
-            document.getElementById('formContainer').style.display = 'block';
-            renderTable(globalData.Requisition);
+            submitBtn.disabled = false; submitBtn.innerText = "Submit Requisition";
+            alert("Submitted successfully!"); loadAllData();
         }
 
         function renderTable(requisitions) {
@@ -616,105 +562,50 @@
                 tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">No records found.</td></tr>`; return;
             }
 
-            const filteredList = requisitions.filter(item => {
-                if (currentRole === "Employee" || isSuperPower()) return true;
-                
-                const itemDept = (item["Department"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
-                const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
-                
-                if (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept)) return true;
-                return false;
-            });
-
-            if(filteredList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-orange-800 bg-orange-50 font-bold border border-orange-200 rounded-lg">No pending or requisition history records for your department.</td></tr>`; return;
-            }
-
-            [...filteredList].reverse().forEach(item => {
-                const itemDept = (item["Department"] || "").toString().trim().toLowerCase().replace(/\s+/g, '');
-                const loggedInDept = currentDept.trim().toLowerCase().replace(/\s+/g, '');
-                
-                const isMyDept = (itemDept === loggedInDept || itemDept.includes(loggedInDept) || loggedInDept.includes(itemDept));
-
-                let deptAction = item["Dept Head Status"] || "Pending";
-                if (deptAction === "Pending" && (isSuperPower() || (isMyDept && currentRole === "Dept_Head"))) {
-                    deptAction = `<div class="flex justify-center gap-1">
-                                    <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
-                                    <button onclick="updateStatus(${item.rowIndex}, 'Dept Head Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
-                                  </div>`;
-                }
-
-                let finalAction = item["Final Status"] || "Pending";
-                if (finalAction === "Pending" && isSuperPower()) {
-                    finalAction = `<div class="flex justify-center gap-1">
-                                    <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Approved')" class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-emerald-700">Approve</button>
-                                    <button onclick="updateStatus(${item.rowIndex}, 'Final Status', 'Rejected')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold cursor-pointer hover:bg-red-700">Reject</button>
-                                   </div>`;
-                }
-
-                let actionCol = "—";
-                if (item["Dept Head Status"] === "Rejected" || item["Final Status"] === "Rejected") {
-                    actionCol = `<span class="text-red-500 font-bold">Rejected</span>`;
-                } else if (item["Actual Cost"]) {
-                    actionCol = `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-emerald-200">Successful</span>`;
-                } else if (item["Final Status"] === "Approved") {
-                    if (isSuperPower()) { 
-                        actionCol = `<div class="flex items-center justify-center"><input type="number" id="act-${item.rowIndex}" placeholder="Cost" class="border text-center w-14 p-0.5 text-xs rounded-l focus:outline-none focus:border-modina"><button onclick="submitPurchase(${item.rowIndex})" class="bg-modina text-white text-[10px] px-2 py-1 rounded-r cursor-pointer hover:bg-orange-800 font-bold">Done</button></div>`;
-                    } else {
-                        actionCol = `<span class="bg-orange-100 text-orange-800 px-2 py-1 rounded font-bold text-[10px] uppercase shadow-sm border border-orange-200">Processing</span>`;
-                    }
-                } else if (item["Dept Head Status"] === "Approved") {
-                    actionCol = `<span class="text-slate-400 font-medium italic">Processing</span>`;
-                }
-
-                const matName = item["Material Name"] || "N/A";
-                const matQty = item["Quantity & Unit"] || "N/A";
-                const requesterName = item["Employee Name"] || "N/A";
-                const requesterId = item["Employee ID"] || "N/A";
-                const matBudget = item["Est. Cost"] || "0";
-                const matDept = item["Department"] || "N/A";
-                const reqDate = item["Date"] || "N/A";
-
-                let inlineControls = "";
-                if (isSuperPower()) {
-                    inlineControls = `
-                        <div class="mt-2 flex items-center justify-center gap-3 border-t border-slate-100 pt-1.5">
-                            <button onclick="editRequisition(${item.rowIndex}, '${matName.replace(/'/g, "\\'")}', '${matQty.replace(/'/g, "\\'")}', ${matBudget})" class="text-blue-500 hover:text-blue-700 transition-all cursor-pointer" title="Edit text description">
-                                <i class="fa-solid fa-pen text-[10px]"></i> <span class="text-[10px] font-bold">Edit</span>
-                            </button>
-                            <span class="text-slate-300">|</span>
-                            <button onclick="deleteRequisition(${item.rowIndex})" class="text-red-400 hover:text-red-600 transition-all cursor-pointer" title="Cancel/Delete log">
-                                <i class="fa-solid fa-trash-can text-[10px]"></i> <span class="text-[10px] font-bold">Delete</span>
-                            </button>
-                        </div>
-                    `;
-                }
-
+            [...requisitions].reverse().forEach(item => {
                 tbody.innerHTML += `
-                    <tr class="border-b hover:bg-slate-50/50">
+                    <tr class="border-b hover:bg-slate-50">
                         <td class="p-3 text-left font-black text-modina">${item["ID"]}</td>
                         <td class="p-3 text-left">
-                            <span class="text-xs font-bold text-neutral-800">${matName}</span> 
-                            <span class="bg-neutral-100 text-neutral-800 px-1.5 py-0.5 rounded font-mono text-[10px] font-bold">Qty: ${matQty}</span>
-                            <br>
-                            <div class="mt-1 text-[11px] text-slate-500 flex flex-wrap gap-x-2 gap-y-0.5 items-center">
-                                <span class="text-neutral-900 font-bold"><i class="fa-solid fa-user text-[9px] text-modina"></i> ${requesterName}</span>
-                                <span class="text-slate-300">|</span>
-                                <span class="text-neutral-700 font-mono font-medium">ID: ${requesterId}</span>
-                                <span class="text-slate-300">|</span>
-                                <span class="text-modina font-bold">Budget: ৳${matBudget}</span>
-                            </div>
-                            <div class="text-[10px] text-slate-400 mt-0.5">
-                                <i class="fa-solid fa-building text-[9px]"></i> Dept: ${matDept} | <i class="fa-solid fa-calendar-days text-[9px]"></i> ${reqDate}
+                            <span class="text-xs font-bold text-neutral-800">${item["Material Name"] || 'N/A'}</span> 
+                            <span class="bg-neutral-100 text-neutral-800 px-1.5 py-0.5 rounded text-[10px] font-bold">${item["Quantity & Unit"] || 'N/A'}</span>
+                            <div class="mt-1 text-[11px] text-slate-500">
+                                <span><i class="fa-solid fa-user text-modina"></i> ${item["Employee Name"] || 'N/A'}</span> | 
+                                <span>Dept: ${item["Department"] || 'N/A'}</span>
                             </div>
                         </td>
-                        <td class="p-3 text-center font-semibold text-xs">${deptAction}</td>
-                        <td class="p-3 text-center font-semibold text-xs">${finalAction}</td>
-                        <td class="p-3 text-center font-bold">
-                            <div>${actionCol}</div>
-                            ${inlineControls}
-                        </td>
+                        <td class="p-3 text-center font-semibold text-xs">${item["Dept Head Status"] || "Pending"}</td>
+                        <td class="p-3 text-center font-semibold text-xs">${item["Final Status"] || "Pending"}</td>
+                        <td class="p-3 text-center font-bold text-slate-400">—</td>
                     </tr>`;
+            });
+        }
+
+        // Render Charts for 2nd Picture Interface
+        function initCharts() {
+            // Attendance Bar Chart
+            const ctx1 = document.getElementById('attendanceChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: 28}, (_, i) => i + 1),
+                    datasets: [
+                        { label: 'Present', data: Array(28).fill(105), backgroundColor: '#0284c7' },
+                        { label: 'Absent', data: Array(28).fill(40), backgroundColor: '#ef4444' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } }
+            });
+
+            // Status Doughnut Chart
+            const ctx2 = document.getElementById('statusChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Active', 'Leave'],
+                    datasets: [{ data: [92.4, 7.6], backgroundColor: ['#10b981', '#d97706'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
             });
         }
     </script>
