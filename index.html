@@ -139,41 +139,275 @@
 
     <!-- Sidebar & Main Content Area -->
     <div class="flex pt-16 min-h-screen">
-        <aside class="w-64 bg-modina-dark text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-neutral-800">
+        <aside class="w-64 bg-modina-dark text-slate-300 fixed bottom-0 top-16 left-0 hidden md:block border-r border-neutral-800 overflow-y-auto">
             <div class="p-4 text-xs font-bold text-neutral-500 uppercase tracking-wider">Main Menu</div>
             <nav class="mt-2 px-2 space-y-1">
-                
-                <a href="#" class="sidebar-link main-menu-btn">
-                    <i class="fa-solid fa-cart-plus mr-3"></i><span>Material Requisition</span>
-                </a>
 
-                <!-- Portal Quick Switch for Mobile/Sidebar -->
-                <div class="pt-2 pb-1 border-t border-neutral-800 my-2 block lg:hidden">
-                    <button type="button" onclick="openPortalModal('HR')" class="w-full sidebar-link text-orange-300 hover:bg-slate-800">
-                        <i class="fa-solid fa-user-gear mr-3"></i><span>HR Portal Login</span>
-                    </button>
-                    <button type="button" onclick="openPortalModal('Admin')" class="w-full sidebar-link text-orange-300 hover:bg-slate-800">
-                        <i class="fa-solid fa-shield-halved mr-3"></i><span>Admin Portal Login</span>
-                    </button>
-                </div>
+                <!-- ============ DEFAULT / EMPLOYEE MENU ============ -->
+                <div id="employeeMainMenu">
+                    <a href="#" class="sidebar-link main-menu-btn">
+                        <i class="fa-solid fa-cart-plus mr-3"></i><span>Material Requisition</span>
+                    </a>
 
-                <div class="relative">
-                    <button type="button" onclick="toggleHrDropdown()" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
-                        <i class="fa-solid fa-file-invoice mr-3"></i><span>HR Form</span>
-                        <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
-                    </button>
-                    <div id="hrDropdown" class="dropdown-container">
-                        <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/a3b48e45fd59543eae8c1def96ed1f390b00c3ff/Leave%20Form.pdf" class="dropdown-link" target="_blank">
-                            <i class="fa-solid fa-calendar-minus mr-2 text-xs"></i> 1. Leave form
-                        </a>
-                        <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Late_Attendance_Form.pdf" class="dropdown-link" target="_blank">
-                            <i class="fa-solid fa-clock mr-2 text-xs"></i> 2. Late Attendance Form
-                        </a>
-                        <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Early_Leave_Form.pdf" class="dropdown-link" target="_blank">
-                            <i class="fa-solid fa-door-open mr-2 text-xs"></i> 3. Early Leave Form
-                        </a>
+                    <!-- Portal Quick Switch for Mobile/Sidebar -->
+                    <div class="pt-2 pb-1 border-t border-neutral-800 my-2 block lg:hidden">
+                        <button type="button" onclick="openPortalModal('HR')" class="w-full sidebar-link text-orange-300 hover:bg-slate-800">
+                            <i class="fa-solid fa-user-gear mr-3"></i><span>HR Portal Login</span>
+                        </button>
+                        <button type="button" onclick="openPortalModal('Admin')" class="w-full sidebar-link text-orange-300 hover:bg-slate-800">
+                            <i class="fa-solid fa-shield-halved mr-3"></i><span>Admin Portal Login</span>
+                        </button>
+                    </div>
+
+                    <div class="relative">
+                        <button type="button" onclick="toggleHrDropdown()" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-file-invoice mr-3"></i><span>HR Form</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="hrDropdown" class="dropdown-container">
+                            <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/a3b48e45fd59543eae8c1def96ed1f390b00c3ff/Leave%20Form.pdf" class="dropdown-link" target="_blank">
+                                <i class="fa-solid fa-calendar-minus mr-2 text-xs"></i> 1. Leave form
+                            </a>
+                            <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Late_Attendance_Form.pdf" class="dropdown-link" target="_blank">
+                                <i class="fa-solid fa-clock mr-2 text-xs"></i> 2. Late Attendance Form
+                            </a>
+                            <a href="https://raw.githack.com/hrinfomapl-lgtm/hr-admin-service-portal/727bc7ce220b61ebc8519f480f2e4ac75e47029b/Early_Leave_Form.pdf" class="dropdown-link" target="_blank">
+                                <i class="fa-solid fa-door-open mr-2 text-xs"></i> 3. Early Leave Form
+                            </a>
+                        </div>
                     </div>
                 </div>
+                <!-- ============ END DEFAULT / EMPLOYEE MENU ============ -->
+
+                <!-- ============ HR PORTAL MENU (visible only after HR login) ============ -->
+                <div id="hrPortalMenu" class="hidden">
+                    <div class="px-2 pb-2 pt-1 text-[10px] font-bold text-neutral-500 uppercase tracking-wider border-t border-neutral-800 mt-1">
+                        HR & Admin Menu
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_hrsetup')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-gear mr-3"></i><span>HR Setup</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_hrsetup" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_empinfo')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-id-card mr-3"></i><span>Employee Info</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_empinfo" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_recruit')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-people-arrows mr-3"></i><span>Recruitment</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_recruit" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_award')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-award mr-3"></i><span>Award & Discipline</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_award" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_training')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-chalkboard-user mr-3"></i><span>Training</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_training" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_mpeval')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-clipboard-check mr-3"></i><span>MP. Evaluation</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_mpeval" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_kpi')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-chart-line mr-3"></i><span>EMP. KPI</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_kpi" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_letter')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-envelope-open-text mr-3"></i><span>Letter</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_letter" class="dropdown-container"></div>
+                    </div>
+
+                    <a href="#" class="sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-file-lines mr-3"></i><span>Employment Report</span>
+                    </a>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_promo')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-arrow-up-right-dots mr-3"></i><span>Promotion-Transfer</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_promo" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_leave')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-calendar-minus mr-3"></i><span>Leave</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_leave" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_shortleave')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-person-walking-arrow-right mr-3"></i><span>Short-Leave</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_shortleave" class="dropdown-container"></div>
+                    </div>
+
+                    <a href="#" class="sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-umbrella-beach mr-3"></i><span>Holiday Application</span>
+                    </a>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_schedule')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-calendar-days mr-3"></i><span>Schedule Management</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_schedule" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_attendance')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-fingerprint mr-3"></i><span>Attendance</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_attendance" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_dailywork')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-list-check mr-3"></i><span>Daily Work</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_dailywork" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_late')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-clock mr-3"></i><span>Late Management</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_late" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_absence')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-user-slash mr-3"></i><span>Absence Management</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_absence" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_ot')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-business-time mr-3"></i><span>OT & Holiday A.</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_ot" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_tax')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-file-invoice-dollar mr-3"></i><span>Income Tax</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_tax" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_increment')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-arrow-trend-up mr-3"></i><span>Increment</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_increment" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_bonus')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-gift mr-3"></i><span>Bonus</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_bonus" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_pf')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-piggy-bank mr-3"></i><span>PF Management</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_pf" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_payroll')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-money-check-dollar mr-3"></i><span>Payroll</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_payroll" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_projsalary')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-diagram-project mr-3"></i><span>Project Wise Salary</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_projsalary" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_otherexp')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-receipt mr-3"></i><span>Other Expenses</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_otherexp" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_tour')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-plane-departure mr-3"></i><span>Tour Plan</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_tour" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="hr-menu-item relative">
+                        <button type="button" onclick="toggleHrMenuDropdown('m_settlement')" class="w-full sidebar-link text-slate-300 hover:bg-slate-800 hover:text-white">
+                            <i class="fa-solid fa-handshake mr-3"></i><span>Final Settlement</span>
+                            <i class="fa-solid fa-chevron-down ml-auto text-xs opacity-60"></i>
+                        </button>
+                        <div id="m_settlement" class="dropdown-container"></div>
+                    </div>
+
+                    <div class="pt-2 pb-1 border-t border-neutral-800 mt-2">
+                        <button type="button" onclick="logout()" class="w-full sidebar-link text-orange-300 hover:bg-slate-800">
+                            <i class="fa-solid fa-right-from-bracket mr-3"></i><span>Back / Logout</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- ============ END HR PORTAL MENU ============ -->
 
             </nav>
         </aside>
@@ -349,6 +583,29 @@
             dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
         }
 
+        /* --- HR PORTAL SIDEBAR MENU CONTROLS --- */
+        function showHrPortalMenu() {
+            document.getElementById('employeeMainMenu').classList.add('hidden');
+            document.getElementById('hrPortalMenu').classList.remove('hidden');
+        }
+
+        function hideHrPortalMenu() {
+            document.getElementById('hrPortalMenu').classList.add('hidden');
+            document.getElementById('employeeMainMenu').classList.remove('hidden');
+        }
+
+        function toggleHrMenuDropdown(id) {
+            const dropdown = document.getElementById(id);
+            if (!dropdown) return;
+            const isOpen = dropdown.style.display === 'block';
+            // close any other open dropdown in the HR menu first
+            document.querySelectorAll('#hrPortalMenu .dropdown-container').forEach(el => el.style.display = 'none');
+            dropdown.style.display = isOpen ? 'none' : 'block';
+            if (!isOpen && dropdown.innerHTML.trim() === '') {
+                dropdown.innerHTML = '<span class="dropdown-link opacity-60 cursor-default">Module coming soon...</span>';
+            }
+        }
+
         /* --- PORTAL MODAL CONTROLS --- */
         function openPortalModal(portalType) {
             document.getElementById('targetPortal').value = portalType;
@@ -405,6 +662,11 @@
                 }
 
                 document.getElementById('formContainer').style.display = 'none';
+
+                if (portalType === 'HR') {
+                    showHrPortalMenu();
+                }
+
                 closePortalModal();
                 renderTable(globalData.Requisition);
             } else {
@@ -435,7 +697,6 @@
                                     <option value="Ltr">Ltr</option>
                                     <option value="Roll">Roll</option>
                                     <option value="Box">Box</option>
-                                    <option value="Strip">Strip</option>
                                 </select>
                             </div>
                         </div>
@@ -475,6 +736,9 @@
                 if(isSuperPower()) {
                     document.getElementById('roleBadge').innerText = `⚡ Mode: Admin Panel (${currentRole})`;
                     document.getElementById('superAdminPanel').classList.remove('hidden');
+                    if (currentRole === "HR & Admin") {
+                        showHrPortalMenu();
+                    }
                 } else {
                     document.getElementById('roleBadge').innerText = `👔 Mode: Dept Head (${currentDept})`;
                     document.getElementById('superAdminPanel').classList.add('hidden');
@@ -650,6 +914,7 @@
             document.getElementById('logoutBtn').classList.add('hidden');
             document.getElementById('superAdminPanel').classList.add('hidden');
             document.getElementById('formContainer').style.display = 'block';
+            hideHrPortalMenu();
             renderTable(globalData.Requisition);
         }
 
