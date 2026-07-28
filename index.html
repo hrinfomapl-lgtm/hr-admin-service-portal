@@ -19,7 +19,7 @@
                     },
                     colors: {
                         modina: {
-                            DEFAULT: '#c8381a',
+                            DEFAULT: '#d33918',
                             dark: '#a12b13',
                             light: '#e04322',
                             bg: '#fcf3f1'
@@ -30,7 +30,7 @@
         }
     </script>
     <style>
-        /* Custom Scrollbar for Dashboard */
+        /* Custom Scrollbar Styling */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -48,6 +48,11 @@
         .modal-active {
             overflow: hidden;
         }
+        /* Custom transitions */
+        .sidebar-item-active {
+            background-color: #d33918;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
@@ -56,15 +61,17 @@
     <header class="bg-modina text-white shadow-md sticky top-0 z-40 flex justify-between items-center px-6 py-2.5">
         <!-- Brand Logo & System Name -->
         <div class="flex items-center gap-4">
-            <div class="bg-white px-2.5 py-1 rounded shadow-sm flex items-center justify-center">
-                <span class="text-modina font-extrabold text-lg tracking-tighter uppercase leading-none">MODINA<sup>®</sup></span>
-                <span class="text-[8px] font-bold text-slate-700 block ml-1 leading-none border-l border-slate-300 pl-1">AUTO PARTS</span>
+            <div class="bg-white px-3 py-1.5 rounded shadow-sm flex items-center justify-center">
+                <span class="text-slate-900 font-extrabold text-xl tracking-tighter uppercase leading-none flex items-center">
+                    <span class="text-red-600 mr-1"><i class="fa-solid fa-mountain"></i></span> MODINA<sup>®</sup>
+                </span>
+                <span class="text-[9px] font-bold text-slate-700 block ml-1 leading-none border-l border-slate-300 pl-1 uppercase">AUTO PARTS</span>
             </div>
             <div class="h-6 w-[1px] bg-red-400 opacity-40"></div>
             <span class="font-semibold text-sm tracking-wide">HR & Admin Service Portal</span>
         </div>
 
-        <!-- Top Right Controls -->
+        <!-- Top Right Controls & Role Selector -->
         <div class="flex items-center gap-3 text-xs font-semibold">
             <button onclick="switchRole('HR Portal', 'HR & Admin')" class="bg-red-800/60 hover:bg-red-900/80 text-white px-3 py-1.5 rounded transition flex items-center gap-1.5 cursor-pointer border border-red-700">
                 <i class="fa-solid fa-user-tie"></i> HR Portal
@@ -73,7 +80,7 @@
                 <i class="fa-solid fa-shield-halved"></i> Admin Portal
             </button>
             
-            <!-- Current Active Mode Indicator -->
+            <!-- Current Active Mode Badge -->
             <div class="bg-blue-600 text-white px-3.5 py-1.5 rounded font-bold flex items-center gap-2 shadow-inner border border-blue-500">
                 <i class="fa-solid fa-user-shield text-blue-200"></i> 
                 <span id="roleDisplayBadge">Manager Mode: (Super Admin)</span>
@@ -85,7 +92,7 @@
         </div>
     </header>
 
-    <!-- Main Content Layout -->
+    <!-- Main Workspace Area -->
     <div class="flex flex-1 min-h-[calc(100vh-53px)]">
         
         <!-- Left Sidebar -->
@@ -94,11 +101,11 @@
                 <div class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-3 px-2">Main Menu</div>
                 
                 <nav class="space-y-1">
-                    <a href="#" onclick="setActiveTab('requisition')" id="nav-requisition" class="flex items-center gap-3 bg-modina text-white px-3.5 py-2.5 rounded text-xs font-bold shadow-sm transition">
+                    <a href="#" onclick="setActiveTab('requisition')" id="nav-requisition" class="flex items-center gap-3 sidebar-item-active px-3.5 py-2.5 rounded text-xs font-bold shadow-sm transition">
                         <i class="fa-solid fa-cart-shopping w-4 text-center"></i> Material Requisition
                     </a>
                     
-                    <!-- HR Form Dropdown Menu -->
+                    <!-- HR Form Submenu -->
                     <div>
                         <button onclick="toggleHrSubmenu()" class="w-full flex items-center justify-between text-slate-400 hover:text-white px-3.5 py-2.5 rounded text-xs font-medium hover:bg-zinc-800 transition">
                             <span class="flex items-center gap-3">
@@ -107,9 +114,9 @@
                             <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200" id="hrSubmenuArrow"></i>
                         </button>
                         <div id="hrSubmenu" class="hidden pl-9 pr-2 py-1 space-y-1 text-[11px] text-slate-400">
-                            <a href="#" class="block py-1.5 hover:text-white transition">Leave Application</a>
-                            <a href="#" class="block py-1.5 hover:text-white transition">IOM Request</a>
-                            <a href="#" class="block py-1.5 hover:text-white transition">Gate Pass Form</a>
+                            <a href="#" onclick="showNotImplemented('Leave Application')" class="block py-1.5 hover:text-white transition">Leave Application</a>
+                            <a href="#" onclick="showNotImplemented('IOM Request')" class="block py-1.5 hover:text-white transition">IOM Request</a>
+                            <a href="#" onclick="showNotImplemented('Gate Pass Form')" class="block py-1.5 hover:text-white transition">Gate Pass Form</a>
                         </div>
                     </div>
 
@@ -119,33 +126,33 @@
                 </nav>
             </div>
 
-            <!-- Sidebar Footer Info -->
+            <!-- Footer Meta Info -->
             <div class="border-t border-zinc-800 pt-3 px-2 text-[10px] text-slate-500 flex justify-between items-center">
                 <span>Modina ERP v2.4</span>
                 <span class="inline-block w-2 h-2 rounded-full bg-emerald-500" title="System Online"></span>
             </div>
         </aside>
 
-        <!-- Right Main Workspace -->
+        <!-- Right Main Content Panel -->
         <main class="flex-1 p-6 bg-slate-100 overflow-y-auto">
             
-            <!-- Top Action Header & Filters -->
+            <!-- Top Controls & Filters Header -->
             <div class="bg-white rounded-t-lg border border-slate-200 border-b-0 p-4 flex flex-col md:flex-row justify-between items-md-center gap-4">
                 <div>
-                    <h2 class="font-bold text-slate-800 text-sm tracking-wide flex items-center gap-2 uppercase">
+                    <h2 class="font-bold text-slate-800 text-xs tracking-wider flex items-center gap-2 uppercase">
                         <i class="fa-solid fa-list-ul text-modina"></i> Requisition Tracking History
                     </h2>
                     <p class="text-[11px] text-slate-500 mt-0.5">Manage, track and approve material requisitions across departments</p>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <!-- Search Input -->
+                    <!-- Search Bar -->
                     <div class="relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
                         <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Search ID, name or item..." class="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded text-xs focus:outline-none focus:ring-1 focus:ring-modina w-48 md:w-64">
                     </div>
 
-                    <!-- Status Filter -->
+                    <!-- Status Filter Dropdown -->
                     <select id="statusFilter" onchange="filterData()" class="bg-slate-50 border border-slate-300 text-slate-700 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-modina">
                         <option value="ALL">All Status</option>
                         <option value="Pending">Pending Only</option>
@@ -153,7 +160,7 @@
                         <option value="Rejected">Rejected Only</option>
                     </select>
 
-                    <!-- Add Requisition Button -->
+                    <!-- New Request Modal Opener -->
                     <button onclick="openNewReqModal()" class="bg-modina hover:bg-modina-dark text-white px-3 py-1.5 rounded text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
                         <i class="fa-solid fa-plus"></i> New Request
                     </button>
@@ -165,7 +172,7 @@
                 <div class="overflow-x-auto">
                     <table class="w-full text-xs text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+                            <tr class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
                                 <th class="p-3.5 w-24">ID</th>
                                 <th class="p-3.5">Description & Personnel</th>
                                 <th class="p-3.5 text-center w-36">Dept Head</th>
@@ -174,12 +181,12 @@
                             </tr>
                         </thead>
                         <tbody id="tableBody" class="divide-y divide-slate-100">
-                            <!-- JS Dynamically Injects Data Rows -->
+                            <!-- JS Injects Dynamic Table Rows -->
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Pagination Footer -->
+                <!-- Footer Pagination & Summary -->
                 <div class="p-3 bg-slate-50 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
                     <span id="recordCountText">Showing 0 of 0 entries</span>
                     <div class="flex gap-1">
@@ -189,12 +196,30 @@
                 </div>
             </div>
 
+            <!-- Analytics Dashboard View (Hidden by Default) -->
+            <div id="analyticsView" class="hidden space-y-4 mt-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                        <div class="text-slate-500 text-xs font-bold uppercase">Total Requests</div>
+                        <div class="text-2xl font-black text-slate-800 mt-1" id="statTotal">0</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                        <div class="text-emerald-600 text-xs font-bold uppercase">Approved Requests</div>
+                        <div class="text-2xl font-black text-emerald-600 mt-1" id="statApproved">0</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                        <div class="text-amber-600 text-xs font-bold uppercase">Pending Approvals</div>
+                        <div class="text-2xl font-black text-amber-600 mt-1" id="statPending">0</div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
-    <!-- Modal: Create New Requisition -->
+    <!-- Modal: New Requisition Form -->
     <div id="newReqModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-xl border border-slate-200 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-150">
+        <div class="bg-white rounded-lg shadow-xl border border-slate-200 w-full max-w-md overflow-hidden">
             <div class="bg-slate-50 px-5 py-3.5 border-b border-slate-200 flex justify-between items-center">
                 <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
                     <i class="fa-solid fa-file-circle-plus text-modina"></i> Create Material Requisition
@@ -248,9 +273,9 @@
         </div>
     </div>
 
-    <!-- Application Core Script -->
+    <!-- JavaScript Application Core -->
     <script>
-        // Initial Mock Dataset matching your screenshot exactly
+        // Exact Mock Dataset matching the screenshot
         const initialRequisitions = [
             { id: "REQ-540", desc: "N/A", qty: "Pcs", user: "Asif Ahmed Bin Sattar", dept: "HR & Admin", deptStatus: "Pending", hrStatus: "Pending" },
             { id: "REQ-540", desc: "Abs", qty: "1 Pcs", user: "Asif Ahmed Bin Sattar", dept: "HR & Admin", deptStatus: "Pending", hrStatus: "Pending" },
@@ -262,19 +287,20 @@
             { id: "REQ-995", desc: "pin remover", qty: "1 Pcs", user: "Md. Ziaul Karim", dept: "Marketing", deptStatus: "Approved", hrStatus: "Approved" }
         ];
 
-        // Load data from LocalStorage if available, else load default dataset
+        // Persistent Data Handling via LocalStorage
         let requisitions = JSON.parse(localStorage.getItem('modina_reqs')) || [...initialRequisitions];
 
-        // Global State Variables
-        let currentRole = "Super Admin";
+        // Global State
+        let currentRole = "Manager Mode: (Super Admin)";
         let currentDept = "All";
 
         // Save State
         function saveData() {
             localStorage.setItem('modina_reqs', JSON.stringify(requisitions));
+            updateAnalytics();
         }
 
-        // Render Table Function with COMPLETE Action Column Logic
+        // Render Table Function
         function renderTable(dataToRender = requisitions) {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = "";
@@ -292,62 +318,24 @@
             }
 
             dataToRender.forEach((item, index) => {
-                // Determine Badges Style
                 let deptBadge = getStatusBadgeHtml(item.deptStatus);
                 let hrBadge = getStatusBadgeHtml(item.hrStatus);
 
-                // --- ACTION COLUMN LOGIC (THE FIX) ---
-                let actionHtml = `<span class="text-slate-300 font-bold">—</span>`;
+                // Action Column Logic based on role & status
+                let actionHtml = `<button onclick="resetStatus(${index})" class="text-slate-400 hover:text-slate-600 text-[11px] underline cursor-pointer">Reset Status</button>`;
 
-                // Normalize role string for check
-                const roleClean = (currentRole || "").toLowerCase().replace(/[^a-z0-9]/g, '');
-                const isSuperAdmin = roleClean.includes("superadmin") || roleClean.includes("manager");
-                const isHRAdmin = roleClean.includes("hr") || roleClean.includes("admin");
-
-                // 1. SUPER ADMIN MODE: Always gets direct control over actions
-                if (isSuperAdmin) {
-                    if (item.deptStatus === "Pending" || item.hrStatus === "Pending") {
-                        actionHtml = `
-                            <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="updateBothStatuses(${index}, 'Approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2 py-1 rounded text-[10px] transition shadow-sm flex items-center gap-1 cursor-pointer">
-                                    <i class="fa-solid fa-check"></i> Approve
-                                </button>
-                                <button onclick="updateBothStatuses(${index}, 'Rejected')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2 py-1 rounded text-[10px] transition shadow-sm flex items-center gap-1 cursor-pointer">
-                                    <i class="fa-solid fa-xmark"></i> Reject
-                                </button>
-                            </div>`;
-                    } else {
-                        actionHtml = `
-                            <div class="flex items-center justify-center gap-1">
-                                <button onclick="resetStatus(${index})" class="text-slate-400 hover:text-slate-600 text-[10px] underline font-medium cursor-pointer">
-                                    Reset Status
-                                </button>
-                            </div>`;
-                    }
-                } 
-                // 2. HR Portal or Admin Portal
-                else if (isHRAdmin) {
-                    if (item.deptStatus === "Approved" && item.hrStatus === "Pending") {
-                        actionHtml = `
-                            <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="updateSingleStatus(${index}, 'hrStatus', 'Approved')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1 rounded text-[10px] transition shadow-sm cursor-pointer">
-                                    HR Approve
-                                </button>
-                                <button onclick="updateSingleStatus(${index}, 'hrStatus', 'Rejected')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2 py-1 rounded text-[10px] transition shadow-sm cursor-pointer">
-                                    HR Reject
-                                </button>
-                            </div>`;
-                    } else if (item.deptStatus === "Pending") {
-                        actionHtml = `
-                            <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="updateSingleStatus(${index}, 'deptStatus', 'Approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2 py-1 rounded text-[10px] transition shadow-sm cursor-pointer">
-                                    Dept Approve
-                                </button>
-                            </div>`;
-                    }
+                if (item.deptStatus === "Pending" || item.hrStatus === "Pending") {
+                    actionHtml = `
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="approveItem(${index})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1 rounded text-[11px] transition shadow-sm flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-check"></i> Approve
+                            </button>
+                            <button onclick="rejectItem(${index})" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2.5 py-1 rounded text-[11px] transition shadow-sm flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-xmark"></i> Reject
+                            </button>
+                        </div>`;
                 }
 
-                // Append Row HTML
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="p-3.5 font-bold text-modina align-middle">${item.id}</td>
@@ -371,7 +359,7 @@
             document.getElementById('recordCountText').innerText = `Showing ${dataToRender.length} of ${requisitions.length} entries`;
         }
 
-        // Helper: Badge HTML Builder
+        // Status Badge Generator
         function getStatusBadgeHtml(status) {
             if (status === "Approved") {
                 return `<span class="text-emerald-600 font-bold bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded text-[11px] inline-block">Approved</span>`;
@@ -381,25 +369,21 @@
             return `<span class="text-amber-600 font-bold bg-amber-50 border border-amber-200 px-2.5 py-1 rounded text-[11px] inline-block">Pending</span>`;
         }
 
-        // Updates Both Dept and HR Status (For Super Admin)
-        function updateBothStatuses(index, status) {
-            requisitions[index].deptStatus = status;
-            requisitions[index].hrStatus = status;
+        // Action Executions
+        function approveItem(index) {
+            requisitions[index].deptStatus = "Approved";
+            requisitions[index].hrStatus = "Approved";
             saveData();
             filterData();
         }
 
-        // Updates Individual Status Step
-        function updateSingleStatus(index, field, status) {
-            requisitions[index][field] = status;
-            if (field === 'deptStatus' && status === 'Rejected') {
-                requisitions[index].hrStatus = 'Rejected';
-            }
+        function rejectItem(index) {
+            requisitions[index].deptStatus = "Rejected";
+            requisitions[index].hrStatus = "Rejected";
             saveData();
             filterData();
         }
 
-        // Reset Status back to Pending
         function resetStatus(index) {
             requisitions[index].deptStatus = "Pending";
             requisitions[index].hrStatus = "Pending";
@@ -407,7 +391,7 @@
             filterData();
         }
 
-        // Filter Logic (Search + Dropdown)
+        // Data Filter
         function filterData() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const status = document.getElementById('statusFilter').value;
@@ -445,7 +429,23 @@
             arrow.classList.toggle('rotate-180');
         }
 
-        // New Requisition Modal Logic
+        // Tab Switching
+        function setActiveTab(tab) {
+            if (tab === 'analytics') {
+                document.getElementById('analyticsView').classList.remove('hidden');
+                updateAnalytics();
+            } else {
+                document.getElementById('analyticsView').classList.add('hidden');
+            }
+        }
+
+        function updateAnalytics() {
+            document.getElementById('statTotal').innerText = requisitions.length;
+            document.getElementById('statApproved').innerText = requisitions.filter(r => r.deptStatus === 'Approved' && r.hrStatus === 'Approved').length;
+            document.getElementById('statPending').innerText = requisitions.filter(r => r.deptStatus === 'Pending' || r.hrStatus === 'Pending').length;
+        }
+
+        // Modal Controls
         function openNewReqModal() {
             document.getElementById('newReqModal').classList.remove('hidden');
             document.getElementById('newReqModal').classList.add('flex');
@@ -480,15 +480,19 @@
             filterData();
         }
 
-        // Logout Simulation
+        function showNotImplemented(feature) {
+            alert(`${feature} module is currently under development.`);
+        }
+
         function handleLogout() {
             if(confirm("Are you sure you want to logout?")) {
                 location.reload();
             }
         }
 
-        // Initial Initialization
+        // Initialization
         renderTable();
+        updateAnalytics();
     </script>
 </body>
 </html>
